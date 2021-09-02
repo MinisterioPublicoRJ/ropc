@@ -89,12 +89,23 @@
 
 {% block extra_js %}
 <script>
-const FORWARD_URL = '/operacoes/cadastro/informacoes/ocorrencia/parte-1/';
-const API_URL = '/v1/operacoes/cria-informacoes-resultado/';
+const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/parte-2/';
+const API_URL = '/v1/operacoes/cria-informacoes-resultado-parte-1/';
 const FORM_VAR_LIST = {
+    "registro_ocorrencia": "#registro_ocorrencia",
     "houve_confronto_daf": "#houve_confronto_daf",
     "houve_resultados_operacao": "#houve_resultados_operacao",
-    "houve_ocorrencia_operacao": "#houve_ocorrencia_operacao"
+    "numero_presos_elencados": "#numero_presos_elencados",
+    "numero_presos_flagrante": "#numero_presos_flagrante",
+    "numero_adolescentes_apreendidos": "#numero_adolescentes_apreendidos",
+    "numero_policiais_feridos": "#numero_policiais_feridos",
+    "numero_mortes_policiais": "#numero_mortes_policiais",
+    "numero_mortes_interv_estado": "#numero_mortes_interv_estado",
+    "numero_civis_feridos": "#numero_civis_feridos",
+    "numero_civis_mortos_npap": "#numero_civis_mortos_npap",
+    "numero_veiculos_recuperados": "#numero_veiculos_recuperados",
+    "houve_apreensao_drogas": "#houve_apreensao_drogas",
+    "tipos_drogas_apreendidas": "#tipos_drogas_apreendidas"
 };
 
 function displayOcorrenciaDialog(){

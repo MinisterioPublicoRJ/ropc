@@ -116,17 +116,15 @@
 {% block extra_js %}
 <script>
 toggleOrdemOperacoesField();
-const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/';
+const FORWARD_URL = '/operacoes/cadastro/informacoes/etapa-1-concluida/';
 const API_URL = '/v1/operacoes/cria-informacoes-operacionais-parte-2/';
 const FORM_VAR_LIST = {
-    "tipo_operacao": "#tipo_operacao",
-    "tipo_acao_repressiva": "#tipo_acao_repressiva",
-    "numero_ordem_operacoes": "#numero_ordem_operacoes",
-    "objetivo_estrategico_operacao": "#objetivo_estrategico_operacao",
-    "numero_guarnicoes_mobilizadas": "#numero_guarnicoes_mobilizadas",
-    "numero_policiais_mobilizados": "#numero_policiais_mobilizados",
+    "numero_viaturas_mobilizadas": "#numero_viaturas_mobilizadas",
+    "numero_agentes_mobilizados": "#numero_agentes_mobilizados",
     "numero_veiculos_blindados": "#numero_veiculos_blindados",
-    "numero_aeronaves": "#numero_aeronaves"
+    "numero_aeronaves": "#numero_aeronaves",
+    "numero_equipes_medicas": "#numero_equipes_medicas",
+    "descricao_analise_risco": "#descricao_analise_risco"
 };
 
 function toggleOrdemOperacoesField(){

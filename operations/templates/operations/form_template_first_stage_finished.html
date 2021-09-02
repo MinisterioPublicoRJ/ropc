@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Cadastro Completo</title>
+{% endblock title %}
+
+{% block content %}
+<div class="operation-form">
+    <span>Cadastro de Operações</span>
+    <div class="main-page-form">
+        <div class="header-form">
+            <div class="text-header-form">
+                <p>Finalização do cadastro</p>
+            </div>
+            <div>
+                <div class="progressbar-text">
+                    <p>Informações Gerais</p>
+                    <p>ADPF 635</p>
+                    <p>Informações Operacionais 1/1</p>
+                    <p>Informações Operacionais 1/2</p>
+                    <p>Informações de Resultado</p>
+                    <p>Informações da Ocorrência 1/1</p>
+                    <p>Informações da Ocorrência 1/2</p>
+                    <p>Observações Gerais</p>
+                    <p>Finalizar cadastro</p>
+                </div>
+                <progress max="100" value="100" id="progressbar"></progress>
+                <ul class="progressbar">
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                    <li class="progressbar-checked"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-final-cadastro">
+            <img src="{% static " img/icon-checked.png" %}" alt="icon-checked">
+            <span style="margin-top: -25px">Primeira etapa concluída yada yada!</span>
+            <p>A preencher de acordo com o design aqui</p>
+            <div class="btns-forms">
+                <div class="btns-forms">
+                    <a href="{% url 'home' %}">
+                        <button type="submit" class="btn-previus">Página inicial</button>
+                    </a>
+                </div>
+                <div class="btns-forms">
+                    <a href="{% url 'operations:form' %}">
+                        <button type="submit" class="btn-next">Cadastrar nova operação +</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

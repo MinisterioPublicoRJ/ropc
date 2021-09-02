@@ -6,17 +6,17 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse
 
-from coredata.models import Bairro, Batalhao, Municipio
+from coredata.models import Bairro, Municipio
 from operations.models import Operacao
 from operations.serializers import (
-    GeneralObservationSerializer,
-    InfoADPF635Serializer,
-    InfoGeraisOperacaoSerializer,
+    OperationRegisterInfoSerializer,
+    InfoGeralOperacaoOneSerializer,
+    InfoGeralOperacaoTwoSerializer,
     InfoOperacionaisOperacaoOneSerializer,
     InfoOperacionaisOperacaoTwoSerializer,
-    InfoOcorrenciaOneSerializer,
-    InfoOcorrenciaTwoSerializer,
-    InfoResultadosOperacaoSerializer,
+    InfoResultadosOneSerializer,
+    InfoResultadosTwoSerializer,
+    InfoResultadosThreeSerializer
 )
 
 
@@ -39,11 +39,8 @@ class OperationReportView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form_uuid"] = uuid.uuid4()
-        context["municipios"] = Municipio.objects.get_ordered_values()
-        nm_first_city = context["municipios"][0]["nm_mun"]
-        context["bairros"] = Bairro.objects.get_ordered_for_municipio(nm_first_city)
-        context["batalhoes"] = Batalhao.objects.get_ordered_for_municipio(nm_first_city)
         context["operacao_data"] = dict()
+        context["tipos_operacoes"] = Operacao.TIPO_OPERACAO
         return context
 
 
@@ -103,41 +100,55 @@ class OperationViewMixin:
 class UpdateOperationReportView(LoginRequiredMixin, OperationViewMixin, TemplateView):
     template_name = "operations/form_template.html"
     lookup_url_kwarg = "form_uuid"
-    serializer_class = InfoGeraisOperacaoSerializer
+    serializer_class = OperationRegisterInfoSerializer
 
     section_number = 1
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["municipios"] = Municipio.objects.get_ordered_values()
-        context["bairros"] = Bairro.objects.get_ordered_for_municipio(
-            context["operacao_info"]["municipio"]
-        )
-        context["batalhoes"] = Batalhao.objects.get_ordered_for_municipio(
-            context["operacao_info"]["municipio"]
-        )
+        context["tipos_operacoes"] = Operacao.TIPO_OPERACAO
         return context
 
 
-class OperationADPF635View(LoginRequiredMixin, OperationViewMixin, TemplateView):
-    template_name = "operations/form_ADPF_635.html"
+class OperationGeneralInfoPageOneView(LoginRequiredMixin, OperationViewMixin, TemplateView):
+    template_name = "operations/form_template_info_general_page_one.html"
     lookup_url_kwarg = "form_uuid"
-    serializer_class = InfoADPF635Serializer
+    serializer_class = InfoGeralOperacaoOneSerializer
 
     section_number = 2
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["municipios"] = Municipio.objects.get_ordered_values()
+        try:
+            selected_municipio = context["operacao_info"]["municipio"]
+        except:
+            selected_municipio = context["municipios"][0]["nm_mun"]
+        context["bairros"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
+        return context
+
 
 # TODO: add tests
+class OperationGeneralInfoPageTwoView(LoginRequiredMixin, OperationViewMixin, TemplateView):
+    template_name = "operations/form_template_info_general_page_two.html"
+    lookup_url_kwarg = "form_uuid"
+    serializer_class = InfoGeralOperacaoTwoSerializer
+
+    section_number = 3
+
+
 class OperationInfoPageOneView(LoginRequiredMixin, OperationViewMixin, TemplateView):
     template_name = "operations/form_template_info_operation_page_one.html"
     lookup_url_kwarg = "form_uuid"
     serializer_class = InfoOperacionaisOperacaoOneSerializer
 
-    section_number = 3
+    section_number = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["postos_comandante"] = Operacao.POSTO_COMANDANTE
+        context["natureza_operacoes"] = Operacao.NATUREZA_OPERACAO
+        context["unidades_policia_judiciaria"] = ["Unidade 1", "Unidade 2"]
+        context["orgaos_externos"] = ["Orgao 1", "Orgao 2"]
         return context
 
 
@@ -146,57 +157,57 @@ class OperationInfoPageTwoView(LoginRequiredMixin, OperationViewMixin, TemplateV
     lookup_url_kwarg = "form_uuid"
     serializer_class = InfoOperacionaisOperacaoTwoSerializer
 
-    section_number = 4
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["tipos_operacoes"] = Operacao.TIPO_OPERACAO
-        context["tipos_acoes_repressivas"] = Operacao.TIPO_ACAO_REPRESSIVA
-        return context
-
-
-class OperationInfoResultRegisterView(LoginRequiredMixin, OperationViewMixin, TemplateView):
-    template_name = "operations/form_template_result_info.html"
-    lookup_url_kwarg = "form_uuid"
-    serializer_class = InfoResultadosOperacaoSerializer
-
     section_number = 5
 
 
-class OperationOcurrencePageOneView(LoginRequiredMixin, OperationViewMixin, TemplateView):
-    template_name = "operations/form_template_ocurrence_page_one.html"
+class OperationFirstStageFinishedView(LoginRequiredMixin, OperationViewMixin, TemplateView):
+    template_name = "operations/form_template_first_stage_finished.html"
     lookup_url_kwarg = "form_uuid"
-    serializer_class = InfoOcorrenciaOneSerializer
+    # serializer_class = ...
 
     section_number = 6
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["postos_comandante"] = Operacao.POSTO_COMANDANTE
-        return context
 
-
-class OperationOcurrencePageTwoView(LoginRequiredMixin, OperationViewMixin, TemplateView):
-    template_name = "operations/form_template_ocurrence_page_two.html"
+class OperationResultsPageOneView(LoginRequiredMixin, OperationViewMixin, TemplateView):
+    template_name = "operations/form_template_results_page_one.html"
     lookup_url_kwarg = "form_uuid"
-    serializer_class = InfoOcorrenciaTwoSerializer
+    serializer_class = InfoResultadosOneSerializer
 
     section_number = 7
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tipos_drogas"] = ["Cannabis", "Cocaína", "Outras"]
+        return context
 
-class OperationGeneralObservation(LoginRequiredMixin, OperationViewMixin, TemplateView):
-    template_name = "operations/general_observations.html"
+
+class OperationResultsPageTwoView(LoginRequiredMixin, OperationViewMixin, TemplateView):
+    template_name = "operations/form_template_results_page_two.html"
     lookup_url_kwarg = "form_uuid"
-    serializer_class = GeneralObservationSerializer
+    serializer_class = InfoResultadosTwoSerializer
 
     section_number = 8
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tipos_cartuchos"] = ["Plastico CBC", "Outros"]
+        context["tipos_calibres"] = ["Calibre 28", "Outros"]
+        return context
+
+
+class OperationResultsPageThreeView(LoginRequiredMixin, OperationViewMixin, TemplateView):
+    template_name = "operations/form_template_results_page_three.html"
+    lookup_url_kwarg = "form_uuid"
+    serializer_class = InfoResultadosThreeSerializer
+
+    section_number = 9
 
 
 class FormCompleteView(LoginRequiredMixin, TemplateView):
     template_name = "operations/form_complete.html"
     lookup_url_kwarg = "form_uuid"
 
-    section_number = 8
+    section_number = 10
 
     def get_serialized_data(self, operacao):
         return {}
