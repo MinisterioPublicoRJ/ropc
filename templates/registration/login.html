@@ -8,11 +8,16 @@
 
 {% block content %}
 <div class="tela-login-main">
+  <div class="wrapper-login-main"></div>
+  <div class="">
+    <img src="{% static "img/logo-civil.png" %}" alt="logo_civil">
+  </div>
   <div class="tela-login">
     <img src="{% static "img/logo.png" %}" alt="logo_painel">
+    <div class="wrapper-logo"></div>
     <form method="POST" class="tela-login">
       {% csrf_token %}
-      <input placeholder="Usuário" type="text" name="username" autocapitalize="none" autocomplete="username"
+      <input placeholder="Login PCERJ" type="text" name="username" autocapitalize="none" autocomplete="username"
         maxlength="150" required="" id="id_username">
       <input placeholder="Senha" type="password" name="password" autocomplete="current-password" required=""
         id="id_password">
@@ -26,6 +31,6 @@
       {% endfor %}
   </ul>
   {% endif %}
-  <img src="{% static "img/logo_MP.png" %}" alt="logo_MP">
+  <img src="{% static "img/logo-MP.png" %}" alt="logo_MP">
 </div>
 {% endblock content %}
