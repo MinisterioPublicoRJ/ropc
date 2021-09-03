@@ -135,7 +135,7 @@ firstTarget.onmouseleave = mouseLeaveFunctionFirtsLi;
 
 // Mudar cor e imagem da segunda li
 var mouseOverFunctionSecondLi = function () {
-  document.getElementById("target-image-second-li").setAttribute("src", `${STATIC_PREFIX}img/align-left-blue.png`);
+  document.getElementById("target-image-second-li").setAttribute("src", `${STATIC_PREFIX}img/align-left-amarela.png`);
 };
 secondTarget.onmouseover = mouseOverFunctionSecondLi;
 
@@ -156,12 +156,12 @@ var mouseLeaveFunctionThirdLi = function () {
 thirdTarget.onmouseleave = mouseLeaveFunctionThirdLi;
 
 // Mudar cor e imagem da quarta li
-var mouseOverFunctionfourthLi = function () {
-  document.getElementById("target-image-fourth-li").setAttribute("src", `${STATIC_PREFIX}img/chart-blue.png`);
+var mouseOverFunctionFourthdLi = function () {
+  document.getElementById("target-image-fourth-li").setAttribute("src", `${STATIC_PREFIX}img/chart-amarelo.png`);
 };
-fourthTarget.onmouseover = mouseOverFunctionThirdLi;
+fourthTarget.onmouseover = mouseOverFunctionFourthdLi;
 
 var mouseLeaveFunctionFourthdLi = function () {
   document.getElementById("target-image-fourth-li").setAttribute("src",  `${STATIC_PREFIX}img/chart.png`);
 };
-thirdTarget.onmouseleave = mouseLeaveFunctionFourthdLi;
+fourthTarget.onmouseleave = mouseLeaveFunctionFourthdLi;

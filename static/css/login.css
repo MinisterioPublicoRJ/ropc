@@ -9,6 +9,10 @@
     margin-top: 30px ;
     margin-bottom: 40px;
 }
+ul{
+    color: #ffff;
+    list-style: none;
+}
 .wrapper-login-main{
     height: 65px;
     width: 100%;
