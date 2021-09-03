@@ -5,20 +5,20 @@ from rest_framework.viewsets import ModelViewSet
 from operations.mixins import AllowPUTAsCreateMixin
 from operations.models import Operacao
 from operations.serializers import (
-    GeneralObservationSerializer,
-    InfoADPF635Serializer,
-    InfoGeraisOperacaoSerializer,
+    OperationRegisterInfoSerializer,
+    InfoGeralOperacaoOneSerializer,
+    InfoGeralOperacaoTwoSerializer,
     InfoOperacionaisOperacaoOneSerializer,
     InfoOperacionaisOperacaoTwoSerializer,
-    InfoResultadosOperacaoSerializer,
-    InfoOcorrenciaOneSerializer,
-    InfoOcorrenciaTwoSerializer,
+    InfoResultadosOneSerializer,
+    InfoResultadosTwoSerializer,
+    InfoResultadosThreeSerializer
 )
 
 
-class GeneralInfoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
+class RegistrationInfoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = InfoGeraisOperacaoSerializer
+    serializer_class = OperationRegisterInfoSerializer
     lookup_url_kwarg = "form_uuid"
     lookup_field = "identificador"
     model_class = Operacao
@@ -45,9 +45,9 @@ class GeneralInfoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         return obj
 
 
-class OperationInfoADPF635ViewSet(AllowPUTAsCreateMixin, ModelViewSet):
+class GeneralInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = InfoADPF635Serializer
+    serializer_class = InfoGeralOperacaoOneSerializer
     lookup_url_kwarg = "form_uuid"
     lookup_field = "identificador"
     model_class = Operacao
@@ -74,6 +74,32 @@ class OperationInfoADPF635ViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         return obj
 
 
+class GeneralInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = InfoGeralOperacaoTwoSerializer
+    lookup_url_kwarg = "form_uuid"
+    lookup_field = "identificador"
+    model_class = Operacao
+
+    next_section_number = 4
+
+    def get_operation(self):
+        identificador = self.kwargs.get(self.lookup_url_kwarg)
+        return get_object_or_404(
+            Operacao,
+            identificador=identificador,
+            usuario=self.request.user,
+        )
+
+    def get_queryset(self):
+        user = self.request.user
+        identificador = self.kwargs.get(self.lookup_url_kwarg)
+        return Operacao.objects.filter(
+            usuario=user,
+            identificador=identificador
+        )
+
+
 class OperationalInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = InfoOperacionaisOperacaoOneSerializer
@@ -81,7 +107,7 @@ class OperationalInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     lookup_field = "identificador"
     model_class = Operacao
 
-    next_section_number = 4
+    next_section_number = 5
 
     def get_operation(self):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
@@ -107,32 +133,6 @@ class OperationalInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     lookup_field = "identificador"
     model_class = Operacao
 
-    next_section_number = 5
-
-    def get_operation(self):
-        identificador = self.kwargs.get(self.lookup_url_kwarg)
-        return get_object_or_404(
-            Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
-        )
-
-    def get_queryset(self):
-        user = self.request.user
-        identificador = self.kwargs.get(self.lookup_url_kwarg)
-        return Operacao.objects.filter(
-            usuario=user,
-            identificador=identificador
-        )
-
-
-class ResultInfoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    serializer_class = InfoResultadosOperacaoSerializer
-    lookup_url_kwarg = "form_uuid"
-    lookup_field = "identificador"
-    model_class = Operacao
-
     next_section_number = 6
 
     def get_operation(self):
@@ -152,35 +152,9 @@ class ResultInfoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         )
 
 
-class OcurrenceInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
+class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = InfoOcorrenciaOneSerializer
-    lookup_url_kwarg = "form_uuid"
-    lookup_field = "identificador"
-    model_class = Operacao
-
-    next_section_number = 7
-
-    def get_operation(self):
-        identificador = self.kwargs.get(self.lookup_url_kwarg)
-        return get_object_or_404(
-            Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
-        )
-
-    def get_queryset(self):
-        user = self.request.user
-        identificador = self.kwargs.get(self.lookup_url_kwarg)
-        return Operacao.objects.filter(
-            usuario=user,
-            identificador=identificador
-        )
-
-
-class OcurrenceInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    serializer_class = InfoOcorrenciaTwoSerializer
+    serializer_class = InfoResultadosOneSerializer
     lookup_url_kwarg = "form_uuid"
     lookup_field = "identificador"
     model_class = Operacao
@@ -204,9 +178,9 @@ class OcurrenceInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         )
 
 
-class GeneralObservationViewSet(AllowPUTAsCreateMixin, ModelViewSet):
+class ResultInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = GeneralObservationSerializer
+    serializer_class = InfoResultadosTwoSerializer
     lookup_url_kwarg = "form_uuid"
     lookup_field = "identificador"
     model_class = Operacao
@@ -228,3 +202,55 @@ class GeneralObservationViewSet(AllowPUTAsCreateMixin, ModelViewSet):
             usuario=user,
             identificador=identificador
         )
+
+
+class ResultInfoThreeViewSet(AllowPUTAsCreateMixin, ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = InfoResultadosThreeSerializer
+    lookup_url_kwarg = "form_uuid"
+    lookup_field = "identificador"
+    model_class = Operacao
+
+    next_section_number = 10
+
+    def get_operation(self):
+        identificador = self.kwargs.get(self.lookup_url_kwarg)
+        return get_object_or_404(
+            Operacao,
+            identificador=identificador,
+            usuario=self.request.user,
+        )
+
+    def get_queryset(self):
+        user = self.request.user
+        identificador = self.kwargs.get(self.lookup_url_kwarg)
+        return Operacao.objects.filter(
+            usuario=user,
+            identificador=identificador
+        )
+
+
+# class GeneralObservationViewSet(AllowPUTAsCreateMixin, ModelViewSet):
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = GeneralObservationSerializer
+#     lookup_url_kwarg = "form_uuid"
+#     lookup_field = "identificador"
+#     model_class = Operacao
+
+#     next_section_number = 9
+
+#     def get_operation(self):
+#         identificador = self.kwargs.get(self.lookup_url_kwarg)
+#         return get_object_or_404(
+#             Operacao,
+#             identificador=identificador,
+#             usuario=self.request.user,
+#         )
+
+#     def get_queryset(self):
+#         user = self.request.user
+#         identificador = self.kwargs.get(self.lookup_url_kwarg)
+#         return Operacao.objects.filter(
+#             usuario=user,
+#             identificador=identificador
+#         )

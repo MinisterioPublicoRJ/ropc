@@ -2,7 +2,7 @@ version: "3.9"
 services:
   db:
     image: postgres:13.1
-    container_name: ropm_postgres_db
+    container_name: ropc_postgres_db
     env_file: docker/.env-postgres
     ports:
       - 13454:5432

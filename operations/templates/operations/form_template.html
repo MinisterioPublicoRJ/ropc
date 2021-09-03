@@ -41,65 +41,31 @@
     <div class="form-main">
       <form action="/" id="main-form"   method="post" enctype="multipart/form-data">
           <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
-        <div class="box-form-group">
-          <div class="">
-            <label for="name">Data da operação </label>
-            <input type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" required>
-          </div>
-          <div class="styled-select">
-            <label>Horário da operação </label>
-            <input type="time" id="hora" value={{ operacao_info.hora|default:"''" }} name="hora" required>
-          </div>
+
+        <div class="form-group">
+          <label>Número do inquérito mãe</label>
+          <input type="text" name="numero_inquerito_mae" value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
+            id="numero_inquerito_mae" class="form-control required" required>
         </div>
-        <div class="box-form-group">
-          <div class="form-group">
-            <label>Município da Operação </label>
-            <div class="styled-select">
-              <select
-                  class="form-control required"
-                  id="municipio"
-                  name="municipio"
-                  onchange="getBairros(this); getBatalhoes(this);"
-                  required
-                  >
-                  <option value="">-</option>
-                  {% for municipio in municipios %}
-                  <option value="{{ municipio.nm_mun }}" {% if municipio.nm_mun == operacao_info.municipio %} selected {% endif %}>{{ municipio.nm_mun}}</option>
-                  {% endfor %}
-              </select>
-            </div>
-          </div>
+
+        <div class="form-group">
+          <label for="fname">Tipo de operação</label>
           <div class="styled-select">
-            <label>Bairro da operação </label>
-            <select class="form-control required" id="bairro" name="bairro" required>
-                <option value="">-</option>
-                {% for bairro in bairros %}
-                <option value="{{ bairro.bairro }}" {% if bairro.bairro == operacao_info.bairro|default:"''" %} selected {% endif %}>{{ bairro.bairro}}</option>
-                {% endfor %}
+            <select class="form-control required" id="tipo_operacao" name="tipo_operacao" required>
+              <option value="">-</option>
+              {% for tipo_operacao in tipos_operacoes %}
+              <option value="{{ tipo_operacao.0 }}" {% if tipo_operacao.0 == operacao_info.tipo_operacao %}selected{% endif %}> {{ tipo_operacao.1 }} </option>
+              {% endfor %}
             </select>
           </div>
         </div>
-        <div class="box-form-group">
-          <div class="form-group">
-            <label>Endereço de Referência</label>
-            <input type="text" name="endereco_referencia" value="{{ operacao_info.endereco_referencia|default:'' }}" id="endereco_referencia" class="form-control required" required>
-          </div>
-          <div class="styled-select">
-            <label>Batalhão Responsável</label>
-            <select class="form-control required" id="batalhao_responsavel" name="batalhao_responsavel" required>
-                <option value="">-</option>
-                {% for batalhao in batalhoes %}
-                <option value="{{ batalhao.bpm}}" {% if batalhao.bpm == operacao_info.batalhao_responsavel|default:"''" %} selected {% endif %}>{{batalhao.bpm}}</option>
-                {% endfor %}
-            </select>
-          </div>
+
+        <div class="form-group">
+          <label>Nome da Operação</label>
+          <input type="text" name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
+            id="nome_operacao" class="form-control required" required>
         </div>
-        <div class="box-form-group">
-          <div class="styled-select">
-            <label>Localidade</label>
-            <input type="text" id="localidade" value="{{ operacao_info.localidade|default:'' }}" name="localidade" required>
-          </div>
-        </div>
+
       </form>
       <div class="btns-forms">
           <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>

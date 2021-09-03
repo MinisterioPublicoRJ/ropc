@@ -12,14 +12,19 @@ single_actions = {
 app_name = "operations_api"
 urlpatterns = [
     path(
-        "cria-informacoes-gerais/<uuid:form_uuid>",
-        api_views.GeneralInfoViewSet.as_view(single_actions),
-        name="create-general-info"
+        "cria-informacoes-registro/<uuid:form_uuid>",
+        api_views.RegistrationInfoViewSet.as_view(single_actions),
+        name="create-registration-info"
     ),
     path(
-        "cria-informacoes-adpf635/<uuid:form_uuid>",
-        api_views.OperationInfoADPF635ViewSet.as_view(single_actions),
-        name="create-adpf635l-info"
+        "cria-informacoes-gerais-parte-1/<uuid:form_uuid>",
+        api_views.GeneralInfoOneViewSet.as_view(single_actions),
+        name="create-general-info-1"
+    ),
+    path(
+        "cria-informacoes-gerais-parte-2/<uuid:form_uuid>",
+        api_views.GeneralInfoTwoViewSet.as_view(single_actions),
+        name="create-general-info-2"
     ),
     path(
         "cria-informacoes-operacionais-parte-1/<uuid:form_uuid>",
@@ -32,23 +37,18 @@ urlpatterns = [
         name="create-operational-info-2"
     ),
     path(
-        "cria-informacoes-resultado/<uuid:form_uuid>",
-        api_views.ResultInfoViewSet.as_view(single_actions),
-        name="create-result-info"
+        "cria-informacoes-resultado-parte-1/<uuid:form_uuid>",
+        api_views.ResultInfoOneViewSet.as_view(single_actions),
+        name="create-result-info-1"
     ),
     path(
-        "cria-informacoes-ocorrencia-parte-1/<uuid:form_uuid>",
-        api_views.OcurrenceInfoOneViewSet.as_view(single_actions),
-        name="create-ocurrence-info-1"
+        "cria-informacoes-resultado-parte-2/<uuid:form_uuid>",
+        api_views.ResultInfoTwoViewSet.as_view(single_actions),
+        name="create-result-info-2"
     ),
     path(
-        "cria-informacoes-ocorrencia-parte-2/<uuid:form_uuid>",
-        api_views.OcurrenceInfoTwoViewSet.as_view(single_actions),
-        name="create-ocurrence-info-2"
-    ),
-    path(
-        "cria-informacoes-observacoes-gerais/<uuid:form_uuid>",
-        api_views.GeneralObservationViewSet.as_view(single_actions),
-        name="create-general-observation"
-    ),
+        "cria-informacoes-resultado-parte-3/<uuid:form_uuid>",
+        api_views.ResultInfoThreeViewSet.as_view(single_actions),
+        name="create-result-info-3"
+    )
 ]

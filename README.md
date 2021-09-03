@@ -15,10 +15,22 @@ git clone <repository-url>
 cd ropm
 cp env.example .env
 
+pip install -r requirements.txt
+
 # Ativar vitualenv utilizado
+
+docker-compose up
 
 python manage.py migrate
 python manage.py createsuperuser
+```
+
+Caso o comando `docker-compose` dê erro de `Error while loading shared libraries: libz.so.1: failed to map segment from shared object: Operation not permitted`, tente
+rodar os seguintes comandos:
+
+```shell
+mkdir $HOME/tmp
+sudo TMPDIR=$HOME/tmp docker-compose up
 ```
 
 ### Rodando

@@ -18,6 +18,41 @@ class InformacaoManager(models.Manager):
         return obj
 
 
+class LocalidadeOperacao(models.Model):
+    localidade = models.CharField("Localidade", max_length=255, null=True, blank=True) 
+    municipio = models.CharField("Município", max_length=255, null=True, blank=True)
+    bairro = models.CharField("Bairro", max_length=255, null=True, blank=True)
+    endereco_referencia = models.CharField("Endereço de referência", max_length=255, null=True, blank=True)
+
+#class UnidadesApoiadores(models.Model):
+#    pass
+
+#class OrgaosExternosOperacao(models.Model):
+#    pass
+
+class TiposDeDroga(models.Model):
+    nome_droga = models.CharField(
+        "Nome da Droga",
+        max_length=255
+    )
+
+class Cartucho(models.Model):
+    tipo_cartucho = models.CharField(
+        "Tipo de Cartucho",
+        max_length=255
+    )
+
+class Calibre(models.Model):
+    tipo_calibre = models.CharField(
+        "Tipo de Calibre",
+        max_length=255
+    )
+
+class CartuchoCalibresApreendidos(models.Model):
+    tipo_cartucho = models.ForeignKey(Cartucho, on_delete=models.DO_NOTHING)
+    tipo_calibre = models.ForeignKey(Calibre, on_delete=models.DO_NOTHING)
+
+
 class Operacao(models.Model):
     n_sections = 8
 
@@ -36,31 +71,18 @@ class Operacao(models.Model):
         (SITUACAO_CSO, "Completo sem Ocorrência"),
         (SITUACAO_CCO, "Completo com Ocorrência"),
     ]
-    POSTO_COMANDANTE = [
-        ("Cel", "Coronel"),
-        ("Ten Cel", "Tenente Coronel"),
-        ("Maj", "Major"),
-        ("Cap", "Capitão"),
-        ("1 Ten", "Primeiro Tenente"),
-        ("2 Ten", "Segundo Tenente"),
-        ("Subten", "Subtenente"),
-        ("1 Sgt", "Primeiro Sargento"),
-        ("2 Sgt", "Segundo Sargento"),
-        ("3 Sgt", "Terceiro Sargento"),
-        ("Cb", "Cabo"),
-        ("Sd", "Soldado"),
+    NATUREZA_OPERACAO = [
+        ("NatO I", "Ações de inteligência"),
+        ("NatO II", "Cumprimento de Medidas Cautelares Judiciais"),
+        ("NatO III", "Apoio operacional a outras instituições"),
+        ("NatO IV", "Prestação de auxílio e assistência em emergências"),
     ]
     TIPO_OPERACAO = [
-        ("Pl", "Planejada"),
+        ("Pr", "Programada"),
         ("Em", "Emergencial"),
     ]
-    TIPO_ACAO_REPRESSIVA = [
-        ("AREP I", "AREP I"),
-        ("AREP II", "AREP II"),
-        ("AREP III", "AREP III"),
-        ("AREP IV", "AREP IV"),
-    ]
 
+    ### Status cadastro
     secao_atual = models.PositiveIntegerField("Seção Atual", default=1)
     completo = models.BooleanField("Cadastro Completo", default=False)
     situacao = models.CharField(
@@ -76,37 +98,15 @@ class Operacao(models.Model):
 
     identificador = models.UUIDField(unique=True, editable=False)
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-
     criado_em = models.DateTimeField("Criado em", auto_now_add=True)
-    data = models.DateField("Data", null=True, blank=True)
-    hora = models.TimeField("Hora", null=True, blank=True)
-    localidade = models.CharField("Localidade", max_length=255, null=True, blank=True)
-    municipio = models.CharField("Município", max_length=255, null=True, blank=True)
-    bairro = models.CharField("Bairro", max_length=255, null=True, blank=True)
-    endereco_referencia = models.CharField("Endereço de referência", max_length=255, null=True, blank=True)
-    coordenadas_geo = models.CharField("Referência geográfica", max_length=100, null=True, blank=True)
-    batalhao_responsavel = models.CharField("Batalhão Responsável", max_length=255, null=True, blank=True)
 
-    justificativa_excepcionalidade_operacao = models.TextField(
-        "Justificativa da excepcionalidade da operação",
-        null=True,
-        blank=True
-    )
-    descricao_analise_risco = models.TextField(
-        "Análise de riscos e medidas de controles de danos colaterais das operações e de disparos de confrontos",
-        null=True,
-        blank=True
-    )
-
-    unidade_responsavel = models.CharField("Unidade operacional responsável", max_length=255, null=True, blank=True)
-    unidade_apoiadora = models.TextField("Unidade Apoiadora", null=True, blank=True)
-    nome_comandante_operacao = models.CharField("Nome do Comandante", max_length=255, null=True, blank=True)
-    rg_pm_comandante_operacao = models.CharField("RG PM do Comandante", max_length=10, null=True, blank=True)
-    posto_comandante_operacao = models.CharField(
-        "Posto|Graduação do Comandante",
-        choices=POSTO_COMANDANTE,
+    ### Info Registro
+    # Caso tipo seja Pr - Programada
+    numero_inquerito_mae = models.CharField(
+        "Número do Inquérito Policial mãe",
         max_length=100,
-        null=True
+        null=True,
+        blank=True,
     )
     tipo_operacao = models.CharField(
         "Tipo de operação",
@@ -114,15 +114,22 @@ class Operacao(models.Model):
         max_length=10,
         null=True
     )
-    tipo_acao_repressiva = models.CharField(
-        "Tipo de ação repressiva",
-        choices=TIPO_ACAO_REPRESSIVA,
-        max_length=15,
-        null=True
-    )
-    numero_ordem_operacoes = models.CharField(
-        "Número da ordem de operações no caso de operação planejada",
-        max_length=100,
+    nome_operacao = models.CharField("Nome da operação", max_length=255, null=True, blank=True)
+
+    ### Info Gerais One
+    data = models.DateField("Data", null=True, blank=True)
+    hora_inicio = models.TimeField("Hora de início da operação", null=True, blank=True)
+    hora_termino = models.TimeField("Hora de término da operação", null=True, blank=True)
+    localidade_operacao = models.ManyToManyField(LocalidadeOperacao)
+    # localidade = models.CharField("Localidade", max_length=255, null=True, blank=True) 
+    # municipio = models.CharField("Município", max_length=255, null=True, blank=True)
+    # bairro = models.CharField("Bairro", max_length=255, null=True, blank=True)
+    # endereco_referencia = models.CharField("Endereço de referência", max_length=255, null=True, blank=True)
+    # coordenadas_geo = models.CharField("Referência geográfica", max_length=100, null=True, blank=True)
+
+    ### Info Gerais Two
+    justificativa_excepcionalidade_operacao = models.TextField(
+        "Justificativa da excepcionalidade da operação",
         null=True,
         blank=True
     )
@@ -131,14 +138,46 @@ class Operacao(models.Model):
         null=True,
         blank=True
     )
-    numero_guarnicoes_mobilizadas = models.PositiveIntegerField(
-        "Número de Guarnições mobilizadas",
-        null=True,
+
+
+    ### Info Operacionais One
+    nome_delegado_operacao = models.CharField("Nome do Delegado Responsável", max_length=255, null=True, blank=True)
+    matricula_id_delegado_operacao = models.CharField("Matrícula/ID Funcional do Delegado", max_length=10, null=True, blank=True)
+    natureza_operacao = models.CharField(
+        "Natureza da operação",
+        choices=NATUREZA_OPERACAO,
+        max_length=10,
+        null=True
+    )
+    unidade_responsavel = models.CharField("Unidade da polícia judiciária responsável", max_length=255, null=True, blank=True)
+    # apoio_recebido = models.BooleanField(
+    #     "Recebeu apoio de outras unidades policiais?",
+    #     default=False
+    # )
+    unidades_apoiadoras = models.TextField("Unidades Apoiadoras", null=True, blank=True)
+    # operacao_integrada = models.BooleanField(
+    #     "Operação integrada com órgãos externos à Polícia Civil?",
+    #     default=False
+    # )
+    orgaos_externos = models.TextField("Órgãos Externos", null=True, blank=True)
+    
+    
+    ### Info Operacionais Two
+    
+    # numero_mandado = models.CharField(
+    #     "Número de mandado",
+    #     max_length=20,
+    #     null=True,
+    #     blank=True
+    # )
+    numero_viaturas_mobilizadas = models.PositiveIntegerField(
+        "Número de viaturas mobilizadas",
+        default=0,
         blank=True
     )
-    numero_policiais_mobilizados = models.PositiveIntegerField(
-        "Número de policiais mobilizados",
-        null=True,
+    numero_agentes_mobilizados = models.PositiveIntegerField(
+        "Número de agentes mobilizados",
+        default=1,
         blank=True
     )
     numero_veiculos_blindados = models.PositiveIntegerField(
@@ -151,7 +190,35 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
+    numero_equipes_medicas = models.PositiveIntegerField(
+        "Número de equipes médicas de apoio",
+        default=0,
+        blank=True
+    )
+    # comunicou escolas e saude?
+    # escolas perto?
+    # hospitais perto?
+    descricao_analise_risco = models.TextField(
+        "Análise de riscos e medidas de controles de danos colaterais das operações e de disparos de confrontos",
+        null=True,
+        blank=True
+    )
+    # TODO: Vai ter esse campo ou vai ser binário?
+    # numero_escolas = models.PositiveIntegerField(
+    #     "Número de escolas na proximidade da operação",
+    #     default=0,
+    #     blank=True
+    # )
 
+
+    ### Info Resultados One
+    # Caso tipo seja Em - Emergencial
+    registro_ocorrencia = models.CharField(
+        "Registro de Ocorrência apensado",
+        max_length=255,
+        null=True,
+        blank=True,
+    )
     houve_confronto_daf = models.BooleanField(
         "Houve confronto com DAF?",
         null=True,
@@ -162,108 +229,168 @@ class Operacao(models.Model):
         null=True,
         blank=True,
     )
-    houve_ocorrencia_operacao = models.BooleanField(
-        "Houve ocorrência na operação?",
-        null=True,
+    numero_presos_elencados = models.PositiveIntegerField(
+        "Número de presos elencados nos mandados de prisão",
+        default=0,
+        blank=True
+    )
+    # presos em outros mandados?
+    numero_presos_flagrante = models.PositiveIntegerField(
+        "Número de presos em flagrante",
+        default=0,
+        blank=True
+    )
+    numero_adolescentes_apreendidos = models.PositiveIntegerField(
+        "Número de adolescentes apreendidos",
+        default=0,
         blank=True,
     )
-
-    boletim_ocorrencia_pm = models.CharField(
-        "Boletim de Ocorrência da Polícia Militar (BOPM)",
-        max_length=100,
-        null=True,
+    numero_policiais_feridos = models.PositiveIntegerField(
+        "Número de policiais feridos",
+        default=0,
         blank=True,
     )
-    registro_ocorrencia = models.CharField(
-        "Registro de Ocorrência",
-        max_length=255,
-        null=True,
-        blank=True,
+    numero_mortes_policiais = models.PositiveIntegerField(
+        "Número de mortes policiais",
+        default=0,
+        blank=True
     )
-    nome_condutor_ocorrencia = models.CharField(
-        "Nome do condutor da ocorrência",
-        max_length=255,
-        null=True,
-        blank=True,
+    numero_mortes_interv_estado = models.PositiveIntegerField(
+        "Número de mortes por intervenção de agentes do Estado",
+        default=0,
+        blank=True
     )
-    rg_pm_condutor_ocorrencia = models.CharField(
-        "RG PM do condutor da ocorrência",
-        max_length=100,
-        null=True,
-        blank=True,
+    numero_civis_feridos = models.PositiveIntegerField(
+        "Número de civis feridos",
+        default=0,
+        blank=True
     )
-    posto_condutor_ocorrencia = models.CharField(
-        "Posto|Graduação do condutor da ocorrência",
-        choices=POSTO_COMANDANTE,
-        max_length=100,
-        null=True
+    numero_civis_mortos_npap = models.PositiveIntegerField(
+        "Número de civis mortos – morte não provocada por agente policiais",
+        default=0,
+        blank=True
     )
+    numero_veiculos_recuperados = models.PositiveIntegerField(
+        "Número de veículos recuperados",
+        default=0,
+        blank=True
+    )
+    # houve_ocorrencia_operacao = models.BooleanField(
+    #     "Houve ocorrência na operação?",
+    #     null=True,
+    #     blank=True,
+    # )
     houve_apreensao_drogas = models.BooleanField(
         "Houve apreensão de Drogas?",
         null=True,
         blank=True,
     )
+    tipos_drogas_apreendidas = models.CharField(
+        "Drogas apreendidas",
+        max_length=255,
+        null=True,
+        blank=True
+    )
+    # tipos_drogas_apreendidas = models.ForeignKey(
+    #     TiposDeDroga,
+    #     on_delete=models.DO_NOTHING
+    # )
+
+
+    ### Info Resultados Two
+    numero_explosivos_apreendidos = models.PositiveIntegerField(
+        "Número de artefatos explosivos apreendidos",
+        default=0,
+        blank=True
+    )
     numero_armas_apreendidas = models.PositiveIntegerField(
         "Número de armas apreendidas",
-        null=True,
+        default=0,
         blank=True
     )
     numero_fuzis_apreendidos = models.PositiveIntegerField(
         "Número de fuzis apreendidos",
-        null=True,
+        default=0,
         blank=True
     )
-    numero_presos = models.PositiveIntegerField(
-        "Número presos",
-        null=True,
+    numero_carregadores_apreendidos = models.PositiveIntegerField(
+        "Número de carregadores apreendidos",
+        default=0,
         blank=True
     )
-    numero_adolescentes_apreendidos = models.PositiveIntegerField(
-        "Número de adolescentes apreendidos",
+    numero_municoes_apreendidas = models.PositiveIntegerField(
+        "Número de munições apreendidas",
+        default=0,
+        blank=True
+    )
+    
+    # cartuchosCalibres
+    
+    
+    # Info Resultados Three
+    houve_disparados_aeronave = models.BooleanField(
+        "Houve disparos embarcado da aeronave?",
         null=True,
         blank=True,
     )
-    numero_policiais_feridos = models.PositiveIntegerField(
-        "Número de policiais feridos",
-        null=True,
-        blank=True,
-    )
-    numero_mortes_policiais = models.PositiveIntegerField(
-        "Número de mortes policiais",
+    houve_registros_imagem = models.BooleanField(
+        "Foram feitos registros de imagem a partir da aeronave?",
         null=True,
         blank=True
     )
-    numero_mortes_interv_estado = models.PositiveIntegerField(
-        "Número de mortes por intervenção de agentes do Estado",
+    local_preservado = models.BooleanField(
+        "Local permaneceu preservado?",
         null=True,
         blank=True
     )
-    numero_civis_feridos = models.PositiveIntegerField(
-        "Número de civis feridos",
+    pericia_local = models.BooleanField(
+        "Foi feita perícia do local?",
         null=True,
         blank=True
     )
-    numero_civis_mortos_npap = models.PositiveIntegerField(
-        "Número de civis mortos – morte não provocada por agente policiais",
+    pericia_aeronave = models.BooleanField(
+        "Foi feita perícia da aeronave?",
         null=True,
         blank=True
     )
-    numero_veiculos_recuperados = models.PositiveIntegerField(
-        "Número de veículos recuperados",
+    pericia_veiculo_blindado = models.BooleanField(
+        "Foi feita perícia do veículo blindado?",
         null=True,
         blank=True
     )
-
+    pericia_viaturas = models.BooleanField(
+        "Foi feita perícia das viaturas?",
+        null=True,
+        blank=True
+    )
+    pericia_iml = models.BooleanField(
+        "Foi feita perícia no IML?",
+        null=True,
+        blank=True
+    )
+    pericia_outras = models.BooleanField(
+        "Foram feitas outras perícias?",
+        null=True,
+        blank=True
+    )
     observacoes_gerais = models.TextField(
         "Observações gerais",
         null=True,
         blank=True
     )
 
+
     class Meta:
         db_table = "operacao"
         verbose_name = "operação"
         verbose_name_plural = "operações"
+
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_nr_fuzis_menorigual_nr_armas",
+                check=models.Q(numero_fuzis_apreendidos__lte=models.F("numero_armas_apreendidas")),
+            )
+        ]
 
     @property
     def get_admin_url(self):

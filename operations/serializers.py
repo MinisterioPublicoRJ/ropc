@@ -15,99 +15,120 @@ class OperacaoSerializer(serializers.Serializer):
         return instance
 
 
-class InfoGeraisOperacaoSerializer(OperacaoSerializer):
+class OperationRegisterInfoSerializer(OperacaoSerializer):
+    numero_inquerito_mae = serializers.CharField(allow_blank=True)
+    tipo_operacao = serializers.CharField(required=True)
+    nome_operacao = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs["tipo_operacao"] == "Pr" and not attrs["numero_inquerito_mae"]:
+            raise serializers.ValidationError(
+                {"numero_inquerito_mae": "Número de inquérito mãe deve ser fornecido para operação de tipo Programada."}
+            )
+        return attrs
+
+class InfoGeralOperacaoOneSerializer(OperacaoSerializer):
     data = serializers.DateField(format="%Y-%m-%d", required=True)
-    hora = serializers.TimeField(format="%H:%M:%S", required=True)
+    hora_inicio = serializers.TimeField(format="%H:%M:%S", required=True)
+    hora_termino = serializers.TimeField(format="%H:%M:%S", required=True)
 
     localidade = serializers.CharField(required=True)
     municipio = serializers.CharField(required=True)
     bairro = serializers.CharField(required=True)
     endereco_referencia = serializers.CharField(required=True)
-    coordenadas_geo = serializers.CharField(required=False)
-    batalhao_responsavel = serializers.CharField(required=True)
+    # coordenadas_geo = serializers.CharField(required=False)
 
     def validate(self, attrs):
         bairros_validos = Bairro.objects.get_ordered_for_municipio(
             attrs["municipio"]
         ).values_list("bairro", flat=True)
-        batalhoes_validos = Batalhao.objects.get_ordered_for_municipio(
-            attrs["municipio"]
-        ).values_list("bpm", flat=True)
 
         if attrs["bairro"] not in bairros_validos:
             raise serializers.ValidationError(
                 {"bairro": "Bairro inválido para município selecionado."}
             )
 
-        if attrs["batalhao_responsavel"] not in batalhoes_validos:
-            raise serializers.ValidationError(
-                {"batalhao_responsavel": "Batalhao inválido para município selecionado."}
-            )
-
         return attrs
 
 
-class InfoADPF635Serializer(OperacaoSerializer):
+class InfoGeralOperacaoTwoSerializer(OperacaoSerializer):
     justificativa_excepcionalidade_operacao = serializers.CharField(required=True)
-    descricao_analise_risco = serializers.CharField(required=True)
+    objetivo_estrategico_operacao = serializers.CharField(required=True)
 
 
 class InfoOperacionaisOperacaoOneSerializer(OperacaoSerializer):
+    nome_delegado_operacao = serializers.CharField(required=True)
+    matricula_id_delegado_operacao = serializers.CharField(required=True)
+    natureza_operacao = serializers.CharField(required=True)
     unidade_responsavel = serializers.CharField(required=True)
-    unidade_apoiadora = serializers.CharField(allow_blank=True)
-    nome_comandante_operacao = serializers.CharField(required=True)
-    rg_pm_comandante_operacao = serializers.CharField(required=True)
-    posto_comandante_operacao = serializers.CharField(required=True)
+    # apoio_recebido = serializers.BooleanField(required=True)
+    unidades_apoiadoras = serializers.CharField(allow_blank=True) #validate?
+    # operacao_integrada = serializers.BooleanField(required=True)
+    orgaos_externos = serializers.CharField(allow_blank=True) #validate?
 
-    def validate_rg_pm_comandante_operacao(self, value):
-        match = re.match(r"\d{5,6}", value)
-        if not match:
-            raise serializers.ValidationError("Número RG PM inválido.")
+    # def validate_matricula_id_delegado_operacao(self, value):
+    #     match = re.match(r"\d{5,6}", value)
+    #     if not match:
+    #         raise serializers.ValidationError("Número RG PM inválido.")
 
-        return value
+    #     return value
 
-    def validate_posto_comandante_operacao(self, value):
-        options = [opt[0] for opt in Operacao.POSTO_COMANDANTE]
-        if value not in options:
-            raise serializers.ValidationError("Opção inválida.")
+    # def validate_posto_comandante_operacao(self, value):
+    #     options = [opt[0] for opt in Operacao.POSTO_COMANDANTE]
+    #     if value not in options:
+    #         raise serializers.ValidationError("Opção inválida.")
 
-        return value
-
-
-class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
-    tipo_operacao = serializers.CharField(required=True)
-    tipo_acao_repressiva = serializers.CharField(required=True)
-    numero_ordem_operacoes = serializers.CharField(allow_blank=True)
-    objetivo_estrategico_operacao = serializers.CharField(required=True)
-    numero_guarnicoes_mobilizadas = serializers.IntegerField(required=True, min_value=0)
-    numero_policiais_mobilizados = serializers.IntegerField(required=True, min_value=0)
-    numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0)
-    numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
+    #     return value
 
     def validate(self, attrs):
-        if attrs["tipo_operacao"] == "Pl" and not attrs["numero_ordem_operacoes"]:
-            raise serializers.ValidationError(
-                {"numero_ordem_operacoes": "Número da ordem deve ser fornecido."}
-            )
-        elif attrs["tipo_operacao"] == "Em" and attrs["numero_ordem_operacoes"]:
-            raise serializers.ValidationError(
-                {
-                    "numero_ordem_operacoes":
-                    "Número da ordem é apenas para operações planejadas."
-                }
-            )
+        # unidades_validas = Bairro.objects.get_ordered_for_municipio(
+        #     attrs["municipio"]
+        # ).values_list("bairro", flat=True)
+
+        # if attrs["unidade_responsavel"] not in unidades_validas:
+        #     raise serializers.ValidationError(
+        #         {"unidade_responsavel": "Bairro inválido para município selecionado."}
+        #     )
+
         return attrs
 
 
-class InfoResultadosOperacaoSerializer(OperacaoSerializer):
+class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
+    numero_viaturas_mobilizadas = serializers.IntegerField(required=True, min_value=0)
+    numero_agentes_mobilizados = serializers.IntegerField(required=True, min_value=1)
+    numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0)
+    numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
+    numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0)
+    descricao_analise_risco = serializers.CharField(required=True)
+
+
+class InfoResultadosOneSerializer(OperacaoSerializer):
+    registro_ocorrencia = serializers.CharField(required=True)
     houve_confronto_daf = serializers.BooleanField(required=True)
     houve_resultados_operacao = serializers.BooleanField(required=True)
-    houve_ocorrencia_operacao = serializers.BooleanField(required=True)
+    # houve_ocorrencia_operacao = serializers.BooleanField(required=True)
+    numero_presos_elencados = serializers.IntegerField(required=True, min_value=0)
+    numero_presos_flagrante = serializers.IntegerField(required=True, min_value=0)
+    numero_adolescentes_apreendidos = serializers.IntegerField(required=True, min_value=0)
+    numero_policiais_feridos = serializers.IntegerField(required=True, min_value=0)
+    numero_mortes_policiais = serializers.IntegerField(required=True, min_value=0)
+    numero_mortes_interv_estado = serializers.IntegerField(required=True, min_value=0)
+    numero_civis_feridos = serializers.IntegerField(required=True, min_value=0)
+    numero_civis_mortos_npap = serializers.IntegerField(required=True, min_value=0)
+    numero_veiculos_recuperados = serializers.IntegerField(required=True, min_value=0)
+    houve_apreensao_drogas = serializers.BooleanField(required=True)
+    tipos_drogas_apreendidas = serializers.CharField(allow_blank=True)
 
     def validate(self, attrs):
         # Verifica se já existem dados de ocorrência
         ser = InfoOcorrenciaOneSerializer(instance=self.instance)
         has_occurence_data = any(ser.data.values())
+
+        # Precisa verificar se tem registro de ocorrência caso seja Em
+        if attrs["tipo_operacao"] == "Em" and not attrs["numero_ordem_operacoes"]:
+            raise serializers.ValidationError(
+                {"numero_ordem_operacoes": "Número da ordem deve ser fornecido."}
+            )
 
         if (
             self.instance.houve_ocorrencia_operacao and not
@@ -123,50 +144,32 @@ class InfoResultadosOperacaoSerializer(OperacaoSerializer):
         return attrs
 
 
-class InfoOcorrenciaOneSerializer(OperacaoSerializer):
-    boletim_ocorrencia_pm = serializers.CharField()
-    registro_ocorrencia = serializers.CharField()
-    nome_condutor_ocorrencia = serializers.CharField()
-    rg_pm_condutor_ocorrencia = serializers.CharField()
-    posto_condutor_ocorrencia = serializers.CharField()
-    houve_apreensao_drogas = serializers.BooleanField()
-    numero_armas_apreendidas = serializers.IntegerField(min_value=0)
-    numero_fuzis_apreendidos = serializers.IntegerField(min_value=0)
-    numero_presos = serializers.IntegerField(min_value=0)
+class InfoResultadosTwoSerializer(OperacaoSerializer):
+    numero_explosivos_apreendidos = serializers.IntegerField(required=True, min_value=0)
+    numero_armas_apreendidas = serializers.IntegerField(required=True, min_value=0)
+    numero_fuzis_apreendidos = serializers.IntegerField(required=True, min_value=0)
+    numero_presos = serializers.IntegerField(required=True, min_value=0)
+    numero_carregadores_apreendidos = serializers.IntegerField(required=True, min_value=0)
+    numero_municoes_apreendidas = serializers.IntegerField(required=True, min_value=0)
 
-    def validate_posto_condutor_ocorrencia(self, value):
-        options = [opt[0] for opt in Operacao.POSTO_COMANDANTE]
-        if value not in options:
-            raise serializers.ValidationError("Opção inválida.")
+    # def validate_registro_ocorrencia(self, value):
+    #     match = re.match(r"^\d{3}-\d{5}/\d{4}(-\d{2})?$", value)
+    #     if not match:
+    #         raise serializers.ValidationError("Número de RO inválido.")
 
-        return value
-
-    def validate_registro_ocorrencia(self, value):
-        match = re.match(r"^\d{3}-\d{5}/\d{4}(-\d{2})?$", value)
-        if not match:
-            raise serializers.ValidationError("Número de RO inválido.")
-
-        return value
-
-    def validate_rg_pm_condutor_ocorrencia(self, value):
-        match = re.match(r"\d{5,6}", value)
-        if not match:
-            raise serializers.ValidationError("Número RG PM inválido.")
-
-        return value
+    #     return value
 
 
-class InfoOcorrenciaTwoSerializer(OperacaoSerializer):
-    numero_policiais_feridos = serializers.IntegerField(min_value=0)
-    numero_mortes_policiais = serializers.IntegerField(min_value=0)
-    numero_mortes_interv_estado = serializers.IntegerField(min_value=0)
-    numero_civis_feridos = serializers.IntegerField(min_value=0)
-    numero_civis_mortos_npap = serializers.IntegerField(min_value=0)
-    numero_veiculos_recuperados = serializers.IntegerField(min_value=0)
-    numero_adolescentes_apreendidos = serializers.IntegerField(min_value=0)
-
-
-class GeneralObservationSerializer(OperacaoSerializer):
+class InfoResultadosThreeSerializer(OperacaoSerializer):
+    houve_disparados_aeronave = serializers.BooleanField(required=True)
+    houve_registros_imagem = serializers.BooleanField(required=True)
+    local_preservado = serializers.BooleanField(required=True)
+    pericia_local = serializers.BooleanField(required=True)
+    pericia_aeronave = serializers.BooleanField(required=True)
+    pericia_veiculo_blindado = serializers.BooleanField(required=True)
+    pericia_viaturas = serializers.BooleanField(required=True)
+    pericia_iml = serializers.BooleanField(required=True)
+    pericia_outras = serializers.BooleanField(required=True)
     observacoes_gerais = serializers.CharField(allow_blank=True)
 
 

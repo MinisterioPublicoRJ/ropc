@@ -11,40 +11,50 @@ urlpatterns = [
         name="form-update"
     ),
     path(
-        "cadastro/informacoes/adpf-635/<uuid:form_uuid>",
-        views.OperationADPF635View.as_view(),
-        name="form-info-adpf-635"
+        "cadastro/informacoes/gerais/parte-1/<uuid:form_uuid>",
+        views.OperationGeneralInfoPageOneView.as_view(),
+        name="form-general-info-page-one"
+    ),
+    path(
+        "cadastro/informacoes/gerais/parte-2/<uuid:form_uuid>",
+        views.OperationGeneralInfoPageTwoView.as_view(),
+        name="form-general-info-page-two"
     ),
     path(
         "cadastro/informacoes/operacionais/parte-1/<uuid:form_uuid>",
         views.OperationInfoPageOneView.as_view(),
-        name="form-info-operation-page-one"
+        name="form-operational-info-page-one"
     ),
     path(
         "cadastro/informacoes/operacionais/parte-2/<uuid:form_uuid>",
         views.OperationInfoPageTwoView.as_view(),
-        name="form-info-operation-page-two"
+        name="form-operational-info-page-two"
     ),
     path(
-        "cadastro/informacoes/resultado/<uuid:form_uuid>",
-        views.OperationInfoResultRegisterView.as_view(),
+        "cadastro/informacoes/etapa-1-concluida/<uuid:form_uuid>",
+        views.OperationFirstStageFinishedView.as_view(),
+        name="form-first-stage-finished"
+    ),
+    path(
+        "cadastro/informacoes/resultado/parte-1/<uuid:form_uuid>",
+        views.OperationResultsPageOneView.as_view(),
         name="form-info-result"
     ),
     path(
-        "cadastro/informacoes/ocorrencia/parte-1/<uuid:form_uuid>",
-        views.OperationOcurrencePageOneView.as_view(),
+        "cadastro/informacoes/resultado/parte-2/<uuid:form_uuid>",
+        views.OperationResultsPageTwoView.as_view(),
         name="form-info-ocurrence-page-one"
     ),
     path(
-        "cadastro/informacoes/ocorrencia/parte-2/<uuid:form_uuid>",
-        views.OperationOcurrencePageTwoView.as_view(),
+        "cadastro/informacoes/resultado/parte-3/<uuid:form_uuid>",
+        views.OperationResultsPageThreeView.as_view(),
         name="form-info-ocurrence-page-two"
     ),
-    path(
-        "cadastro/informacoes/observacoes/<uuid:form_uuid>",
-        views.OperationGeneralObservation.as_view(),
-        name="form-observacoes-gerais"
-    ),
+    # path(
+    #     "cadastro/informacoes/observacoes/<uuid:form_uuid>",
+    #     views.OperationGeneralObservation.as_view(),
+    #     name="form-observacoes-gerais"
+    # ),
     path(
         "cadastro/completo/<uuid:form_uuid>",
         views.FormCompleteView.as_view(),

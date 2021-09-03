@@ -1,13 +1,9 @@
-const FORWARD_URL = '/operacoes/cadastro/informacoes/adpf-635/';
-const API_URL = '/v1/operacoes/cria-informacoes-gerais/';
+const FORWARD_URL = '/operacoes/cadastro/informacoes/gerais/parte-1/';
+const API_URL = '/v1/operacoes/cria-informacoes-registro/';
 const FORM_VAR_LIST = {
-    "data": "#data",
-    "hora": "#hora",
-    "municipio": "#municipio",
-    "bairro": "#bairro",
-    "localidade": "#localidade",
-    "endereco_referencia": "#endereco_referencia",
-    "batalhao_responsavel": "#batalhao_responsavel"
+  "numero_inquerito_mae": "#numero_inquerito_mae",
+  "tipo_operacao": "#tipo_operacao",
+  "nome_operacao": "#nome_operacao",
 };
 
 
