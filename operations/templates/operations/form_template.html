@@ -77,5 +77,13 @@
 {% endblock content %}
 
 {% block extra_js %}
-      <script src="{% static 'js/informacoes_gerais.js' %}"></script>
+      <script>
+      const FORWARD_URL = '/operacoes/cadastro/informacoes/gerais/parte-1/';
+      const API_URL = '/v1/operacoes/cria-informacoes-registro/';
+      const FORM_VAR_LIST = {
+        "numero_inquerito_mae": "#numero_inquerito_mae",
+        "tipo_operacao": "#tipo_operacao",
+        "nome_operacao": "#nome_operacao",
+      };
+      </script>
 {% endblock extra_js %}

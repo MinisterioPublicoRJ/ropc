@@ -39,18 +39,18 @@
             </div>
         </div>
         <div class="page-final-cadastro">
-            <img src="{% static " img/icon-checked.png" %}" alt="icon-checked">
+            <img src="{% static "img/icon-checked.png" %}" alt="icon-checked">
             <span style="margin-top: -25px">Primeira etapa concluída yada yada!</span>
             <p>A preencher de acordo com o design aqui</p>
             <div class="btns-forms">
                 <div class="btns-forms">
-                    <a href="{% url 'home' %}">
-                        <button type="submit" class="btn-previus">Página inicial</button>
+                    <a href="{% url 'operations:operations-list' %}">
+                        <button type="submit" class="btn-previus">Salvar e fechar cadastro</button>
                     </a>
                 </div>
                 <div class="btns-forms">
-                    <a href="{% url 'operations:form' %}">
-                        <button type="submit" class="btn-next">Cadastrar nova operação +</button>
+                    <a href="{% url 'operations:form-info-result-page-one' form_uuid %}">
+                        <button type="submit" class="btn-next" >Cadastrar resultados ></button>
                     </a>
                 </div>
             </div>
@@ -59,3 +59,19 @@
 </div>
 
 {% endblock content %}
+
+<!-- {% block extra_js %}
+<script>
+    //toggleOrdemOperacoesField();
+    const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/parte-1/';
+    const formUUID = "{{ form_uuid }}"
+
+    function goToNextPage(event) {
+        event.preventDefault();
+        const forwardFullURL = FORWARD_URL + formUUID;
+
+        window.location = forwardFullURL;
+    }
+</script>
+
+{% endblock extra_js %} -->

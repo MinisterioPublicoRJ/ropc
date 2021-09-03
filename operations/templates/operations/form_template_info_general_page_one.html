@@ -47,8 +47,12 @@
             <input type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" required>
           </div>
           <div class="styled-select">
-            <label>Horário da operação </label>
-            <input type="time" id="hora" value={{ operacao_info.hora|default:"''" }} name="hora" required>
+            <label>Hora de início da operação </label>
+            <input type="time" id="hora_inicio" value={{ operacao_info.hora_inicio|default:"''" }} name="hora_inicio" required>
+          </div>
+          <div class="styled-select">
+            <label>Hora de término da operação </label>
+            <input type="time" id="hora_termino" value={{ operacao_info.hora_termino|default:"''" }} name="hora_termino" required>
           </div>
         </div>
         <div class="box-form-group">
@@ -59,7 +63,7 @@
                   class="form-control required"
                   id="municipio"
                   name="municipio"
-                  onchange="getBairros(this); getBatalhoes(this);"
+                  onchange="getBairros(this);"
                   required
                   >
                   <option value="">-</option>
@@ -83,15 +87,6 @@
           <div class="form-group">
             <label>Endereço de Referência</label>
             <input type="text" name="endereco_referencia" value="{{ operacao_info.endereco_referencia|default:'' }}" id="endereco_referencia" class="form-control required" required>
-          </div>
-          <div class="styled-select">
-            <label>Batalhão Responsável</label>
-            <select class="form-control required" id="batalhao_responsavel" name="batalhao_responsavel" required>
-                <option value="">-</option>
-                {% for batalhao in batalhoes %}
-                <option value="{{ batalhao.bpm}}" {% if batalhao.bpm == operacao_info.batalhao_responsavel|default:"''" %} selected {% endif %}>{{batalhao.bpm}}</option>
-                {% endfor %}
-            </select>
           </div>
         </div>
         <div class="box-form-group">

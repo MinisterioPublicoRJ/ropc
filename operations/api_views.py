@@ -133,7 +133,7 @@ class OperationalInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
     lookup_field = "identificador"
     model_class = Operacao
 
-    next_section_number = 6
+    next_section_number = 7
 
     def get_operation(self):
         identificador = self.kwargs.get(self.lookup_url_kwarg)

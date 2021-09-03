@@ -120,11 +120,11 @@ class Operacao(models.Model):
     data = models.DateField("Data", null=True, blank=True)
     hora_inicio = models.TimeField("Hora de início da operação", null=True, blank=True)
     hora_termino = models.TimeField("Hora de término da operação", null=True, blank=True)
-    localidade_operacao = models.ManyToManyField(LocalidadeOperacao)
-    # localidade = models.CharField("Localidade", max_length=255, null=True, blank=True) 
-    # municipio = models.CharField("Município", max_length=255, null=True, blank=True)
-    # bairro = models.CharField("Bairro", max_length=255, null=True, blank=True)
-    # endereco_referencia = models.CharField("Endereço de referência", max_length=255, null=True, blank=True)
+    # localidade_operacao = models.ManyToManyField(LocalidadeOperacao)
+    localidade = models.CharField("Localidade", max_length=255, null=True, blank=True) 
+    municipio = models.CharField("Município", max_length=255, null=True, blank=True)
+    bairro = models.CharField("Bairro", max_length=255, null=True, blank=True)
+    endereco_referencia = models.CharField("Endereço de referência", max_length=255, null=True, blank=True)
     # coordenadas_geo = models.CharField("Referência geográfica", max_length=100, null=True, blank=True)
 
     ### Info Gerais Two
@@ -195,9 +195,21 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
-    # comunicou escolas e saude?
-    # escolas perto?
-    # hospitais perto?
+    comunicou_escolas_saude = models.BooleanField(
+        "Comunicou a equipamentos de saúde e escolas?",
+        null=True,
+        blank=True,
+    )
+    escolas_perto = models.BooleanField(
+        "Escolas nas proximidades?",
+        null=True,
+        blank=True,
+    )
+    hospitais_perto = models.BooleanField(
+        "Hospitais nas proximidades?",
+        null=True,
+        blank=True,
+    )
     descricao_analise_risco = models.TextField(
         "Análise de riscos e medidas de controles de danos colaterais das operações e de disparos de confrontos",
         null=True,
@@ -234,7 +246,11 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
-    # presos em outros mandados?
+    numero_presos_outros_mandados = models.PositiveIntegerField(
+        "Número de presos indicados em outros mandados de prisão pendentes",
+        default=0,
+        blank=True
+    )
     numero_presos_flagrante = models.PositiveIntegerField(
         "Número de presos em flagrante",
         default=0,
@@ -257,6 +273,11 @@ class Operacao(models.Model):
     )
     numero_mortes_interv_estado = models.PositiveIntegerField(
         "Número de mortes por intervenção de agentes do Estado",
+        default=0,
+        blank=True
+    )
+    numero_civis_mortos = models.PositiveIntegerField(
+        "Número de civis mortos",
         default=0,
         blank=True
     )

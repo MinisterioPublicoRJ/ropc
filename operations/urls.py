@@ -38,17 +38,17 @@ urlpatterns = [
     path(
         "cadastro/informacoes/resultado/parte-1/<uuid:form_uuid>",
         views.OperationResultsPageOneView.as_view(),
-        name="form-info-result"
+        name="form-info-result-page-one"
     ),
     path(
         "cadastro/informacoes/resultado/parte-2/<uuid:form_uuid>",
         views.OperationResultsPageTwoView.as_view(),
-        name="form-info-ocurrence-page-one"
+        name="form-info-result-page-two"
     ),
     path(
         "cadastro/informacoes/resultado/parte-3/<uuid:form_uuid>",
         views.OperationResultsPageThreeView.as_view(),
-        name="form-info-ocurrence-page-two"
+        name="form-info-result-page-three"
     ),
     # path(
     #     "cadastro/informacoes/observacoes/<uuid:form_uuid>",

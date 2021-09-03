@@ -112,35 +112,36 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     numero_adolescentes_apreendidos = serializers.IntegerField(required=True, min_value=0)
     numero_policiais_feridos = serializers.IntegerField(required=True, min_value=0)
     numero_mortes_policiais = serializers.IntegerField(required=True, min_value=0)
-    numero_mortes_interv_estado = serializers.IntegerField(required=True, min_value=0)
+    numero_civis_mortos = serializers.IntegerField(required=True, min_value=0)
+    # numero_mortes_interv_estado = serializers.IntegerField(required=True, min_value=0)
     numero_civis_feridos = serializers.IntegerField(required=True, min_value=0)
-    numero_civis_mortos_npap = serializers.IntegerField(required=True, min_value=0)
+    # numero_civis_mortos_npap = serializers.IntegerField(required=True, min_value=0)
     numero_veiculos_recuperados = serializers.IntegerField(required=True, min_value=0)
     houve_apreensao_drogas = serializers.BooleanField(required=True)
     tipos_drogas_apreendidas = serializers.CharField(allow_blank=True)
 
     def validate(self, attrs):
         # Verifica se já existem dados de ocorrência
-        ser = InfoOcorrenciaOneSerializer(instance=self.instance)
-        has_occurence_data = any(ser.data.values())
+        # ser = InfoOcorrenciaOneSerializer(instance=self.instance)
+        # has_occurence_data = any(ser.data.values())
 
         # Precisa verificar se tem registro de ocorrência caso seja Em
-        if attrs["tipo_operacao"] == "Em" and not attrs["numero_ordem_operacoes"]:
-            raise serializers.ValidationError(
-                {"numero_ordem_operacoes": "Número da ordem deve ser fornecido."}
-            )
+        # if attrs["tipo_operacao"] == "Em" and not attrs["numero_ordem_operacoes"]:
+        #     raise serializers.ValidationError(
+        #         {"numero_ordem_operacoes": "Número da ordem deve ser fornecido."}
+        #     )
 
-        if (
-            self.instance.houve_ocorrencia_operacao and not
-            attrs["houve_ocorrencia_operacao"] and
-            has_occurence_data is True
-        ):
-            msg = "Operação com ocorrência não pode ser atualizada para sem ocorrência."
-            raise serializers.ValidationError(
-                {
-                    "houve_ocorrencia_operacao": msg
-                }
-            )
+        # if (
+        #     self.instance.houve_ocorrencia_operacao and not
+        #     attrs["houve_ocorrencia_operacao"] and
+        #     has_occurence_data is True
+        # ):
+        #     msg = "Operação com ocorrência não pode ser atualizada para sem ocorrência."
+        #     raise serializers.ValidationError(
+        #         {
+        #             "houve_ocorrencia_operacao": msg
+        #         }
+        #     )
         return attrs
 
 
@@ -148,7 +149,7 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
     numero_explosivos_apreendidos = serializers.IntegerField(required=True, min_value=0)
     numero_armas_apreendidas = serializers.IntegerField(required=True, min_value=0)
     numero_fuzis_apreendidos = serializers.IntegerField(required=True, min_value=0)
-    numero_presos = serializers.IntegerField(required=True, min_value=0)
+    # numero_presos = serializers.IntegerField(required=True, min_value=0)
     numero_carregadores_apreendidos = serializers.IntegerField(required=True, min_value=0)
     numero_municoes_apreendidas = serializers.IntegerField(required=True, min_value=0)
 

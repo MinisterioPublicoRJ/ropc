@@ -1,12 +1,3 @@
-const FORWARD_URL = '/operacoes/cadastro/informacoes/gerais/parte-1/';
-const API_URL = '/v1/operacoes/cria-informacoes-registro/';
-const FORM_VAR_LIST = {
-  "numero_inquerito_mae": "#numero_inquerito_mae",
-  "tipo_operacao": "#tipo_operacao",
-  "nome_operacao": "#nome_operacao",
-};
-
-
 function getBairros(object) {
   const bairroUrl = `/v1/dados/bairros-rj/${object.value}`;
   fetch(bairroUrl, { method: "GET" })
