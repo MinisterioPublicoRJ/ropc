@@ -12,11 +12,12 @@ a:link{
   text-decoration: none;
 }
 .navbarLeft-list ul a li:hover{
-  color: #0055FF;
+  color: #FDBC2D;
 }
 #first-li,
 #second-li,
-#third-li{
+#third-li,
+#fourth-li{
   display: flex;
 }
 .main-page{
@@ -27,7 +28,7 @@ a:link{
 }
 .navbarLeft{
   text-align: center;
-  background-color: #F8F8F8;
+  background-color: #1A1A1A;
   box-shadow: 0px 3px 10px #0000001A;
   opacity: 1;
   grid-area: navBar;
@@ -70,9 +71,9 @@ progress[value]{
   list-style: none;
   text-align: left;
   font-size: 1.300rem;
-  color: #707070;
+  color: #D4D4D5;
   margin-top: 60px;
-  margin-left: 2px;
+  margin-left: 6px;
 }
 .navbarLeft ul {
   margin-top: 40px;

@@ -118,11 +118,13 @@ function submitFormInfo(event) {
 var firstTarget = document.getElementById("first-li");
 var secondTarget = document.getElementById("second-li");
 var thirdTarget = document.getElementById("third-li");
+var fourthTarget = document.getElementById("fourth-li");
+
 
 // Mudar cor e imagem da primeira li
 
 var mouseOverFunctionFirtsLi = function () {
-  document.getElementById("target-image-first-li").setAttribute("src", `${STATIC_PREFIX}img/home-blue.png`);
+  document.getElementById("target-image-first-li").setAttribute("src", `${STATIC_PREFIX}img/home-amarela.png`);
 };
 firstTarget.onmouseover = mouseOverFunctionFirtsLi;
 
@@ -133,7 +135,7 @@ firstTarget.onmouseleave = mouseLeaveFunctionFirtsLi;
 
 // Mudar cor e imagem da segunda li
 var mouseOverFunctionSecondLi = function () {
-  document.getElementById("target-image-second-li").setAttribute("src", `${STATIC_PREFIX}img/align-left-blue.png`);
+  document.getElementById("target-image-second-li").setAttribute("src", `${STATIC_PREFIX}img/align-left-amarela.png`);
 };
 secondTarget.onmouseover = mouseOverFunctionSecondLi;
 
@@ -144,7 +146,7 @@ secondTarget.onmouseleave = mouseLeaveFunctionSecondLi;
 
 // Mudar cor e imagem da terceira li
 var mouseOverFunctionThirdLi = function () {
-  document.getElementById("target-image-third-li").setAttribute("src", `${STATIC_PREFIX}img/file-plus-blue.png`);
+  document.getElementById("target-image-third-li").setAttribute("src", `${STATIC_PREFIX}img/file-plus-amarela.png`);
 };
 thirdTarget.onmouseover = mouseOverFunctionThirdLi;
 
@@ -152,3 +154,14 @@ var mouseLeaveFunctionThirdLi = function () {
   document.getElementById("target-image-third-li").setAttribute("src",  `${STATIC_PREFIX}img/file-plus.png`);
 };
 thirdTarget.onmouseleave = mouseLeaveFunctionThirdLi;
+
+// Mudar cor e imagem da quarta li
+var mouseOverFunctionFourthdLi = function () {
+  document.getElementById("target-image-fourth-li").setAttribute("src", `${STATIC_PREFIX}img/chart-amarelo.png`);
+};
+fourthTarget.onmouseover = mouseOverFunctionFourthdLi;
+
+var mouseLeaveFunctionFourthdLi = function () {
+  document.getElementById("target-image-fourth-li").setAttribute("src",  `${STATIC_PREFIX}img/chart.png`);
+};
+fourthTarget.onmouseleave = mouseLeaveFunctionFourthdLi;
