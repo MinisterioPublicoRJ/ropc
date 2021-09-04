@@ -1,9 +1,10 @@
 function getBairros(object) {
+  field_number = object.id.split('-')[1]
   const bairroUrl = `/v1/dados/bairros-rj/${object.value}`;
   fetch(bairroUrl, { method: "GET" })
     .then((response) => response.json())
     .then((data) => {
-      let bairroSelector = document.querySelector("#bairro");
+      let bairroSelector = document.querySelector(`#bairro-${field_number}`); //bairro-1, bairro-2...
       bairroSelector.innerHTML = "";
       let option = document.createElement("option");
       option.text = "-";

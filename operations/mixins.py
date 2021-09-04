@@ -7,9 +7,10 @@ class AllowPUTAsCreateMixin:
         self.instance = self.get_operation()
 
         partial = kwargs.pop('partial', False)
-        serializer = self.get_serializer(self.instance, data=request.data, partial=partial)
+        data = self.preprocess_data(request.data)
+        serializer = self.get_serializer(self.instance, data=data, partial=partial)
+        print(serializer)
         serializer.is_valid(raise_exception=True)
-        print('ra')
         self.perform_create_or_update(serializer)
 
         if getattr(self.instance, '_prefetched_objects_cache', None):
@@ -30,3 +31,6 @@ class AllowPUTAsCreateMixin:
     def perform_create_or_update(self, serializer):
         serializer.instance.secao_atual = self.next_section_number
         serializer.save()
+
+    def preprocess_data(self, data):
+        return data

@@ -41,93 +41,53 @@
         <div class="form-main">
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
               <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
+
                 <div class="box-form-group">
-                    <div class="">
-                        <label for="data">Boletim de Ocorrência da Polícia Militar (BOPM) </label>
-                        <input
-                            type="text"
-                            name="boletim_ocorrencia_pm"
-                            id="boletim_ocorrencia_pm"
-                            class="form-control" value="{{operacao_info.boletim_ocorrencia_pm|default:''}}" required>
+                    <div class="form-group">
+                        <label>Artefatos explosivos apreendidos?</label>
+                        <input type="number" min="1" value="{{ operacao_info.numero_presos_elencados|default:0 }}"
+                            name="numero_presos_elencados" id="numero_presos_elencados" class="form-control" required>
                     </div>
-                    <div class="">
-                        <label for="data">Registro de Ocorrência</label>
-                        <input
-                            type="text"
-                            placeholder="000-00000/0000"
-                            name="registro_ocorrencia"
-                            id="registro_ocorrencia"
-                            class="form-control" value="{{ operacao_info.registro_ocorrencia|default:''}}" required>
+                    <div class="form-group">
+                        <label>Armas apreendidas?</label>
+                        <input type="number" min="0" value="{{ operacao_info.numero_presos_outros_mandados|default:0 }}"
+                            name="numero_presos_outros_mandados" id="numero_presos_outros_mandados" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Do total de armas, quantos fuzis?</label>
+                        <input type="number" min="0" value="{{ operacao_info.numero_presos_flagrante|default:0 }}"
+                            name="numero_presos_flagrante" id="numero_presos_flagrante" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Carregadores apreendidos?</label>
+                        <input type="number" min="0" value="{{ operacao_info.numero_adolescentes_apreendidos|default:0 }}"
+                            name="numero_adolescentes_apreendidos" id="numero_adolescentes_apreendidos" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Munições apreendidas?</label>
+                        <input type="number" min="0" value="{{ operacao_info.numero_policiais_feridos|default:0 }}"
+                            name="numero_policiais_feridos" id="numero_policiais_feridos" class="form-control" required>
                     </div>
                 </div>
-                <div class="box-form-group">
-                    <div class="">
-                        <label for="data">Nome do Condutor da ocorrência</label>
-                        <input
-                            type="text"
-                            name="nome_condutor_ocorrencia"
-                            id="nome_condutor_ocorrencia"
-                            class="form-control" value="{{ operacao_info.nome_condutor_ocorrencia|default:'' }}" required>
-                    </div>
-                    <div class="">
-                        <label for="data">RG PM do Condutor da ocorrência</label>
-                        <input
-                            type="text"
-                            name="rg_pm_condutor_ocorrencia"
-                            id="rg_pm_condutor_ocorrencia"
-                            class="form-control" value="{{ operacao_info.rg_pm_condutor_ocorrencia|default:'' }}" required>
-                    </div>
-                </div>
-                <div class="box-form-group">
-                    <div class="">
-                        <label>Posto/graduação do Condutor da ocorrência</label>
-                        <div class="styled-select">
-                        <select class="form-control required" id="posto_condutor_ocorrencia" name="posto_condutor_ocorrencia" required>
-                            <option value="">-</option>
-                            {% for posto in postos_comandante %}
-                            <option value="{{ posto.0 }}" {% if posto.0 == operacao_info.posto_condutor_ocorrencia %} selected {% endif %}>{{ posto.1 }}</option>
-                            {% endfor %}
-                        </select>
-                        </div>
-                    </div>
-                    <div class="">
-                        <label for="data">Número de armas apreendidas </label>
-                        <input
-                            type="number" min="0"
-                            name="numero_armas_apreendidas"
-                            id="numero_armas_apreendidas"
-                            class="form-control" value="{{ operacao_info.numero_armas_apreendidas|default:'' }}" required>
-                    </div>
-                </div>
-                <div class="box-form-group">
-                    <div class="">
-                        <label for="data">Número de fuzis apreendidos</label>
-                        <input
-                            type="number" min="0"
-                            name="numero_fuzis_apreendidos"
-                            id="numero_fuzis_apreendidos"
-                            class="form-control" value="{{ operacao_info.numero_fuzis_apreendidos|default:''}}" required>
-                    </div>
-                    <div class="">
-                        <label for="data">Número de presos</label>
-                        <input
-                            type="number" min="0"
-                            name="numero_presos"
-                            id="numero_presos"
-                            class="form-control" value="{{ operacao_info.numero_presos|default:''}}" required>
-                    </div>
-                </div>
-                <div class="box-form-group">
-                    <div class="input-type-checked">
-                        <label for="data">Houve apreensao de drogas?</label>
-                            <div class="form-control" id="houve_apreensao_drogas" name="houve_apreensao_drogas" required>
-                                <label> Sim</label>
-                                <input type="radio" name="option-confronto" {% if operacao_info.houve_apreensao_drogas %}checked{% endif %} value="1">
-                                <label style="margin-left: 20px">Não</label>
-                                <input type="radio" name="option-confronto" {% if operacao_info.houve_apreensao_drogas == False %}checked{% endif %} value="0">
+
+
+
+                    <div class="box-form-group">
+                        Especifique nestes campos os cartuchos e calibres apreendidos:
+                        <div id="cartuchos-container">
+                            <div class="form-group">
+                                <label>Cartucho</label>
+                                <input type="text" name="cartucho-1" value="{{ operacao_info.endereco_referencia|default:'' }}"
+                                    id="cartucho-1" class="form-control required" required>
+
+                                <label>Calibre</label>
+                                <input type="text" id="calibre-1" value="{{ operacao_info.localidade|default:'' }}" name="calibre-1" required>
                             </div>
+                        </div>
+                        <button id="add-another" onclick="addAnother(event)">Adicionar localidade</button>
                     </div>
-                </div>
+                
+
             </form>
             <div class="btns-forms">
                 <div class="btns-forms">

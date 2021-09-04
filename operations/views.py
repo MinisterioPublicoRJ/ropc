@@ -125,6 +125,7 @@ class OperationGeneralInfoPageOneView(LoginRequiredMixin, OperationViewMixin, Te
         except:
             selected_municipio = context["municipios"][0]["nm_mun"]
         context["bairros"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
+        # mudar context pra entregar localidades corretamente
         return context
 
 
