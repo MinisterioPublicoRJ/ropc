@@ -6,13 +6,15 @@
 {% block content %}
 <div class="main-initial-page">
         <div class="table-list">
-            <h2>Lista de operações</h2>
-            <h4>Aqui é onde se encontra as informações referentes as operações cadastradas e onde você pode editá-las.</h4>
+            <h2>Últimas operações cadastradas</h2>
+            <p style="margin-left: 30px">Aqui é onde se encontra as informações referentes as operações cadastradas e onde você pode editá-las.</p>
             <table>
                 <tr>
+                    <th>Status</th>
                     <th>Tipo Ação Repressiva</th>
+                    <th>Operação</th>
                     <th>Data</th>
-                    <th>Batalhão</th>
+                    <th>Responsável/Delegacia</th>
                     <th>Local</th>
                 </tr>
                 {% for info_operacao in object_list %}

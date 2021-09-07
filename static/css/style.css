@@ -19,12 +19,19 @@ a:link{
 #third-li,
 #fourth-li{
   display: flex;
+  margin-left: 30px;
 }
 .main-page{
   display: grid;
   height: 100%;
+  background-color: #292929;
   grid-template-areas:
   'navBar pageForm pageForm pageForm pageForm pageForm'
+}
+ul .wrapper-initial-page{
+  width: 100%;
+  margin-top: 10px;
+  border-bottom: solid 0.3px #D4D4D5
 }
 .navbarLeft{
   text-align: center;
@@ -47,7 +54,6 @@ a:link{
   color: #707070;
   width: 100vh;
 }
-
 progress::-moz-progress-bar {
   background: #0055FF;
 }
@@ -77,7 +83,7 @@ progress[value]{
 }
 .navbarLeft ul {
   margin-top: 40px;
-  margin-left: -17px;
+  padding-left: 0px;
 }
 .navbarLeft-list img{
   height: 33px;
@@ -212,7 +218,7 @@ label {
 }
 .box-logo-mp{
   position:absolute;
-  bottom: 30px; 
+  bottom: 0px; 
   margin-left: 10px;
 }
 .error-message{
