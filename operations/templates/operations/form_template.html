@@ -39,33 +39,35 @@
       </div>
     </div>
     <div class="form-main">
+      <p>Bem-vindo ao formulário de cadastro de operações.</p>
+      <p>
+        Para começar sugerimos o preenchimento destes campos a seguir.
+        Assim poderemos dar seguimento ao preenchimento de maneira estratégica.
+      </p>
       <form action="/" id="main-form"   method="post" enctype="multipart/form-data">
           <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
-
         <div class="form-group">
-          <label>Número do inquérito mãe</label>
-          <input type="text" name="numero_inquerito_mae" value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
-            id="numero_inquerito_mae" class="form-control required" required>
+          <input type="text" placeholder="Nome da Operação" name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
+            id="nome_operacao" class="form-control required" required>
         </div>
-
         <div class="form-group">
-          <label for="fname">Tipo de operação</label>
           <div class="styled-select">
             <select class="form-control required" id="tipo_operacao" name="tipo_operacao" required>
-              <option value="">-</option>
+              <option value="">Tipo de operação</option>
               {% for tipo_operacao in tipos_operacoes %}
               <option value="{{ tipo_operacao.0 }}" {% if tipo_operacao.0 == operacao_info.tipo_operacao %}selected{% endif %}> {{ tipo_operacao.1 }} </option>
               {% endfor %}
             </select>
           </div>
         </div>
-
         <div class="form-group">
-          <label>Nome da Operação</label>
-          <input type="text" name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
+          <input type="text" class="cor-vermelha" placeholder="Número do inquérito mãe" name="numero_inquerito_mae" value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
+            id="numero_inquerito_mae" class="form-control required" required>
+        </div>
+        <div class="form-group">
+          <input placeholder="Número do procedimento (TJRJ)" type="text" name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
             id="nome_operacao" class="form-control required" required>
         </div>
-
       </form>
       <div class="btns-forms">
           <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
