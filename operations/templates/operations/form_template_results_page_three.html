@@ -41,60 +41,82 @@
         <div class="form-main">
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
               <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
+
+            <div class="box-form-group"></div>
+            <div class="input-type-checked">
+                <label for="data">Houve disparos embarcado da aeronave?</label>
+                <div class="form-control" id="houve_disparados_aeronave" name="houve_disparados_aeronave" required>
+                    <label> Sim</label>
+                    <input type="radio" name="option-disparos" {% if operacao_info.houve_disparados_aeronave %}checked{% endif %}
+                        value="1">
+                    <label style="margin-left: 20px">Não</label>
+                    <input type="radio" name="option-disparos" {% if operacao_info.houve_disparados_aeronave == False %}checked{% endif %}
+                        value="0">
+                </div>
+                <label for="data">Foram feitos registros de imagem a partir da aeronave?</label>
+                <div class="form-control" id="houve_registros_imagem" name="houve_registros_imagem" required>
+                    <label> Sim</label>
+                    <input type="radio" name="option-registros" value="1" {% if operacao_info.houve_registros_imagem %}checked{% endif %}>
+                    <label style="margin-left: 20px">Não</label>
+                    <input type="radio" name="option-registros" value="0" {% if operacao_info.houve_registros_imagem == False %}checked{% endif %}>
+                </div>
+                <label for="data">O local permaneceu preservado?</label>
+                <div class="form-control" id="local_preservado" name="local_preservado" required>
+                    <label> Sim</label>
+                    <input type="radio" name="option-preservado" value="1" {% if operacao_info.local_preservado %}checked{% endif %}>
+                    <label style="margin-left: 20px">Não</label>
+                    <input type="radio" name="option-preservado" value="0" {% if operacao_info.local_preservado == False %}checked{% endif %}>
+                </div>
+            </div>
+            </div>
+
               <div class="box-form-group">
                 <div class="">
-                    <label for="data">Número de policiais feridos</label>
-                    <input type="number" min="0" name="numero_policiais_feridos" id="numero_policiais_feridos"
-                     class="form-control" value="{{ operacao_info.numero_policiais_feridos|default:'' }}" required>
-                </div>
-                <div class="">
-                    <label for="data">Número de mortes policiais</label>
-                    <input type="number" min="0" name="numero_mortes_policiais" id="numero_mortes_policiais"
-                     class="form-control" value="{{ operacao_info.numero_mortes_policiais|default:'' }}" required>
+                    <label for="data">Caso a pericia tenha sido acionada, quais delas foram feitas?</label>
+                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                            <label> Local</label>
+                            <input type="checkbox" name="pericia_local" id="pericia_local" value="0" {% if operacao_info.pericia_local %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                            <label> Aeronave</label>
+                            <input type="checkbox" name="pericia_aeronave" id="pericia_aeronave" value="0" {% if operacao_info.pericia_aeronave %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                            <label> Veículo blindado</label>
+                            <input type="checkbox" name="pericia_veiculo_blindado" id="pericia_veiculo_blindado" value="0" {% if operacao_info.pericia_veiculo_blindado %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                            <label> Viaturas</label>
+                            <input type="checkbox" name="pericia_viaturas" id="pericia_viaturas" value="0" {% if operacao_info.pericia_viaturas %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                            <label> IML</label>
+                            <input type="checkbox" name="pericia_iml" id="pericia_iml" value="0" {% if operacao_info.pericia_iml %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                            <label> Outras</label>
+                            <input type="checkbox" name="pericia_outras" id="pericia_outras" value="0" {% if operacao_info.pericia_outras %}checked{% endif %}>
+                        </div>
                 </div>
             </div>
+
             <div class="box-form-group">
                 <div class="">
-                    <label for="data">Número de civis feridos</label>
-                    <input type="number" min="0" name="numero_civis_feridos" id="numero_civis_feridos"
-                     class="form-control" value="{{ operacao_info.numero_civis_feridos|default:'' }}" required>
-                </div>
-                <div class="">
-                    <label for="data">Nº de civis mortos – morte não provocada por agente policiais </label>
-                    <input type="number" min="0" name="numero_civis_mortos_npap" id="numero_civis_mortos_npap"
-                     class="form-control" value="{{ operacao_info.numero_civis_mortos_npap|default:'' }}" required>
+                    <label for="name">Observações Gerais</label>
+                    <textarea style="width: 100vh; height: 150px;" type="text" id="observacoes_gerais"
+                        value="{{ operacao_info.observacoes_gerais|default:'' }}" name="observacoes_gerais"
+                        required>{{ operacao_info.observacoes_gerais|default:'' }}</textarea>
                 </div>
             </div>
-            <div class="box-form-group">
-                <div class="">
-                    <label for="data">Número de mortes por intervenção de agentes do Estado</label>
-                    <input
-                        type="number" min="0" name="numero_mortes_interv_estado" id="numero_mortes_interv_estado"
-                         class="form-control" value="{{ operacao_info.numero_mortes_interv_estado|default:'' }}" required>
-                </div>
-                <div class="">
-                    <label for="data">Número de adolescentes apreendidos</label>
-                    <input
-                        type="number" min="0"
-                        name="numero_adolescentes_apreendidos"
-                        id="numero_adolescentes_apreendidos"
-                        class="form-control" value="{{ operacao_info.numero_adolescentes_apreendidos|default:'' }}" required>
-                </div>
-            </div>
-            <div class="box-form-group">
-                <div class="">
-                    <label for="data">Número de veículos recuperados</label>
-                    <input
-                        type="number" min="0" name="numero_veiculos_recuperados" id="numero_veiculos_recuperados"
-                        class="form-control" value="{{ operacao_info.numero_veiculos_recuperados|default:'' }}" required>
-                </div>
-            </div>
+            
+
                 <div class="btns-forms" style="margin-left: 300px;">
                     <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
                 </div>
+
             </form>
             <div class="btns-forms" style="margin-right: 300px; margin-top: -80px;">
-                <a href="{% url 'operations:form-info-ocurrence-page-one' form_uuid %}">
+                <a href="{% url 'operations:form-info-result-page-two' form_uuid %}">
                     <button type="submit" class="btn-previus">Anterior</button>
                 </a>
             </div>
