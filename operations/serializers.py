@@ -70,6 +70,7 @@ class InfoGeralOperacaoOneSerializer(OperacaoSerializer):
                 loc_instances = []
                 for loc_obj in val:
                     loc_instances.append(LocalidadeOperacao.objects.create(**loc_obj))
+                instance.localidade_operacao.clear()
                 instance.localidade_operacao.add(*loc_instances)
             else:
                 instance.__setattr__(key, val)

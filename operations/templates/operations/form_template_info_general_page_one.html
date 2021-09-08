@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load getattribute %}
 {% block title %}
 <title>Cadastro de Operaçãoes</title>
 {% endblock title %}
@@ -57,42 +58,48 @@
         </div>
 
         <div id="localidades-container">
+          {% for localidade in operacao_info.localidade_operacao %}
           <div class="box-form-group">
               <div class="form-group">
                 <label>Município da Operação </label>
                 <div class="styled-select">
                   <select
                       class="form-control required"
-                      id="municipio-1"
-                      name="municipio-1"
+                      id="municipio-{{ forloop.counter }}"
+                      name="municipio-{{ forloop.counter }}"
                       onchange="getBairros(this);"
                       required
                       >
                       <option value="">-</option>
                       {% for municipio in municipios %}
-                      <option value="{{ municipio.nm_mun }}" {% if municipio.nm_mun == operacao_info.municipio-1 %} selected {% endif %}>{{ municipio.nm_mun}}</option>
+                      <option value="{{ municipio.nm_mun }}" {% if municipio.nm_mun == localidade.municipio %} selected {% endif %}>{{ municipio.nm_mun }}</option>
                       {% endfor %}
                   </select>
                 </div>
               </div>
               <div class="styled-select">
                 <label>Bairro da operação </label>
-                <select class="form-control required" id="bairro-1" name="bairro-1" required>
+                <select class="form-control required" id="bairro-{{ forloop.counter }}" name="bairro-{{ forloop.counter }}" required>
                     <option value="">-</option>
-                    {% for bairro in bairros %}
-                    <option value="{{ bairro.bairro }}" {% if bairro.bairro == operacao_info.bairro-1|default:"''" %} selected {% endif %}>{{ bairro.bairro}}</option>
-                    {% endfor %}
+                    {% with y=forloop.counter|stringformat:"s" %}
+                    {% with bairros_x="bairros_"|add:y %}
+                      {% for bairro in bairros|getattribute:forloop.counter %}
+                      <option value="{{ bairro.bairro }}" {% if bairro.bairro == localidade.bairro|default:"''" %} selected {% endif %}>{{ bairro.bairro }}</option>
+                      {% endfor %}
+                    {% endwith %}
+                    {% endwith %}
                 </select>
               </div>
               <div class="form-group">
                 <label>Endereço de Referência</label>
-                <input type="text" name="endereco_referencia-1" value="{{ operacao_info.endereco_referencia-1|default:'' }}" id="endereco_referencia-1" class="form-control required" required>
+                <input type="text" name="endereco_referencia-{{ forloop.counter }}" value="{{ localidade.endereco_referencia|default:'' }}" id="endereco_referencia-{{ forloop.counter }}" class="form-control required" required>
               </div>
               <div class="styled-select">
                 <label>Localidade</label>
-                <input type="text" id="localidade-1" value="{{ operacao_info.localidade-1|default:'' }}" name="localidade-1" required>
+                <input type="text" id="localidade-{{ forloop.counter }}" value="{{ localidade.localidade|default:'' }}" name="localidade-{{ forloop.counter }}" required>
               </div>
           </div>
+          {% endfor %}
         </div>
 
         <button id="add-another" onclick="addAnother(event)">Adicionar localidade</button>
@@ -112,6 +119,8 @@
       <script>
         const FORWARD_URL = '/operacoes/cadastro/informacoes/gerais/parte-2/';
         const API_URL = '/v1/operacoes/cria-informacoes-gerais-parte-1/';
+        let COUNT_LOCALIDADE = {{ nb_localidades| escapejs }};
+
         let FORM_VAR_LIST = {
             "data": "#data",
             "hora_inicio": "#hora_inicio",
@@ -122,7 +131,13 @@
             "endereco_referencia-1": "#endereco_referencia-1",
           };
 
-        let COUNT_LOCALIDADE = 1;
+        for (i = 1; i < COUNT_LOCALIDADE + 1; i++) {
+            FORM_VAR_LIST[`municipio-${i}`] = `#municipio-${i}`
+            FORM_VAR_LIST[`bairro-${i}`] = `#bairro-${i}`
+            FORM_VAR_LIST[`localidade-${i}`] = `#localidade-${i}`
+            FORM_VAR_LIST[`endereco_referencia-${i}`] = `#endereco_referencia-${i}`
+          };
+        
         // get extra form count so we know what index to use for the next item.
 
         function addAnother(event) {

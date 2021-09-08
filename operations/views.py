@@ -119,13 +119,34 @@ class OperationGeneralInfoPageOneView(LoginRequiredMixin, OperationViewMixin, Te
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["nb_localidades"] = len(context["operacao_info"]["localidade_operacao"])
         context["municipios"] = Municipio.objects.get_ordered_values()
-        try:
-            selected_municipio = context["operacao_info"]["municipio"]
-        except:
+        context["bairros"] = []
+        for i in range(context["nb_localidades"]):
+            try:
+                selected_municipio = context["operacao_info"]["localidade_operacao"][i]["municipio"]
+            except:
+                selected_municipio = context["municipios"][0]["nm_mun"]
+            context[f"bairros_{i+1}"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
+            context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
+        if not context["nb_localidades"]:
             selected_municipio = context["municipios"][0]["nm_mun"]
-        context["bairros"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
-        # mudar context pra entregar localidades corretamente
+            context[f"bairros_1"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
+            context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
+        print(context)
+        
+        # context["localidades"] = context["operacao_info"]["localidade_operacao"]
+        # if not context["operacao_info"]["localidade_operacao"]:
+        #     loc = {"municipio": None, "bairro": None, "endereco_referencia": None, "localidade": None}
+        #     context["localidades"].append(loc)
+        # else:
+        #     nb_localidades = len(context["operacao_info"]["localidade_operacao"])
+        #     for i in range(nb_localidades):
+        #         loc = context["operacao_info"]["localidade_operacao"][i]
+        #         context["operacao_info"][f"municipio_{i+1}"] = loc['municipio']
+        #         context["operacao_info"][f"bairro_{i+1}"] = loc['bairro']
+        #         context["operacao_info"][f"endereco_referencia_{i+1}"] = loc['endereco_referencia']
+        #         context["operacao_info"][f"localidade_{i+1}"] = loc['localidade']
         return context
 
 
