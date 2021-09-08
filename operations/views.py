@@ -22,14 +22,15 @@ from operations.serializers import (
 
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
-    2: "operations:form-info-adpf-635",
-    3: "operations:form-info-operation-page-one",
-    4: "operations:form-info-operation-page-two",
-    5: "operations:form-info-result",
-    6: "operations:form-info-ocurrence-page-one",
-    7: "operations:form-info-ocurrence-page-two",
-    8: "operations:form-observacoes-gerais",
-    9: "operations:form-complete",
+    2: "operations:form-general-info-page-one",
+    3: "operations:form-general-info-page-two",
+    4: "operations:form-operational-info-page-one",
+    5: "operations:form-operational-info-page-two",
+    6: "operations:form-first-stage-finished",
+    7: "operations:form-info-result-page-one",
+    8: "operations:form-info-result-page-two",
+    9: "operations:form-info-result-page-three",
+    10: "operations:form-complete",
 }
 
 
@@ -52,27 +53,26 @@ class OperationViewMixin:
         # TODO: Refatorar essa lógica
         self.form_uuid = self.kwargs.get(self.lookup_url_kwarg)
         self.operacao = self.get_operation(self.request.user, self.form_uuid)
-        if (
-            self.operacao.houve_ocorrencia_operacao is False and
-            self.section_number == 7 and self.operacao.secao_atual == 8
-        ):
-            dest_url = URL_SECTION_MAPPER[5]
-            return redirect(
-                reverse(dest_url, kwargs={"form_uuid": self.form_uuid})
-            )
+        # if (
+        #     self.operacao.houve_ocorrencia_operacao is False and
+        #     self.section_number == 7 and self.operacao.secao_atual == 8
+        # ):
+        #     dest_url = URL_SECTION_MAPPER[5]
+        #     return redirect(
+        #         reverse(dest_url, kwargs={"form_uuid": self.form_uuid})
+        #     )
 
-        if (
-            self.operacao.houve_ocorrencia_operacao is False and
-            self.section_number in settings.SKIPPABLE_SECTIONS
-        ):
-            self.operacao.update_section(OperationGeneralObservation.section_number)
-            reverse_url = reverse(
-                "operations:form-observacoes-gerais",
-                kwargs={"form_uuid": self.form_uuid}
-            )
-            if request.path != reverse_url:
-                return redirect(reverse_url)
-
+        # if (
+        #     self.operacao.houve_ocorrencia_operacao is False and
+        #     self.section_number in settings.SKIPPABLE_SECTIONS
+        # ):
+        #     self.operacao.update_section(OperationGeneralObservation.section_number)
+        #     reverse_url = reverse(
+        #         "operations:form-observacoes-gerais",
+        #         kwargs={"form_uuid": self.form_uuid}
+        #     )
+        #     if request.path != reverse_url:
+        #         return redirect(reverse_url)
         if self.section_number > self.operacao.secao_atual:
             secao_atual_url = URL_SECTION_MAPPER[self.operacao.secao_atual]
             return redirect(
@@ -125,6 +125,7 @@ class OperationGeneralInfoPageOneView(LoginRequiredMixin, OperationViewMixin, Te
         except:
             selected_municipio = context["municipios"][0]["nm_mun"]
         context["bairros"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
+        # mudar context pra entregar localidades corretamente
         return context
 
 
@@ -160,12 +161,18 @@ class OperationInfoPageTwoView(LoginRequiredMixin, OperationViewMixin, TemplateV
     section_number = 5
 
 
-class OperationFirstStageFinishedView(LoginRequiredMixin, OperationViewMixin, TemplateView):
+class OperationFirstStageFinishedView(LoginRequiredMixin, TemplateView):
     template_name = "operations/form_template_first_stage_finished.html"
     lookup_url_kwarg = "form_uuid"
-    # serializer_class = ...
 
     section_number = 6
+
+    def get_context_data(self, **kwargs):
+        self.form_uuid = self.kwargs.get(self.lookup_url_kwarg)
+        
+        context = super().get_context_data(**kwargs)
+        context["form_uuid"] = self.form_uuid
+        return context
 
 
 class OperationResultsPageOneView(LoginRequiredMixin, OperationViewMixin, TemplateView):

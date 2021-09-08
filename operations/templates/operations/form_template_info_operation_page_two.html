@@ -41,68 +41,72 @@
     <div class="form-main">
       <form action="/" id="main-form" method="post" enctype="multipart/form-data">
         <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
+
         <div class="box-form-group">
           <div class="form-group">
-            <label for="fname">Tipo de operação</label>
-            <div class="styled-select">
-              <select class="form-control required" id="tipo_operacao" name="tipo_operacao" onchange="toggleOrdemOperacoesField();" required>
-                  <option value="">-</option>
-                {% for tipo_operacao in tipos_operacoes %}
-                <option value="{{ tipo_operacao.0 }}" {% if tipo_operacao.0 == operacao_info.tipo_operacao %}selected{% endif %}>{{ tipo_operacao.1 }}</option>
-                {% endfor %}
-              </select>
+            <label>Número de agentes?</label>
+            <input type="number" min="1" value="{{ operacao_info.numero_agentes_mobilizados|default:1 }}"
+              name="numero_agentes_mobilizados" id="numero_agentes_mobilizados" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Número de viaturas?</label>
+            <input type="number" min="0" value="{{ operacao_info.numero_viaturas_mobilizadas|default:0 }}" name="numero_viaturas_mobilizadas"
+              id="numero_viaturas_mobilizadas" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Número de veículos blindados?</label>
+            <input type="number" min="0" value="{{ operacao_info.numero_veiculos_blindados|default:0 }}" name="numero_veiculos_blindados"
+              id="numero_veiculos_blindados" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Número de aeronaves?</label>
+            <input type="number" min="0" value="{{ operacao_info.numero_aeronaves|default:0 }}" name="numero_aeronaves"
+              id="numero_aeronaves" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Equipes médicas de apoio?</label>
+            <input type="number" min="0" value="{{ operacao_info.numero_equipes_medicas|default:0 }}" name="numero_equipes_medicas"
+              id="numero_equipes_medicas" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="box-form-group">
+          <div class="input-type-checked">
+            <label for="data">Comunicou a equipamentos de saúde e escolas?</label>
+            <div class="form-control" id="comunicou_escolas_saude" name="comunicou_escolas_saude" required>
+              <label> Sim</label>
+              <input type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude %}checked{% endif %} value="1">
+              <label style="margin-left: 20px">Não</label>
+              <input type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude == False %}checked{% endif %} value="0">
+            </div>
+            <label for="data">Escolas nas proximidades?</label>
+            <div class="form-control" id="escolas_perto" name="escolas_perto" required>
+              <label> Sim</label>
+              <input type="radio" name="option-escolas" value="1" {% if operacao_info.escolas_perto %}checked{% endif %}>
+              <label style="margin-left: 20px">Não</label>
+              <input type="radio" name="option-escolas" value="0" {% if operacao_info.escolas_perto == False %}checked{% endif %}>
+            </div>
+            <label for="data">Hospitais nas proximidades?</label>
+            <div class="form-control" id="hospitais_perto" name="hospitais_perto" required>
+              <label> Sim</label>
+              <input type="radio" name="option-hospitais" value="1" {% if operacao_info.hospitais_perto %}checked{% endif %}>
+              <label style="margin-left: 20px">Não</label>
+              <input type="radio" name="option-hospitais" value="0" {% if operacao_info.hospitais_perto == False %}checked{% endif %}>
             </div>
           </div>
-          <div class="form-group">
-            <label>Número da ordem de operações</label>
-            <input type="text" value="{{ operacao_info.numero_ordem_operacoes|default:'' }}" name="numero_ordem_operacoes" id="numero_ordem_operacoes" class="form-control">
-          </div>
         </div>
-          <div class="box-form-group">
-            <div class="form-group">
-                <label>Tipo de ação repressiva</label>
-                <div class="styled-select">
-                <select class="form-control required" id="tipo_acao_repressiva" name="tipo_acao_repressiva" required>
-                    <option value="">-</option>
-                    {% for tipo_acao_repressiva in tipos_acoes_repressivas %}
-                    <option
-                        value="{{ tipo_acao_repressiva.0 }}"
-                        {% if tipo_acao_repressiva.0 == operacao_info.tipo_acao_repressiva %}selected{% endif %}>
-                    {{ tipo_acao_repressiva.1 }}</option>
-                    {% endfor %}
-                </select>
-              </div>
 
-          </div>
+        <div class="box-form-group">
           <div class="">
-            <label>Objetivo Estratégico da Operação</label>
-            <input type="text" value="{{ operacao_info.objetivo_estrategico_operacao|default:'' }}" name="objetivo_estrategico_operacao" id="objetivo_estrategico_operacao" class="form-control" required>
-          </div>
-          </div>
-        <div class="box-form-group">
-          <div class="form-group">
-            <label>Número de Policiais mobilizados </label>
-            <input type="number" min="0" value="{{ operacao_info.numero_policiais_mobilizados|default:''}}" name="numero_policiais_mobilizados" id="numero_policiais_mobilizados" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label>Número de Guarnições mobilizadas</label>
-            <input type="number" min="0" value="{{ operacao_info.numero_guarnicoes_mobilizadas|default:'' }}" name="numero_guarnicoes_mobilizadas" id="numero_guarnicoes_mobilizadas" class="form-control" required>
+            <label>Análise de riscos e medidas de controle de danos colaterais das operações...</label>
+            <input type="text" value="{{ operacao_info.descricao_analise_risco|default:'' }}" name="descricao_analise_risco" id="descricao_analise_risco" class="form-control" required>
           </div>
         </div>
-        <div class="box-form-group">
-          <div class="form-group">
-            <label>Número de veículos blindados</label>
-            <input type="number" min="0" value="{{ operacao_info.numero_veiculos_blindados|default:0 }}" name="numero_veiculos_blindados" id="numero_veiculos_blindados" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label>Número de aeronaves</label>
-            <input type="number" min="0" value="{{ operacao_info.numero_aeronaves|default:0 }}" name="numero_aeronaves" id="numero_aeronaves" class="form-control" required>
-          </div>
-        </div>
+        
       </form>
       <div class="btns-forms">
         <div class="btns-forms">
-          <a href="{% url 'operations:form-info-operation-page-one' form_uuid %}">
+          <a href="{% url 'operations:form-operational-info-page-one' form_uuid %}">
             <button type="submit" class="btn-previus">Anterior</button>
           </a>
         </div>
@@ -115,7 +119,7 @@
 
 {% block extra_js %}
 <script>
-toggleOrdemOperacoesField();
+//toggleOrdemOperacoesField();
 const FORWARD_URL = '/operacoes/cadastro/informacoes/etapa-1-concluida/';
 const API_URL = '/v1/operacoes/cria-informacoes-operacionais-parte-2/';
 const FORM_VAR_LIST = {
@@ -124,6 +128,9 @@ const FORM_VAR_LIST = {
     "numero_veiculos_blindados": "#numero_veiculos_blindados",
     "numero_aeronaves": "#numero_aeronaves",
     "numero_equipes_medicas": "#numero_equipes_medicas",
+    "comunicou_escolas_saude": "#comunicou_escolas_saude",
+    "escolas_perto": "#escolas_perto",
+    "hospitais_perto": "#hospitais_perto",
     "descricao_analise_risco": "#descricao_analise_risco"
 };
 
