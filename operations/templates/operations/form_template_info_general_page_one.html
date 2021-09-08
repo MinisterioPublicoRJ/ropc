@@ -47,59 +47,56 @@
             <input type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" required>
           </div>
           <div class="styled-select">
-            <label>Horário da operação </label>
-            <input type="time" id="hora" value={{ operacao_info.hora|default:"''" }} name="hora" required>
-          </div>
-        </div>
-        <div class="box-form-group">
-          <div class="form-group">
-            <label>Município da Operação </label>
-            <div class="styled-select">
-              <select
-                  class="form-control required"
-                  id="municipio"
-                  name="municipio"
-                  onchange="getBairros(this); getBatalhoes(this);"
-                  required
-                  >
-                  <option value="">-</option>
-                  {% for municipio in municipios %}
-                  <option value="{{ municipio.nm_mun }}" {% if municipio.nm_mun == operacao_info.municipio %} selected {% endif %}>{{ municipio.nm_mun}}</option>
-                  {% endfor %}
-              </select>
-            </div>
+            <label>Hora de início da operação </label>
+            <input type="time" id="hora_inicio" value={{ operacao_info.hora_inicio|default:"''" }} name="hora_inicio" required>
           </div>
           <div class="styled-select">
-            <label>Bairro da operação </label>
-            <select class="form-control required" id="bairro" name="bairro" required>
-                <option value="">-</option>
-                {% for bairro in bairros %}
-                <option value="{{ bairro.bairro }}" {% if bairro.bairro == operacao_info.bairro|default:"''" %} selected {% endif %}>{{ bairro.bairro}}</option>
-                {% endfor %}
-            </select>
+            <label>Hora de término da operação </label>
+            <input type="time" id="hora_termino" value={{ operacao_info.hora_termino|default:"''" }} name="hora_termino" required>
           </div>
         </div>
-        <div class="box-form-group">
-          <div class="form-group">
-            <label>Endereço de Referência</label>
-            <input type="text" name="endereco_referencia" value="{{ operacao_info.endereco_referencia|default:'' }}" id="endereco_referencia" class="form-control required" required>
-          </div>
-          <div class="styled-select">
-            <label>Batalhão Responsável</label>
-            <select class="form-control required" id="batalhao_responsavel" name="batalhao_responsavel" required>
-                <option value="">-</option>
-                {% for batalhao in batalhoes %}
-                <option value="{{ batalhao.bpm}}" {% if batalhao.bpm == operacao_info.batalhao_responsavel|default:"''" %} selected {% endif %}>{{batalhao.bpm}}</option>
-                {% endfor %}
-            </select>
+
+        <div id="localidades-container">
+          <div class="box-form-group">
+              <div class="form-group">
+                <label>Município da Operação </label>
+                <div class="styled-select">
+                  <select
+                      class="form-control required"
+                      id="municipio-1"
+                      name="municipio-1"
+                      onchange="getBairros(this);"
+                      required
+                      >
+                      <option value="">-</option>
+                      {% for municipio in municipios %}
+                      <option value="{{ municipio.nm_mun }}" {% if municipio.nm_mun == operacao_info.municipio-1 %} selected {% endif %}>{{ municipio.nm_mun}}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="styled-select">
+                <label>Bairro da operação </label>
+                <select class="form-control required" id="bairro-1" name="bairro-1" required>
+                    <option value="">-</option>
+                    {% for bairro in bairros %}
+                    <option value="{{ bairro.bairro }}" {% if bairro.bairro == operacao_info.bairro-1|default:"''" %} selected {% endif %}>{{ bairro.bairro}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Endereço de Referência</label>
+                <input type="text" name="endereco_referencia-1" value="{{ operacao_info.endereco_referencia-1|default:'' }}" id="endereco_referencia-1" class="form-control required" required>
+              </div>
+              <div class="styled-select">
+                <label>Localidade</label>
+                <input type="text" id="localidade-1" value="{{ operacao_info.localidade-1|default:'' }}" name="localidade-1" required>
+              </div>
           </div>
         </div>
-        <div class="box-form-group">
-          <div class="styled-select">
-            <label>Localidade</label>
-            <input type="text" id="localidade" value="{{ operacao_info.localidade|default:'' }}" name="localidade" required>
-          </div>
-        </div>
+
+        <button id="add-another" onclick="addAnother(event)">Adicionar localidade</button>
+
       </form>
       <div class="btns-forms">
           <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
@@ -114,15 +111,68 @@
       <script src="{% static 'js/informacoes_gerais.js' %}"></script>
       <script>
         const FORWARD_URL = '/operacoes/cadastro/informacoes/gerais/parte-2/';
-          const API_URL = '/v1/operacoes/cria-informacoes-gerais-parte-1/';
-          const FORM_VAR_LIST = {
+        const API_URL = '/v1/operacoes/cria-informacoes-gerais-parte-1/';
+        let FORM_VAR_LIST = {
             "data": "#data",
             "hora_inicio": "#hora_inicio",
             "hora_termino": "#hora_termino",
-            "municipio": "#municipio",
-            "bairro": "#bairro",
-            "localidade": "#localidade",
-            "endereco_referencia": "#endereco_referencia",
+            "municipio-1": "#municipio-1",
+            "bairro-1": "#bairro-1",
+            "localidade-1": "#localidade-1",
+            "endereco_referencia-1": "#endereco_referencia-1",
           };
+
+        let COUNT_LOCALIDADE = 1;
+        // get extra form count so we know what index to use for the next item.
+
+        function addAnother(event) {
+          event.preventDefault();
+          COUNT_LOCALIDADE++;
+
+          let element = `<div class="box-form-group">
+              <div class="form-group">
+                <label>Município da Operação </label>
+                <div class="styled-select">
+                  <select
+                      class="form-control required"
+                      id="municipio-${COUNT_LOCALIDADE}"
+                      name="municipio-${COUNT_LOCALIDADE}"
+                      onchange="getBairros(this);"
+                      required
+                      >
+                      <option value="">-</option>
+                      {% for municipio in municipios %}
+                      <option value="{{ municipio.nm_mun }}" {% if municipio.nm_mun == operacao_info.municipio %} selected {% endif %}>{{ municipio.nm_mun}}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="styled-select">
+                <label>Bairro da operação </label>
+                <select class="form-control required" id="bairro-${COUNT_LOCALIDADE}" name="bairro-${COUNT_LOCALIDADE}" required>
+                    <option value="">-</option>
+                    {% for bairro in bairros %}
+                    <option value="{{ bairro.bairro }}" {% if bairro.bairro == operacao_info.bairro|default:"''" %} selected {% endif %}>{{ bairro.bairro}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Endereço de Referência</label>
+                <input type="text" name="endereco_referencia-${COUNT_LOCALIDADE}" value="{{ operacao_info.endereco_referencia|default:'' }}" id="endereco_referencia-${COUNT_LOCALIDADE}" class="form-control required" required>
+              </div>
+              <div class="styled-select">
+                <label>Localidade</label>
+                <input type="text" id="localidade-${COUNT_LOCALIDADE}" value="{{ operacao_info.localidade|default:'' }}" name="localidade-${COUNT_LOCALIDADE}" required>
+              </div>
+          </div>`;
+
+          document.getElementById('localidades-container').insertAdjacentHTML('beforeend', element);
+
+          FORM_VAR_LIST[`municipio-${COUNT_LOCALIDADE}`] = `#municipio-${COUNT_LOCALIDADE}`
+          FORM_VAR_LIST[`bairro-${COUNT_LOCALIDADE}`] = `#bairro-${COUNT_LOCALIDADE}`
+          FORM_VAR_LIST[`localidade-${COUNT_LOCALIDADE}`] = `#localidade-${COUNT_LOCALIDADE}`
+          FORM_VAR_LIST[`endereco_referencia-${COUNT_LOCALIDADE}`] = `#endereco_referencia-${COUNT_LOCALIDADE}`
+        }
+
       </script>
 {% endblock extra_js %}
