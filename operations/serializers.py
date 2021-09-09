@@ -241,6 +241,7 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
                 loc_instances = []
                 for loc_obj in val:
                     loc_instances.append(CartuchoCalibresApreendidos.objects.create(**loc_obj))
+                instance.localidade_operacao.clear()
                 instance.cartuchos_calibres.add(*loc_instances)
             else:
                 instance.__setattr__(key, val)
