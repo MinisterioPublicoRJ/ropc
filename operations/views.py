@@ -133,20 +133,7 @@ class OperationGeneralInfoPageOneView(LoginRequiredMixin, OperationViewMixin, Te
             selected_municipio = context["municipios"][0]["nm_mun"]
             context[f"bairros_1"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
             context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
-        print(context)
         
-        # context["localidades"] = context["operacao_info"]["localidade_operacao"]
-        # if not context["operacao_info"]["localidade_operacao"]:
-        #     loc = {"municipio": None, "bairro": None, "endereco_referencia": None, "localidade": None}
-        #     context["localidades"].append(loc)
-        # else:
-        #     nb_localidades = len(context["operacao_info"]["localidade_operacao"])
-        #     for i in range(nb_localidades):
-        #         loc = context["operacao_info"]["localidade_operacao"][i]
-        #         context["operacao_info"][f"municipio_{i+1}"] = loc['municipio']
-        #         context["operacao_info"][f"bairro_{i+1}"] = loc['bairro']
-        #         context["operacao_info"][f"endereco_referencia_{i+1}"] = loc['endereco_referencia']
-        #         context["operacao_info"][f"localidade_{i+1}"] = loc['localidade']
         return context
 
 
@@ -218,6 +205,8 @@ class OperationResultsPageTwoView(LoginRequiredMixin, OperationViewMixin, Templa
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["nb_cartuchos"] = len(context["operacao_info"]["cartuchos_calibres"])
+        print(context)
         context["tipos_cartuchos"] = ["Plastico CBC", "Outros"]
         context["tipos_calibres"] = ["Calibre 28", "Outros"]
         return context
@@ -250,12 +239,14 @@ class FormCompleteView(LoginRequiredMixin, TemplateView):
         self.operacao = self.get_operation(self.request.user, self.form_uuid)
 
         secao_atual_url = URL_SECTION_MAPPER.get(self.operacao.secao_atual)
-        if self.operacao.houve_ocorrencia_operacao is None:
-            return redirect(
-                reverse(secao_atual_url, kwargs={"form_uuid": self.form_uuid})
-            )
-        elif (
-            self.operacao.houve_ocorrencia_operacao is True and
+        
+        # if self.operacao.houve_ocorrencia_operacao is None:
+        #     return redirect(
+        #         reverse(secao_atual_url, kwargs={"form_uuid": self.form_uuid})
+        #     )
+        #elif (
+        if (
+            # self.operacao.houve_ocorrencia_operacao is True and
             self.operacao.secao_atual < Operacao.n_sections
         ):
             return redirect(
@@ -268,21 +259,22 @@ class FormCompleteView(LoginRequiredMixin, TemplateView):
             return handler
         if (
             self.operacao.secao_atual == Operacao.n_sections
-            and self.operacao.houve_ocorrencia_operacao is True
-        ):
-            return redirect(
-                reverse(secao_atual_url, kwargs={"form_uuid": self.form_uuid})
-            )
-        if (
-            self.operacao.secao_atual == Operacao.n_sections
-            and self.operacao.houve_ocorrencia_operacao is False
+            # and self.operacao.houve_ocorrencia_operacao is True
         ):
             return handler
-        if (
-            self.operacao.secao_atual in settings.SKIPPABLE_SECTIONS
-            and self.operacao.houve_ocorrencia_operacao is False
-        ):
-            return handler
+            # return redirect(
+            #     reverse(secao_atual_url, kwargs={"form_uuid": self.form_uuid})
+            # )
+        # if (
+        #     self.operacao.secao_atual == Operacao.n_sections
+        #     and self.operacao.houve_ocorrencia_operacao is False
+        # ):
+        #     return handler
+        # if (
+        #     self.operacao.secao_atual in settings.SKIPPABLE_SECTIONS
+        #     and self.operacao.houve_ocorrencia_operacao is False
+        # ):
+        #     return handler
         else:
             return redirect(
                 reverse(secao_atual_url, kwargs={"form_uuid": self.form_uuid})

@@ -47,7 +47,7 @@ class ROApensado(models.Model):
 
 
 class Operacao(models.Model):
-    n_sections = 8
+    n_sections = 10
 
     objects = InformacaoManager()
 
@@ -395,8 +395,8 @@ class Operacao(models.Model):
             self.notify_completion()
 
         self.situacao = self.SITUACAO_CSO
-        if self.houve_ocorrencia_operacao is True:
-            self.situacao = self.SITUACAO_CCO
+        # if self.houve_ocorrencia_operacao is True:
+        #     self.situacao = self.SITUACAO_CCO
 
         self.save()
 

@@ -290,23 +290,25 @@ class ResultInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         ### Modificar com cartuchocalibre
         processed_data = {}
 
-        processed_data['data'] = data['data']
-        processed_data['hora_inicio'] = data['hora_inicio']
-        processed_data['hora_termino'] = data['hora_termino']
-        processed_data['localidade_operacao'] = []
+        processed_data['numero_explosivos_apreendidos'] = data['numero_explosivos_apreendidos']
+        processed_data['numero_municoes_apreendidas'] = data['numero_municoes_apreendidas']
+        processed_data['numero_carregadores_apreendidos'] = data['numero_carregadores_apreendidos']
+        processed_data['numero_armas_apreendidas'] = data['numero_armas_apreendidas']
+        processed_data['numero_fuzis_apreendidos'] = data['numero_fuzis_apreendidos']
+        processed_data['cartuchos_calibres'] = []
 
         nb_fields = len(data.keys())
-        nb_location_fields = nb_fields - 3
-        nb_location_objs = int(nb_location_fields/4)
+        nb_cartucho_fields = nb_fields - 5
+        nb_cartucho_objs = int(nb_cartucho_fields/2)
 
-        for i in range(1, nb_location_objs+1):
-            loc_obj = {}
+        for i in range(1, nb_cartucho_objs+1):
+            cart_obj = {}
 
             obj_keys = [k for k in data.keys() if str(i) in k]
             for k in obj_keys:
-                loc_obj[k.split('-')[0]] = data[k]
+                cart_obj[k.split('-')[0]] = data[k]
 
-            processed_data['localidade_operacao'].append(loc_obj)
+            processed_data['cartuchos_calibres'].append(cart_obj)
 
         return processed_data
 
