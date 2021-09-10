@@ -126,11 +126,13 @@ class InfoOperacionaisOperacaoOneSerializer(OperacaoSerializer):
                 loc_instances = []
                 for loc_obj in val:
                     loc_instances.append(UnidadesApoiadores.objects.create(**loc_obj))
+                instance.unidades_apoiadoras.clear()
                 instance.unidades_apoiadoras.add(*loc_instances)
             elif key == 'orgaos_externos':
                 loc_instances = []
                 for loc_obj in val:
                     loc_instances.append(OrgaosExternosOperacao.objects.create(**loc_obj))
+                instance.orgaos_externos.clear()
                 instance.orgaos_externos.add(*loc_instances)
             else:
                 instance.__setattr__(key, val)
