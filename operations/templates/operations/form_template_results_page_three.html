@@ -72,29 +72,29 @@
               <div class="box-form-group">
                 <div class="">
                     <label for="data">Caso a pericia tenha sido acionada, quais delas foram feitas?</label>
-                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                        <div class="form-control" id="pericia_local" name="pericia_local" >
                             <label> Local</label>
-                            <input type="checkbox" name="pericia_local" id="pericia_local" value="0" {% if operacao_info.pericia_local %}checked{% endif %}>
+                            <input type="checkbox" name="pericia_local" id="pericia_local" value="1" {% if operacao_info.pericia_local %}checked{% endif %}>
                         </div>
-                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                        <div class="form-control" id="pericia_aeronave" name="pericia_aeronave" >
                             <label> Aeronave</label>
-                            <input type="checkbox" name="pericia_aeronave" id="pericia_aeronave" value="0" {% if operacao_info.pericia_aeronave %}checked{% endif %}>
+                            <input type="checkbox" name="pericia_aeronave" id="pericia_aeronave" value="1" {% if operacao_info.pericia_aeronave %}checked{% endif %}>
                         </div>
-                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                        <div class="form-control" id="pericia_veiculo_blindado" name="pericia_veiculo_blindado" >
                             <label> Veículo blindado</label>
                             <input type="checkbox" name="pericia_veiculo_blindado" id="pericia_veiculo_blindado" value="0" {% if operacao_info.pericia_veiculo_blindado %}checked{% endif %}>
                         </div>
-                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                        <div class="form-control" id="pericia_viaturas" name="pericia_viaturas" >
                             <label> Viaturas</label>
-                            <input type="checkbox" name="pericia_viaturas" id="pericia_viaturas" value="0" {% if operacao_info.pericia_viaturas %}checked{% endif %}>
+                            <input type="checkbox" name="pericia_viaturas" id="pericia_viaturas" value="1" {% if operacao_info.pericia_viaturas %}checked{% endif %}>
                         </div>
-                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                        <div class="form-control" id="pericia_iml" name="pericia_iml" >
                             <label> IML</label>
-                            <input type="checkbox" name="pericia_iml" id="pericia_iml" value="0" {% if operacao_info.pericia_iml %}checked{% endif %}>
+                            <input type="checkbox" name="pericia_iml" id="pericia_iml" value="1" {% if operacao_info.pericia_iml %}checked{% endif %}>
                         </div>
-                        <div class="form-control" id="pericia_local" name="pericia_local" required>
+                        <div class="form-control" id="pericia_outras" name="pericia_outras" >
                             <label> Outras</label>
-                            <input type="checkbox" name="pericia_outras" id="pericia_outras" value="0" {% if operacao_info.pericia_outras %}checked{% endif %}>
+                            <input type="checkbox" name="pericia_outras" id="pericia_outras" value="1" {% if operacao_info.pericia_outras %}checked{% endif %}>
                         </div>
                 </div>
             </div>

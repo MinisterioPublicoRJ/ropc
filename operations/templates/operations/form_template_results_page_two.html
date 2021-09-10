@@ -42,6 +42,32 @@
               <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
 
                 <div class="box-form-group">
+                    <div class="">
+                        <label for="data">Houve apreensão de drogas? Se sim, quais?</label>
+                        <div class="form-control" id="droga_cocaina" name="droga_cocaina" >
+                            <label> Cocaína</label>
+                            <input type="checkbox" name="droga_cocaina" id="droga_cocaina" value="1" {% if operacao_info.droga_cocaina %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="droga_cannabis" name="droga_cannabis" >
+                            <label> Cannabis</label>
+                            <input type="checkbox" name="droga_cannabis" id="droga_cannabis" value="1" {% if operacao_info.droga_cannabis %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="droga_haxixe" name="droga_haxixe" >
+                            <label> Haxixe</label>
+                            <input type="checkbox" name="droga_haxixe" id="droga_haxixe" value="1" {% if operacao_info.droga_haxixe %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="droga_sinteticos" name="droga_sinteticos" >
+                            <label> Sintéticos</label>
+                            <input type="checkbox" name="droga_sinteticos" id="droga_sinteticos" value="1" {% if operacao_info.droga_sinteticos %}checked{% endif %}>
+                        </div>
+                        <div class="form-control" id="droga_outros" name="droga_outros" >
+                            <label> Outros</label>
+                            <input type="checkbox" name="droga_outros" id="droga_outros" value="1" {% if operacao_info.droga_outros %}checked{% endif %}>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-form-group">
                     <div class="form-group">
                         <label>Artefatos explosivos apreendidos?</label>
                         <input type="number" min="1" value="{{ operacao_info.numero_explosivos_apreendidos|default:0 }}"
@@ -81,7 +107,7 @@
                                     id="tipo_cartucho-{{ forloop.counter }}" class="form-control required" required>
 
                                 <label>Calibre</label>
-                                <input type="text" id="tipo_calibre-{{ forloop.counter }}" value="{{ calibre.tipo_calibre|default:'' }}" name="tipo_calibre-{{ forloop.counter }}" required>
+                                <input type="text" id="tipo_calibre-{{ forloop.counter }}" value="{{ cartucho.tipo_calibre|default:'' }}" name="tipo_calibre-{{ forloop.counter }}" required>
                             </div>
                             {% endfor %}
                         </div>
@@ -110,6 +136,11 @@
 const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/parte-3/';
 const API_URL = '/v1/operacoes/cria-informacoes-resultado-parte-2/';
 let FORM_VAR_LIST = {
+    "droga_cocaina": "#droga_cocaina",
+    "droga_cannabis": "#droga_cannabis",
+    "droga_haxixe": "#droga_haxixe",
+    "droga_sinteticos": "#droga_sinteticos",
+    "droga_outros": "#droga_outros",
     "numero_explosivos_apreendidos": "#numero_explosivos_apreendidos",
     "numero_municoes_apreendidas": "#numero_municoes_apreendidas",
     "numero_carregadores_apreendidos": "#numero_carregadores_apreendidos",
