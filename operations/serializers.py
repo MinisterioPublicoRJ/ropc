@@ -271,8 +271,8 @@ class OperacaoEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operacao
         fields = (
-            "localidade",
-            "batalhao_responsavel",
+            "localidade_operacao",
+            "unidade_responsavel",
             "data",
             "tipo_operacao",
             "objetivo_estrategico_operacao",
