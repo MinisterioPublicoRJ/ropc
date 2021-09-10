@@ -340,6 +340,23 @@ class ResultInfoThreeViewSet(AllowPUTAsCreateMixin, ModelViewSet):
             identificador=identificador
         )
 
+    def preprocess_data(self, data):
+        ### Modificar com cartuchocalibre
+        processed_data = {}
+
+        processed_data['houve_disparados_aeronave'] = data['houve_disparados_aeronave']
+        processed_data['houve_registros_imagem'] = data['houve_registros_imagem']
+        processed_data['local_preservado'] = data['local_preservado']
+        processed_data['pericia_local'] = False if not data['pericia_local'] else True
+        processed_data['pericia_aeronave'] = False if not data['pericia_aeronave'] else True
+        processed_data['pericia_veiculo_blindado'] = False if not data['pericia_veiculo_blindado'] else True
+        processed_data['pericia_viaturas'] = False if not data['pericia_viaturas'] else True
+        processed_data['pericia_iml'] = False if not data['pericia_iml'] else True
+        processed_data['pericia_outras'] = False if not data['pericia_outras'] else True
+        processed_data['observacoes_gerais'] = data['observacoes_gerais']
+
+        return processed_data
+
 
 # class GeneralObservationViewSet(AllowPUTAsCreateMixin, ModelViewSet):
 #     permission_classes = [IsAuthenticated]
