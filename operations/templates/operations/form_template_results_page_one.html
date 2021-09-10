@@ -41,62 +41,68 @@
         <div class="form-main">
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
-
-                <div class="box-form-group">
-                    <div class="">
-                        <label>Registro de ocorrência apensado</label>
+                <div id="box-form-group-result-operation-one">
+                    <div>
+                        <label>Registro de ocorrência apensado:</label>
                         <input type="text" value="{{ operacao_info.registro_ocorrencia|default:'' }}" name="registro_ocorrencia"
-                            id="registro_ocorrencia" class="form-control" required>
+                        id="registro_ocorrencia" class="form-control" required>
                     </div>
                 </div>
-
-                <div class="box-form-group">
-                    <div class="input-type-checked">
-                        <label for="data">Houve confronto com DAF?</label>
+                <div style="margin-left: 30px;">
+                    <div id="input-type-checked-results">
                             <div class="form-control" id="houve_confronto_daf" name="houve_confronto_daf" required>
+                                <div style="text-align: left; margin-left: 20px;">
+                                <label for="data">Houve confronto com DAF?</label>
+                                <div class="form-control-input-radios">
                                 <label> Sim</label>
                                 <input type="radio" name="option-confronto" {% if operacao_info.houve_confronto_daf %}checked{% endif %} value="1">
                                 <label style="margin-left: 20px">Não</label>
                                 <input type="radio" name="option-confronto" {% if operacao_info.houve_confronto_daf == False %}checked{% endif %} value="0">
+                                </div>
+                                </div>
                             </div>
-                        <label for="data">Houve resultados na operação?</label>
-                        <div class="form-control" id="houve_resultados_operacao" name="houve_resultados_operacao"
+                            <div class="form-control" id="houve_resultados_operacao" name="houve_resultados_operacao"
                             required>
-                            <label> Sim</label>
-                            <input type="radio" name="option-resultados" value="1" {% if operacao_info.houve_resultados_operacao %}checked{% endif %}>
-                            <label style="margin-left: 20px">Não</label>
-                            <input type="radio" name="option-resultados" value="0" {% if operacao_info.houve_resultados_operacao == False %}checked{% endif %}>
-                        </div>
+                                <div style="text-align: left; margin-left: 20px;">
+                                <label for="data">Houve resultados na operação?</label>
+                                <div class="form-control-input-radios">
+                                <label> Sim</label>
+                                <input type="radio" name="option-resultados" value="1" {% if operacao_info.houve_resultados_operacao %}checked{% endif %}>
+                                <label style="margin-left: 20px">Não</label>
+                                <input type="radio" name="option-resultados" value="0" {% if operacao_info.houve_resultados_operacao == False %}checked{% endif %}>
+                                </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
 
                 <div class="box-form-group">
-                    <div class="form-group">
+                    <div>
                         <label>Presos indicados nos mandados de prisão alvo da operação?</label>
                         <input type="number" min="1" value="{{ operacao_info.numero_presos_elencados|default:0 }}"
                             name="numero_presos_elencados" id="numero_presos_elencados" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label>Presos indicados em outros mandados de prisão pendentes?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_presos_outros_mandados|default:0 }}"
                             name="numero_presos_outros_mandados" id="numero_presos_outros_mandados" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label>Flagrantes? (APF lavrados)</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_presos_flagrante|default:0 }}"
                             name="numero_presos_flagrante" id="numero_presos_flagrante" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label>Adolescentes apreendidos?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_adolescentes_apreendidos|default:0 }}" name="numero_adolescentes_apreendidos"
                             id="numero_adolescentes_apreendidos" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label>Número de policiais feridos?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_policiais_feridos|default:0 }}"
                             name="numero_policiais_feridos" id="numero_policiais_feridos" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label>Número de policiais mortos?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_mortes_policiais|default:0 }}"
                             name="numero_mortes_policiais" id="numero_mortes_policiais" class="form-control" required>
@@ -104,17 +110,17 @@
                 </div>
 
                 <div class="box-form-group">
-                    <div class="form-group">
+                    <div>
                         <label>Número de civis mortos?</label>
                         <input type="number" min="1" value="{{ operacao_info.numero_civis_mortos|default:0 }}"
                             name="numero_civis_mortos" id="numero_civis_mortos" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label>Número de civis feridos?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_civis_feridos|default:0 }}"
                             name="numero_civis_feridos" id="numero_civis_feridos" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label>Número de veículos recuperados?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_veiculos_recuperados|default:0 }}"
                             name="numero_veiculos_recuperados" id="numero_veiculos_recuperados" class="form-control" required>

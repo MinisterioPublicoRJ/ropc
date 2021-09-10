@@ -7,71 +7,59 @@
 {% block content %}
 <div class="operation-form">
     <span>Cadastro de Operações</span>
-    <div class="main-page-form">
-        <div class="header-form">
-            <div class="text-header-form">
-                <p>Finalização do cadastro</p>
-            </div>
-            <div>
-                <div class="progressbar-text">
-                    <p>Informações de Registro</p>
-                    <p>Informações Gerais 1/1</p>
-                    <p>Informações Gerais 1/2</p>
-                    <p>Informações Operacionais 1/1</p>
-                    <p>Informações Operacionais 1/2</p>
-                    <p>Informações de Resultado 1/1</p>
-                    <p>Informações de Resultado 1/2</p>
-                    <p>Informações de Resultado 1/3</p>
-                    <p>Finalizar cadastro</p>
-                </div>
-                <progress max="100" value="100" id="progressbar"></progress>
-                <ul class="progressbar">
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                </ul>
-            </div>
+<div class="main-page-form">
+    <div class="header-form">
+        <div class="text-header-form">
+            <p>Finalização do cadastro</p>
         </div>
-        <div class="page-final-cadastro">
-            <img src="{% static "img/icon-checked.png" %}" alt="icon-checked">
-            <span style="margin-top: -25px">Primeira etapa concluída yada yada!</span>
-            <p>A preencher de acordo com o design aqui</p>
+        <div>
+            <div class="progressbar-text">
+                <p>Informações Gerais</p>
+                <p>Informações Operacionais 1/1</p>
+                <p>Informações Operacionais 1/2</p>
+                <p>Informações de Resultado</p>
+                <p>Informações da Ocorrência 1/1</p>
+                <p>Informações da Ocorrência 1/2</p>
+                <p>Observações Gerais</p>
+                <p>Etapa 01</p>
+            </div>
+            <progress max="100" value="100" id="progressbar"></progress>
+            <ul class="progressbar">
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+                <li class="progressbar-checked"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="page-final-cadastro">
+        <img src="{% static "img/icon-checked.png" %}" alt="icon-checked">
+        <span>Etapa 01 do cadastro concluído!</span>
+        <p>As próximas informações a serem preenchidas são informações referentes
+        aos resultados da operação. Caso a operação ainda não tenha sido finalizada
+        clique em<strong>“Salvar e fechar cadastro”</strong>para preenche-lo futuramente.
+        Se já possui as informações conclusivas da operação, clique em
+        <strong>“Continuar cadastro da operação”.</strong>
+        </p>
+        <div class="btns-forms">
             <div class="btns-forms">
-                <div class="btns-forms">
-                    <a href="{% url 'operations:operations-list' %}">
-                        <button type="submit" class="btn-previus">Salvar e fechar cadastro</button>
-                    </a>
-                </div>
-                <div class="btns-forms">
-                    <a href="{% url 'operations:form-info-result-page-one' form_uuid %}">
-                        <button type="submit" class="btn-next" >Cadastrar resultados ></button>
-                    </a>
-                </div>
+                <a href="{% url 'home' %}">
+                    <button type="submit" class="btn-previus">Página inicial</button>
+                </a>
+            </div>
+            <div class="btns-forms">
+                <a href="{% url 'operations:form-info-result-page-one' form_uuid %}">
+                    <button type="submit" class="btn-next">Cadastrar resultados</button>
+                </a>
             </div>
         </div>
     </div>
 </div>
+</div>
 
 {% endblock content %}
-
-<!-- {% block extra_js %}
-<script>
-    //toggleOrdemOperacoesField();
-    const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/parte-1/';
-    const formUUID = "{{ form_uuid }}"
-
-    function goToNextPage(event) {
-        event.preventDefault();
-        const forwardFullURL = FORWARD_URL + formUUID;
-
-        window.location = forwardFullURL;
-    }
-</script>
-
-{% endblock extra_js %} -->
