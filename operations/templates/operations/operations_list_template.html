@@ -7,11 +7,10 @@
 <div class="main-initial-page">
         <div class="table-list">
             <h2>Últimas operações cadastradas</h2>
-            <p style="margin-left: 30px">Aqui é onde se encontra as informações referentes as operações cadastradas e onde você pode editá-las.</p>
+            <p style="margin-left: 30px">Aqui é onde se encontram as informações referentes às operações cadastradas e onde você pode editá-las.</p>
             <table>
                 <tr>
                     <th>Status</th>
-                    <th>Tipo Ação Repressiva</th>
                     <th>Operação</th>
                     <th>Data</th>
                     <th>Responsável/Delegacia</th>
@@ -19,19 +18,26 @@
                 </tr>
                 {% for info_operacao in object_list %}
                 <tr class="tr-lista-operacao" onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}');">
-                        <td>{{ info_operacao.get_tipo_acao_repressiva_display|default:'' }}</td>
-                        <td>{{ info_operacao.data }}</td>
-                        <td>
-                            {{ info_operacao.batalhao_responsavel|default:'' }}
-                            {% if info_operacao.unidade_apoiadora %}
-                            - {{ info_operacao.unidade_apoiadora|default:'' }}
+                        <td> {% if info_operacao.completo %}
+                            👍
+                            {% else %}
+                            🔴
                             {% endif %}
                         </td>
-                        <td>{{ info_operacao.bairro }}</td>
+                        <td>{{ info_operacao.nome_operacao|default:'' }}</td>
+                        <td>{{ info_operacao.data }}</td>
+                        <td>
+                            {{ info_operacao.nome_delegado_operacao|default:'' }}
+                            {% if info_operacao.unidade_responsavel %}
+                            - {{ info_operacao.unidade_responsavel|default:'' }}
+                            {% endif %}
+                        </td>
+                        <td>{{ info_operacao.localidade_operacao.all.0.municipio }} - {{ info_operacao.localidade_operacao.all.0.bairro }}</td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
+
 {% if page_obj.has_other_pages %}
         <ul class="pagination">
         {% if page_obj.has_previous %}
@@ -53,8 +59,8 @@
        {% endif %}
       </ul>
 {% endif %}
-    </div>
 </div>
+
 {% endblock content %}
 
 {% block extra_js %}
