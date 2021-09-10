@@ -1,12 +1,18 @@
 td {
-    border: 1px solid #e9e3e3;
     height: 78px;
-}   
+    background: #121212 0% 0% no-repeat padding-box;
+    border: 0.1px solid #707070;
+    opacity: 1;
+}  
 th {
     background: #1A1A1A;
     height: 78px;
     color: #D4D4D5;
 }
+tr td {
+    border-right: none;
+    border-left: none;
+  }
 table {
     border-collapse: collapse;
     opacity: 0.80;
@@ -15,4 +21,5 @@ table {
     color: #D4D4D5;
     border-radius: 2px;
     margin-left: 30px;
+    margin-bottom: 50px;
 }
