@@ -10,7 +10,7 @@
     <div class="main-page-form">
         <div class="header-form">
             <div class="text-header-form">
-                <p>ADPF 635</p>
+                <p>Informações Gerais</p>
             </div>
             <div style="margin-left: 30px">
              <div class="progressbar-text">
@@ -43,27 +43,30 @@
                 <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
                 <div class="box-form-group">
                     <div class="">
-                        <label for="name">Justificativa da excepcionalidade da operação</label>
-                        <textarea style="width: 100vh; height: 150px" type="text"
-                            id="justificativa_excepcionalidade_operacao"
-                            value="{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}"
-                            name="justificativa_excepcionalidade_operacao"
-                            required>{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}</textarea>
+                        <label for="name">Objetivo Estratégico da Operação</label>
+                        <textarea style="width: 100vh; height: 85px" type="text"
+                        id="objetivo_estrategico_operacao"
+                        value="{{ operacao_info.objetivo_estrategico_operacao|default:'' }}"
+                        name="objetivo_estrategico_operacao"
+                        required>{{ operacao_info.objetivo_estrategico_operacao|default:'' }}
+                        </textarea>     
                     </div>
                 </div>
                 <div class="box-form-group">
                     <div class="">
-                        <label for="name">Objetivo estratégico da operação</label>
-                        <textarea style="width: 100vh; height: 150px;" type="text" id="objetivo_estrategico_operacao"
-                            value="{{ operacao_info.objetivo_estrategico_operacao|default:'' }}"
-                            name="objetivo_estrategico_operacao"
-                            required>{{ operacao_info.objetivo_estrategico_operacao|default:'' }}</textarea>
+                        <label for="name">Justificativa da excepcionalidade da operação...</label>
+                        <textarea style="width: 100vh; height: 250px;" type="text"
+                        id="justificativa_excepcionalidade_operacao"
+                        value="{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}"
+                        name="justificativa_excepcionalidade_operacao"
+                        required>{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}
+                        </textarea>   
                     </div>
                 </div>
             </form>
             <div class="btns-forms">
                 <div class="btns-forms">
-                    <a href="{% url 'operations:form-update' form_uuid %}">
+                    <a href="{% url 'operations:form-general-info-page-one' form_uuid %}">
                         <button type="submit" class="btn-previus">Anterior</button>
                     </a>
                 </div>

@@ -43,10 +43,9 @@
       <form action="/" id="main-form"   method="post" enctype="multipart/form-data">
           <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
         <div class="box-form-group">
-          <div class="">
+        <div class="">
             <label for="name">Data da operação </label>
             <input type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" required>
-          </div>
           <div class="styled-select">
             <label>Hora de início da operação </label>
             <input type="time" id="hora_inicio" value={{ operacao_info.hora_inicio|default:"''" }} name="hora_inicio" required>
@@ -55,7 +54,9 @@
             <label>Hora de término da operação </label>
             <input type="time" id="hora_termino" value={{ operacao_info.hora_termino|default:"''" }} name="hora_termino" required>
           </div>
-          <div class="form-group">
+        </div>
+        <div class="form-group">
+           <div>
             <label>Município da Operação </label>
             <div class="styled-select">
               <select
@@ -90,6 +91,8 @@
             <input type="text" id="localidade-{{ forloop.counter }}" value="{{ localidade.localidade|default:'' }}" name="localidade-{{ forloop.counter }}" required>
           </div>
         </div>
+        <button id="add-another" onclick="addAnother(event)">Adicionar localidade +</button>
+      </div>
         <div id="localidades-container">
           {% for localidade in operacao_info.localidade_operacao %}
           <div class="box-form-group">
@@ -134,11 +137,12 @@
           </div>
           {% endfor %}
         </div>
-        <button id="add-another" onclick="addAnother(event)">Adicionar localidade +</button>
       </form>
       <div class="btns-forms">
-        <button type="submit" class="btn-previus" onclick="submitFormInfo(event);">Anterior</button>
-        <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
+          <a href="{% url 'operations:form-update' form_uuid %}">
+            <button type="submit" class="btn-previus">Anterior</button>
+          </a>
+          <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
       </div>
     </div>
   </div>
