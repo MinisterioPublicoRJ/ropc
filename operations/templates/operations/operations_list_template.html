@@ -11,7 +11,6 @@
             <table>
                 <tr>
                     <th>Status</th>
-                    <th>Tipo Ação Repressiva</th>
                     <th>Operação</th>
                     <th>Data</th>
                     <th>Responsável/Delegacia</th>
@@ -27,6 +26,7 @@
                             - {{ info_operacao.unidade_apoiadora|default:'' }}
                             {% endif %}
                         </td>
+                        <td>{{ info_operacao.bairro }}</td>
                         <td>{{ info_operacao.bairro }}</td>
                     </tr>
                 {% endfor %}
