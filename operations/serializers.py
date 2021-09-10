@@ -27,6 +27,7 @@ class OperationRegisterInfoSerializer(OperacaoSerializer):
     numero_inquerito_mae = serializers.CharField(allow_blank=True)
     tipo_operacao = serializers.CharField(required=True)
     nome_operacao = serializers.CharField(required=True)
+    numero_tjrj = serializers.CharField(required=True)
 
     def validate(self, attrs):
         if attrs["tipo_operacao"] == "Pr" and not attrs["numero_inquerito_mae"]:

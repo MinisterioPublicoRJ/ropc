@@ -63,10 +63,10 @@
           <input type="text" class="cor-vermelha" placeholder="Número do inquérito mãe" name="numero_inquerito_mae" value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
             id="numero_inquerito_mae" class="form-control required" required>
         </div>
-       <!--  <div class="form-group">
-          <input placeholder="Número do procedimento (TJRJ)" type="text" name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
-            id="nome_operacao" class="form-control required" required>
-        </div> -->
+        <div class="form-group">
+          <input placeholder="Número do procedimento (TJRJ)" type="text" name="numero_tjrj" value="{{ operacao_info.numero_tjrj|default:'' }}"
+            id="numero_tjrj" class="form-control required" required>
+        </div>
       </form>
       <div class="btns-forms">
         <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
@@ -85,6 +85,7 @@
         "numero_inquerito_mae": "#numero_inquerito_mae",
         "tipo_operacao": "#tipo_operacao",
         "nome_operacao": "#nome_operacao",
+        "numero_tjrj": "#numero_tjrj",
       };
       </script> 
 {% endblock extra_js %}
