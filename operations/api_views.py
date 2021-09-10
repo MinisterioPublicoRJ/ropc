@@ -226,9 +226,8 @@ class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         )
     
     def preprocess_data(self, data):
-        ### Modificar com drogas e ros
+        ### Modificar com ros
         processed_data = {}
-        print(data)
 
         processed_data['houve_confronto_daf'] = data['houve_confronto_daf']
         processed_data['houve_resultados_operacao'] = data['houve_resultados_operacao']
@@ -241,9 +240,7 @@ class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         processed_data['numero_civis_mortos'] = data['numero_civis_mortos']
         processed_data['numero_civis_feridos'] = data['numero_civis_feridos']
         processed_data['numero_veiculos_recuperados'] = data['numero_veiculos_recuperados']
-        processed_data['houve_apreensao_drogas'] = data['houve_apreensao_drogas']
         processed_data['registro_ocorrencia'] = [{'numero_ro': data['registro_ocorrencia']}]
-        processed_data['tipos_drogas_apreendidas'] = [{'nome_droga': data['tipos_drogas_apreendidas']}]
 
         # nb_fields = len(data.keys())
         # nb_location_fields = nb_fields - 3
@@ -290,6 +287,11 @@ class ResultInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         ### Modificar com cartuchocalibre
         processed_data = {}
 
+        processed_data['droga_cocaina'] = False if not data['droga_cocaina'] else True
+        processed_data['droga_cannabis'] = False if not data['droga_cannabis'] else True
+        processed_data['droga_haxixe'] = False if not data['droga_haxixe'] else True
+        processed_data['droga_sinteticos'] = False if not data['droga_sinteticos'] else True
+        processed_data['droga_outros'] = False if not data['droga_outros'] else True
         processed_data['numero_explosivos_apreendidos'] = data['numero_explosivos_apreendidos']
         processed_data['numero_municoes_apreendidas'] = data['numero_municoes_apreendidas']
         processed_data['numero_carregadores_apreendidos'] = data['numero_carregadores_apreendidos']
@@ -298,7 +300,7 @@ class ResultInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         processed_data['cartuchos_calibres'] = []
 
         nb_fields = len(data.keys())
-        nb_cartucho_fields = nb_fields - 5
+        nb_cartucho_fields = nb_fields - 10
         nb_cartucho_objs = int(nb_cartucho_fields/2)
 
         for i in range(1, nb_cartucho_objs+1):

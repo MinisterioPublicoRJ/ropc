@@ -152,9 +152,6 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     class ROApensadoSerializer(OperacaoSerializer):
         numero_ro = serializers.CharField(required=True)
 
-    class TipoDrogaSerializer(OperacaoSerializer):
-        nome_droga = serializers.CharField(required=True)
-
     registro_ocorrencia = ROApensadoSerializer(many=True)
     houve_confronto_daf = serializers.BooleanField(required=True)
     houve_resultados_operacao = serializers.BooleanField(required=True)
@@ -169,8 +166,6 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     numero_civis_feridos = serializers.IntegerField(required=True, min_value=0)
     # numero_civis_mortos_npap = serializers.IntegerField(required=True, min_value=0)
     numero_veiculos_recuperados = serializers.IntegerField(required=True, min_value=0)
-    houve_apreensao_drogas = serializers.BooleanField(required=True)
-    tipos_drogas_apreendidas = TipoDrogaSerializer(many=True)
 
     def validate(self, attrs):
         # Verifica se já existem dados de ocorrência
@@ -202,12 +197,8 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
                 loc_instances = []
                 for loc_obj in val:
                     loc_instances.append(ROApensado.objects.create(**loc_obj))
+                instance.registro_ocorrencia.clear()
                 instance.registro_ocorrencia.add(*loc_instances)
-            elif key == 'tipos_drogas_apreendidas':
-                loc_instances = []
-                for loc_obj in val:
-                    loc_instances.append(TiposDeDroga.objects.create(**loc_obj))
-                instance.tipos_drogas_apreendidas.add(*loc_instances)
             else:
                 instance.__setattr__(key, val)
 
@@ -220,6 +211,11 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
         tipo_cartucho = serializers.CharField(required=True)
         tipo_calibre = serializers.CharField(required=True)
 
+    droga_cocaina = serializers.BooleanField(required=True)
+    droga_cannabis = serializers.BooleanField(required=True)
+    droga_haxixe = serializers.BooleanField(required=True)
+    droga_sinteticos = serializers.BooleanField(required=True)
+    droga_outros = serializers.BooleanField(required=True)
     numero_explosivos_apreendidos = serializers.IntegerField(required=True, min_value=0)
     numero_armas_apreendidas = serializers.IntegerField(required=True, min_value=0)
     numero_fuzis_apreendidos = serializers.IntegerField(required=True, min_value=0)

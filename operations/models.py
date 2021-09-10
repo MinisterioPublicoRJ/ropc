@@ -273,15 +273,19 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
-    houve_apreensao_drogas = models.BooleanField(
-        "Houve apreensão de Drogas?",
-        null=True,
-        blank=True,
-    )
-    tipos_drogas_apreendidas = models.ManyToManyField(TiposDeDroga)
 
 
     ### Info Resultados Two
+    # houve_apreensao_drogas = models.BooleanField(
+    #     "Houve apreensão de Drogas?",
+    #     null=True,
+    #     blank=True,
+    # )
+    droga_cocaina = models.BooleanField("Apreensão de Cocaína?", default=False)
+    droga_cannabis = models.BooleanField("Apreensão de Cannabis?", default=False)
+    droga_haxixe = models.BooleanField("Apreensão de Haxixe?", default=False)
+    droga_sinteticos = models.BooleanField("Apreensão de Sintéticos?", default=False)
+    droga_outros = models.BooleanField("Apreensão de Outros?", default=False)
     numero_explosivos_apreendidos = models.PositiveIntegerField(
         "Número de artefatos explosivos apreendidos",
         default=0,
