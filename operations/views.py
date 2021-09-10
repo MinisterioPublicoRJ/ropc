@@ -7,7 +7,7 @@ from django.views.generic import ListView, TemplateView
 from django.urls import reverse
 
 from coredata.models import Bairro, Municipio
-from operations.models import Operacao
+from operations.models import Operacao, UNIDADES_POLICIA, ORGAOS_EXTERNOS
 from operations.serializers import (
     OperationRegisterInfoSerializer,
     InfoGeralOperacaoOneSerializer,
@@ -164,8 +164,8 @@ class OperationInfoPageOneView(LoginRequiredMixin, OperationViewMixin, TemplateV
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["natureza_operacoes"] = Operacao.NATUREZA_OPERACAO
-        context["unidades_policia_judiciaria"] = ["Unidade 1", "Unidade 2"]
-        context["orgaos_externos"] = ["Orgao 1", "Orgao 2"]
+        context["unidades_policia_judiciaria"] = UNIDADES_POLICIA
+        context["orgaos_externos"] = ORGAOS_EXTERNOS
         return context
 
 

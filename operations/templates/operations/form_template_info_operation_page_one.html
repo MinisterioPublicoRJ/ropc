@@ -64,8 +64,8 @@
             <select class="form-control required" id="unidade_responsavel" name="unidade_responsavel" required>
               <option value="">-</option>
               {% for unidade in unidades_policia_judiciaria %}
-              <option value="{{ unidade }}" {% if unidade == operacao_info.unidade_responsavel|default:'' %} selected {% endif %}>
-                {{ unidade }}</option>
+              <option value="{{ unidade.0 }}" {% if unidade == operacao_info.unidade_responsavel|default:'' %} selected {% endif %}>
+                {{ unidade.1 }}</option>
               {% endfor %}
             </select>
           </div>
@@ -78,7 +78,7 @@
               <select class="form-control required" id="unidades_apoiadoras" name="unidades_apoiadoras" required>
                   <option value="">Quais ?</option>
                 {% for unidade in unidades_policia_judiciaria %}
-                <option value="{{ unidade }}" {% if unidade == operacao_info.unidades_apoiadoras %} selected {% endif %}>{{ unidade }}</option>
+                <option value="{{ unidade.0 }}" {% if unidade == operacao_info.unidades_apoiadoras.all.0 %} selected {% endif %}>{{ unidade.1 }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -89,7 +89,7 @@
               <select class="form-control required" id="orgaos_externos" name="orgaos_externos" required>
                 <option value="">Quais ?</option>
                 {% for orgao in orgaos_externos %}
-                <option value="{{ orgao }}" {% if orgao == operacao_info.orgaos_externos %} selected {% endif %}>{{ orgao }}</option>
+                <option value="{{ orgao.0 }}" {% if orgao == operacao_info.orgaos_externos.all.0 %} selected {% endif %}>{{ orgao.1 }}</option>
                 {% endfor %}
               </select>
             </div>
