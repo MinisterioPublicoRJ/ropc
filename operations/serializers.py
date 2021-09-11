@@ -96,9 +96,9 @@ class InfoOperacionaisOperacaoOneSerializer(OperacaoSerializer):
     matricula_id_delegado_operacao = serializers.CharField(required=True)
     natureza_operacao = serializers.CharField(required=True)
     unidade_responsavel = serializers.CharField(required=True)
-    # apoio_recebido = serializers.BooleanField(required=True)
+    apoio_recebido = serializers.BooleanField(required=True)
     unidades_apoiadoras = UnidadeApoiadoraSerializer(many=True)
-    # operacao_integrada = serializers.BooleanField(required=True)
+    operacao_integrada = serializers.BooleanField(required=True)
     orgaos_externos = OrgaoExternoSerializer(many=True)
 
     # def validate_matricula_id_delegado_operacao(self, value):

@@ -66,7 +66,7 @@
             <select class="form-control required" id="unidade_responsavel" name="unidade_responsavel" required>
               <option value="">-</option>
               {% for unidade in unidades_policia_judiciaria %}
-              <option value="{{ unidade.0 }}" {% if unidade == operacao_info.unidade_responsavel|default:'' %} selected {% endif %}>
+              <option value="{{ unidade.0 }}" {% if unidade.0 == operacao_info.unidade_responsavel|default:'' %} selected {% endif %}>
                 {{ unidade.1 }}</option>
               {% endfor %}
             </select>
@@ -76,11 +76,18 @@
         <div class="box-form-group">
           <div class="form-group">
             <label>Recebeu apoio de outras unidades policiais?</label>
+            <div class="input-type-checked">
+            <div class="form-control" id="apoio_recebido" name="apoio_recebido" required>
+              <label>Sim</label>
+              <input type="radio" name="option-apoio" {% if operacao_info.apoio_recebido %}checked{% endif %} value="1">
+              <label style="margin-left: 20px">Não</label>
+              <input type="radio" name="option-apoio" {% if operacao_info.apoio_recebido == False %}checked{% endif %} value="0">
+            </div>
+            </div>
             <div class="styled-select">
-              <select class="form-control required" id="unidades_apoiadoras" name="unidades_apoiadoras" required>
-                  <option value="">-</option>
+              <select id="unidades_apoiadoras" class="form-control required" name="unidades_apoiadoras" placeholder="Quais?" multiple>
                 {% for unidade in unidades_policia_judiciaria %}
-                <option value="{{ unidade.0 }}" {% if unidade == operacao_info.unidades_apoiadoras.all.0 %} selected {% endif %}>{{ unidade.1 }}</option>
+                <option value="{{ unidade.0 }}" {% if unidade.0 in operacao_info.unidades_apoiadoras %} selected {% endif %}>{{ unidade.1 }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -90,11 +97,18 @@
         <div class="box-form-group">
           <div class="form-group">
             <label>Operação integrada com órgãos externos?</label>
+            <div class="input-type-checked">
+              <div class="form-control" id="operacao_integrada" name="operacao_integrada" required>
+                <label>Sim</label>
+                <input type="radio" name="option-integrada" {% if operacao_info.operacao_integrada %}checked{% endif %} value="1">
+                <label style="margin-left: 20px">Não</label>
+                <input type="radio" name="option-integrada" {% if operacao_info.operacao_integrada == False %}checked{% endif %} value="0">
+              </div>
+            </div>
             <div class="styled-select">
-              <select class="form-control required" id="orgaos_externos" name="orgaos_externos" required>
-                <option value="">-</option>
+              <select id="orgaos_externos" class="form-control required" name="orgaos_externos" placeholder="Quais?" multiple>
                 {% for orgao in orgaos_externos %}
-                <option value="{{ orgao.0 }}" {% if orgao == operacao_info.orgaos_externos.all.0 %} selected {% endif %}>{{ orgao.1 }}</option>
+                <option value="{{ orgao.0 }}" {% if orgao.0 in operacao_info.orgaos_externos %} selected {% endif %}>{{ orgao.1 }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -116,7 +130,32 @@
 {% endblock content %}
 
 {% block extra_js %}
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css"> -->
+<link href="{% static 'css/choices.css' %}" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
 <script>
+  $(document).ready(function () {
+
+      var multipleCancelButtonUnits = new Choices('#unidades_apoiadoras', {
+        removeItemButton: true,
+        // maxItemCount: 5,
+        // searchResultLimit: 5,
+        // renderChoiceLimit: 5
+      });
+      var multipleCancelButtonInstitutions = new Choices('#orgaos_externos', {
+      removeItemButton: true,
+      // maxItemCount: 5,
+      // searchResultLimit: 5,
+      // renderChoiceLimit: 5
+    });
+
+
+    });
+
 const FORWARD_URL = '/operacoes/cadastro/informacoes/operacionais/parte-2/';
 const API_URL = '/v1/operacoes/cria-informacoes-operacionais-parte-1/';
 const FORM_VAR_LIST = {
@@ -125,7 +164,9 @@ const FORM_VAR_LIST = {
     "natureza_operacao": "#natureza_operacao",
     "unidade_responsavel": "#unidade_responsavel",
     "unidades_apoiadoras": "#unidades_apoiadoras",
-    "orgaos_externos": "#orgaos_externos"
+    "orgaos_externos": "#orgaos_externos",
+    "apoio_recebido": "#apoio_recebido",
+    "operacao_integrada": "#operacao_integrada",
 };
 
 </script>

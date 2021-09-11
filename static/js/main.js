@@ -35,6 +35,14 @@ function getRadioData(inputs){
 
 }
 
+function getMultipleDropdown(options){
+  var result = [];
+  for (ii = 0; ii < options.length; ii++){
+    result.push(options[ii].value);
+  }
+  return result;
+}
+
 function validateFields(formObj) {
   const fields = formObj.querySelectorAll("[required]");
 
@@ -63,7 +71,10 @@ function buildFormData(fields){
     Object.entries(fields).forEach(field => {
         let fieldObj = document.querySelector(field[1]);
         let inputs = fieldObj.getElementsByTagName("input");
-        if(inputs.length == 0){
+        if(fieldObj.multiple == true) { // for the multiple select dropdown
+            formData[field[0]] = getMultipleDropdown(fieldObj.getElementsByTagName('option'));
+        }
+        else if(inputs.length == 0) {
             formData[field[0]] = fieldObj.value;
         }else {
             formData[field[0]] = getRadioData(inputs);
