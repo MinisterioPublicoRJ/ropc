@@ -166,6 +166,12 @@ class OperationInfoPageOneView(LoginRequiredMixin, OperationViewMixin, TemplateV
         context["natureza_operacoes"] = Operacao.NATUREZA_OPERACAO
         context["unidades_policia_judiciaria"] = UNIDADES_POLICIA
         context["orgaos_externos"] = ORGAOS_EXTERNOS
+        context["operacao_info"]["unidades_apoiadoras"] = [
+            x['nome_unidade'] for x in context["operacao_info"]["unidades_apoiadoras"]
+        ]
+        context["operacao_info"]["orgaos_externos"] = [
+            x['nome_orgao'] for x in context["operacao_info"]["orgaos_externos"]
+        ]
         return context
 
 
@@ -214,7 +220,6 @@ class OperationResultsPageTwoView(LoginRequiredMixin, OperationViewMixin, Templa
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["nb_cartuchos"] = len(context["operacao_info"]["cartuchos_calibres"])
-        print(context)
         context["tipos_cartuchos"] = ["Plastico CBC", "Outros"]
         context["tipos_calibres"] = ["Calibre 28", "Outros"]
         return context
