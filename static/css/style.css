@@ -171,6 +171,15 @@ progress[value]{
   flex-direction: row;
   margin-right: 570px;
 }
+.input-type-checked{
+  display: flex;
+  flex-direction: row;
+  margin-right: 570px;
+}
+.input-type-checked input[type="radio"]{
+  width: 15px;
+  height: 11px;
+}
 #input-type-checked-operation{
   display: flex;
   flex-direction: row;
@@ -179,22 +188,33 @@ progress[value]{
   display: flex;
   flex-direction: row;
 }
+.form-control-input-radios{
+  display: flex;
+}
+.input-type-checked-results-one{
+  display: flex;
+  margin-top: 30px;
+}
+.input-type-checked-results-one input{
+  width: 111px;
+  height: 45px;
+  margin-left: 12px;
+  margin-right: 17px;
+
+}
+.input-type-checked-results-one label{
+  max-width: 100px;
+  text-align: left;
+  margin-left: 13px;
+}
+
 #input-type-checked-operation .form-control{
   display: flex;
   font-size: 0.75rem;
   margin-top: 20px;
   margin-bottom: 10px;
 }
-#input-type-checked-operation,
-#input-type-checked-results
-.form-control input[type="radio"]{
-  width: 15px;
-  height: 11px;
-}
-#input-type-checked-results
-.form-control input{
-  width: 15px;
-}
+
 .input-type-checked p{
   color: #ED0606;
   font-size: 0.875rem;
@@ -276,31 +296,26 @@ label {
   margin: 20px;
   margin-top: 30px;
 }
+
 #box-form-group-result-operation-one{
   display: flex;
   flex-wrap: wrap;
-  margin: 20px;
-  justify-content: space-around;
+  margin-left: 20px;
 
 }
 #box-form-group-result-operation-one #registro_ocorrencia{
   width:100vh;
 }
-#box-form-group-info-operation-two{
+/* #box-form-group-info-operation-two{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
   margin-top: 30px;
 }
-.form-control-input-radios{
-  display: flex;
-}
-.form-control-input-radios input:checked[type="checkbox"] {
-  background-color: #FBB92D;
-}
+
 #box-form-group-info-operation-two input{
   width: 100px;
-}
+  margin: 30px;
+} */
 .box-form-group h3{
   color: #707070;
 }

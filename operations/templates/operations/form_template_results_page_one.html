@@ -48,10 +48,9 @@
                         id="registro_ocorrencia" class="form-control" required>
                     </div>
                 </div>
-                <div style="margin-left: 30px;">
-                    <div id="input-type-checked-results">
+                    <div class="input-type-checked">
                             <div class="form-control" id="houve_confronto_daf" name="houve_confronto_daf" required>
-                                <div style="text-align: left; margin-left: 20px;">
+                                <div style="margin-left: 27px; text-align: left;">
                                 <label for="data">Houve confronto com DAF?</label>
                                 <div class="form-control-input-radios">
                                 <label> Sim</label>
@@ -63,8 +62,8 @@
                             </div>
                             <div class="form-control" id="houve_resultados_operacao" name="houve_resultados_operacao"
                             required>
-                                <div style="text-align: left; margin-left: 20px;">
-                                <label for="data">Houve resultados na operação?</label>
+                                <div style="text-align: left; margin-left: 40px;">
+                                <label style="margin-top: -18px;" for="data">Houve resultados na operação?</label>
                                 <div class="form-control-input-radios">
                                 <label> Sim</label>
                                 <input type="radio" name="option-resultados" value="1" {% if operacao_info.houve_resultados_operacao %}checked{% endif %}>
@@ -74,16 +73,16 @@
                                 </div>
                             </div>
                     </div>
-                </div>
 
                 <div class="box-form-group">
+                   <div class="input-type-checked-results-one"> 
                     <div>
-                        <label>Presos indicados nos mandados de prisão alvo da operação?</label>
+                        <label style="margin-top: -24px;">Presos indicados nos mandados de prisão alvo da operação?</label>
                         <input type="number" min="1" value="{{ operacao_info.numero_presos_elencados|default:0 }}"
                             name="numero_presos_elencados" id="numero_presos_elencados" class="form-control" required>
                     </div>
                     <div>
-                        <label>Presos indicados em outros mandados de prisão pendentes?</label>
+                        <label style="margin-top: -24px;">Presos indicados em outros mandados de prisão pendentes?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_presos_outros_mandados|default:0 }}"
                             name="numero_presos_outros_mandados" id="numero_presos_outros_mandados" class="form-control" required>
                     </div>
@@ -107,9 +106,10 @@
                         <input type="number" min="0" value="{{ operacao_info.numero_mortes_policiais|default:0 }}"
                             name="numero_mortes_policiais" id="numero_mortes_policiais" class="form-control" required>
                     </div>
+                    </div>
                 </div>
 
-                <div class="box-form-group">
+                    <div class="input-type-checked-results-one"> 
                     <div>
                         <label>Número de civis mortos?</label>
                         <input type="number" min="1" value="{{ operacao_info.numero_civis_mortos|default:0 }}"
@@ -125,7 +125,7 @@
                         <input type="number" min="0" value="{{ operacao_info.numero_veiculos_recuperados|default:0 }}"
                             name="numero_veiculos_recuperados" id="numero_veiculos_recuperados" class="form-control" required>
                     </div>
-                </div>
+                    </div>
 
             </form>
             <div class="btns-forms">
