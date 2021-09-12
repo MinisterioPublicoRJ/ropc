@@ -171,15 +171,11 @@ progress[value]{
   flex-direction: row;
   margin-right: 570px;
 }
-.input-type-checked{
-  display: flex;
-  flex-direction: row;
-  margin-right: 570px;
-}
 .input-type-checked input[type="radio"]{
   width: 15px;
   height: 11px;
 }
+
 #input-type-checked-operation{
   display: flex;
   flex-direction: row;
@@ -207,7 +203,25 @@ progress[value]{
   text-align: left;
   margin-left: 13px;
 }
-
+.input-type-checked-results-two {
+  display: flex;
+  margin-top: 30px;
+  margin-left: -31px;
+}
+.input-type-checked-results-two input[type="checkbox"]{
+  width: 26px;
+  height: 26px;
+  margin-left: 30px;
+}
+.info-results-cartuchos{
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  margin-left: 15px;
+}
+.input-type-checked-results-two label{
+  margin-left: 40px;
+}
 #input-type-checked-operation .form-control{
   display: flex;
   font-size: 0.75rem;
@@ -249,6 +263,12 @@ progress[value]{
   color: #FDBC2D;
   text-transform: lowercase;
   margin-left: 250px;
+}
+#add-another-cartucho{
+  background: none;
+  border: none;
+  color: #FDBC2D;
+  text-transform: lowercase;
 }
 .btns-forms button{
   border-radius: 12px;
