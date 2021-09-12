@@ -41,26 +41,9 @@
         <div class="form-main">
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
               <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
-              <label for="data">Houve apreensão de drogas?</label>
-              <div class="form-control" id="houve_apreensao_drogas" name="houve_apreensao_drogas" required>
-                  <label> Sim</label>
-                  <input type="radio" name="option-apreensao" value="1" {% if operacao_info.houve_apreensao_drogas %}checked{% endif %}>
-                  <label style="margin-left: 20px">Não</label>
-                  <input type="radio" name="option-apreensao" value="0" {% if operacao_info.houve_apreensao_drogas == False %}checked{% endif %}>
-              </div>
-              <div class="styled-select">
-                  <label>Quais tipos de drogas? </label>
-                  <select class="form-control required" id="tipos_drogas_apreendidas" name="tipos_drogas_apreendidas" required>
-                      <option value="">-</option>
-                      {% for droga in tipos_drogas %}
-                      <option value="{{ droga }}" {% if droga == operacao_info.tipos_drogas_apreendidas|default:'' %} selected {% endif %}>
-                          {{ droga }}</option>
-                      {% endfor %}
-                  </select>
-              </div>
-                <div class="box-form-group">
-                    <div class="">
-                        <label for="data">Houve apreensão de drogas? Se sim, quais?</label>
+                <div>
+                    <label style="margin-left: 11px;" for="data">Houve apreensão de drogas? Se sim, quais?</label>
+                    <div class="input-type-checked-results-two">
                         <div class="form-control" id="droga_cocaina" name="droga_cocaina" >
                             <label> Cocaína</label>
                             <input type="checkbox" name="droga_cocaina" id="droga_cocaina" value="1" {% if operacao_info.droga_cocaina %}checked{% endif %}>
@@ -83,10 +66,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="box-form-group">
+                    <div class="input-type-checked-results-one"> 
                     <div class="form-group">
-                        <label>Artefatos explosivos apreendidos?</label>
+                        <label style="margin-top: -12px;">Artefatos explosivos apreendidos?</label>
                         <input type="number" min="1" value="{{ operacao_info.numero_explosivos_apreendidos|default:0 }}"
                             name="numero_explosivos_apreendidos" id="numero_explosivos_apreendidos" class="form-control" required>
                     </div>
@@ -110,12 +93,13 @@
                         <input type="number" min="0" value="{{ operacao_info.numero_municoes_apreendidas|default:0 }}"
                             name="numero_municoes_apreendidas" id="numero_municoes_apreendidas" class="form-control" required>
                     </div>
+                    </div>
                 </div>
-
-
-
-                    <div class="box-form-group">
-                        Especifique nestes campos os cartuchos e calibres apreendidos:
+                <div class="info-results-cartuchos">
+                    <label>Especifique nestes campos os cartuchos e calibres apreendidos:</label>
+                    <button style="margin-left: -114px;" id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
+                </div>      
+                <div class="box-form-group">
                         <div id="cartuchos-container">
                             {% for cartucho in operacao_info.cartuchos_calibres %}
                             <div class="form-group">
@@ -128,9 +112,7 @@
                             </div>
                             {% endfor %}
                         </div>
-                        <button id="add-another" onclick="addAnother(event)">Adicionar cartucho</button>
-                    </div>
-                
+                </div>
             </form>
             <div class="btns-forms">
                 <div class="btns-forms">
