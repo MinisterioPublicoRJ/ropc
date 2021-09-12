@@ -83,7 +83,8 @@
             </div>
             </div>
             <div class="styled-select">
-              <select id="unidades_apoiadoras" class="form-control required" name="unidades_apoiadoras" placeholder="Quais?" multiple>
+              <label style="margin-bottom: 10px;">Quais ?</label>
+              <select id="unidades_apoiadoras" class="form-control required" name="unidades_apoiadoras" multiple>
                 {% for unidade in unidades_policia_judiciaria %}
                 <option value="{{ unidade.0 }}" {% if unidade.0 in operacao_info.unidades_apoiadoras %} selected {% endif %}>{{ unidade.1 }}</option>
                 {% endfor %}
@@ -91,17 +92,18 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Operação integrada com órgãos externos?</label>
+            <label style="margin-top: 30px;">Operação integrada com órgãos externos?</label>
             <div class="input-type-checked">
               <div class="form-control" id="operacao_integrada" name="operacao_integrada" required>
-                <label>Sim</label>
+                <label >Sim</label>
                 <input type="radio" name="option-integrada" {% if operacao_info.operacao_integrada %}checked{% endif %} value="1">
                 <label style="margin-left: 20px">Não</label>
                 <input type="radio" name="option-integrada" {% if operacao_info.operacao_integrada == False %}checked{% endif %} value="0">
               </div>
             </div>
             <div class="styled-select">
-              <select id="orgaos_externos" class="form-control required" name="orgaos_externos" placeholder="Quais?" multiple>
+              <label style="margin-bottom: 10px;">Quais ?</label>
+              <select id="orgaos_externos" class="form-control required" name="orgaos_externos" multiple>
                 {% for orgao in orgaos_externos %}
                 <option value="{{ orgao.0 }}" {% if orgao.0 in operacao_info.orgaos_externos %} selected {% endif %}>{{ orgao.1 }}</option>
                 {% endfor %}

@@ -14,17 +14,16 @@
       </div>
       <div>
         <div class="progressbar-text">
-          <p>Informações de Registro</p>
-          <p>Informações Gerais 1/1</p>
-          <p>Informações Gerais 1/2</p>
-          <p>Informações Operacionais 1/1</p>
-          <p>Informações Operacionais 1/2</p>
-          <p>Informações de Resultado 1/1</p>
-          <p>Informações de Resultado 1/2</p>
-          <p>Informações de Resultado 1/3</p>
-          <p>Finalizar cadastro</p>
+        <p>Informações Gerais</p>
+        <p>Informações Operacionais 1/1</p>
+        <p>Informações Operacionais 1/2</p>
+        <p>Informações de Resultado</p>
+        <p>Informações da Ocorrência 1/1</p>
+        <p>Informações da Ocorrência 1/2</p>
+        <p>Observações Gerais</p>
+        <p>Finalizar cadastro</p>
       </div>
-        <progress  max="100" value="48" id="progressbar"></progress>
+        <progress  max="100" value="38" id="progressbar"></progress>
         <ul class="progressbar">
             <li class="progressbar-checked"></li>
             <li class="progressbar-checked"></li>
@@ -41,24 +40,23 @@
     <div class="form-main">
       <form action="/" id="main-form" method="post" enctype="multipart/form-data">
         <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
-
-        <div id="box-form-group-info-operation-two">
-            <div>
+        <div class="box-form-group">
+          <div class="form-group">
             <label>Número de agentes?</label>
             <input type="number" min="1" value="{{ operacao_info.numero_agentes_mobilizados|default:1 }}"
               name="numero_agentes_mobilizados" id="numero_agentes_mobilizados" class="form-control" required>
-            </div>
-          <div style="margin-left: 16px;">
+          </div>
+          <div class="form-group">
             <label>Número de viaturas?</label>
             <input type="number" min="0" value="{{ operacao_info.numero_viaturas_mobilizadas|default:0 }}" name="numero_viaturas_mobilizadas"
               id="numero_viaturas_mobilizadas" class="form-control" required>
           </div>
-          <div>
+          <div class="form-group">
             <label>Número de veículos blindados?</label>
             <input type="number" min="0" value="{{ operacao_info.numero_veiculos_blindados|default:0 }}" name="numero_veiculos_blindados"
               id="numero_veiculos_blindados" class="form-control" required>
           </div>
-          <div>
+          <div class="form-group">
             <label>Número de aeronaves?</label>
             <input type="number" min="0" value="{{ operacao_info.numero_aeronaves|default:0 }}" name="numero_aeronaves"
               id="numero_aeronaves" class="form-control" required>
@@ -70,50 +68,36 @@
           </div>
         </div>
 
-        <div id="input-type-checked-operation">
+        <div class="box-form-group">
+          <div class="input-type-checked">
+            <label for="data">Comunicou a equipamentos de saúde e escolas?</label>
             <div class="form-control" id="comunicou_escolas_saude" name="comunicou_escolas_saude" required>
-            <div style="text-align: left; margin-left: 5px;">
-              <label for="data" style="max-width: 150px;">Comunicou a equipamentos de saúde e escolas?</label>
-              <div class="form-control-input-radios">
-              <label>Sim</label>
-                <input type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude %}checked{% endif %} value="1">
+              <label> Sim</label>
+              <input type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude %}checked{% endif %} value="1">
               <label style="margin-left: 20px">Não</label>
-              <input  type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude == False %}checked{% endif %} value="0">
-              </div>
+              <input type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude == False %}checked{% endif %} value="0">
             </div>
-            </div>
+            <label for="data">Escolas nas proximidades?</label>
             <div class="form-control" id="escolas_perto" name="escolas_perto" required>
-            <div style="text-align: left; margin-left: 20px;">
-              <label for="data">Escolas nas proximidades?</label>
-              <div class="form-control-input-radios">
-              <label style="margin-top: 13px;"> Sim</label>
-              <input style="margin-top: 24px;" type="radio" name="option-escolas" value="1" {% if operacao_info.escolas_perto %}checked{% endif %}>
-              <label style="margin-left: 20px; margin-top: 13px;">Não</label>
-              <input style="margin-top: 24px;" type="radio" name="option-escolas" value="0" {% if operacao_info.escolas_perto == False %}checked{% endif %}>
-              </div>
+              <label> Sim</label>
+              <input type="radio" name="option-escolas" value="1" {% if operacao_info.escolas_perto %}checked{% endif %}>
+              <label style="margin-left: 20px">Não</label>
+              <input type="radio" name="option-escolas" value="0" {% if operacao_info.escolas_perto == False %}checked{% endif %}>
             </div>
-            </div>
-
+            <label for="data">Hospitais nas proximidades?</label>
             <div class="form-control" id="hospitais_perto" name="hospitais_perto" required>
-            <div style="text-align: left; margin-left: 20px;">
-              <label for="data">Hospitais nas proximidades?</label>
-              <div class="form-control-input-radios">
-              <label style="margin-top: 13px;"> Sim</label>
-              <input style="margin-top: 24px;" type="radio" name="option-hospitais" value="1" {% if operacao_info.hospitais_perto %}checked{% endif %}>
-              <label style="margin-left: 20px; margin-top: 13px;">Não</label>
-              <input style="margin-top: 24px;" type="radio" name="option-hospitais" value="0" {% if operacao_info.hospitais_perto == False %}checked{% endif %}>
+              <label> Sim</label>
+              <input type="radio" name="option-hospitais" value="1" {% if operacao_info.hospitais_perto %}checked{% endif %}>
+              <label style="margin-left: 20px">Não</label>
+              <input type="radio" name="option-hospitais" value="0" {% if operacao_info.hospitais_perto == False %}checked{% endif %}>
             </div>
           </div>
-        </div>
-
         </div>
 
         <div class="box-form-group">
           <div class="">
             <label>Análise de riscos e medidas de controle de danos colaterais das operações...</label>
-            <textarea style="width: 100vh; height: 167px;" type="text"
-             value="{{ operacao_info.descricao_analise_risco|default:'' }}" name="descricao_analise_risco" id="descricao_analise_risco" class="form-control" required>
-            </textarea>   
+            <input type="text" value="{{ operacao_info.descricao_analise_risco|default:'' }}" name="descricao_analise_risco" id="descricao_analise_risco" class="form-control" required>
           </div>
         </div>
         
