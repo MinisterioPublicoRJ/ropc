@@ -156,8 +156,10 @@ class OperationalInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         processed_data['matricula_id_delegado_operacao'] = data['matricula_id_delegado_operacao']
         processed_data['natureza_operacao'] = data['natureza_operacao']
         processed_data['unidade_responsavel'] = data['unidade_responsavel']
-        processed_data['unidades_apoiadoras'] = [{'nome_unidade': data['unidades_apoiadoras']}]
-        processed_data['orgaos_externos'] = [{'nome_orgao': data['orgaos_externos']}]
+        processed_data['apoio_recebido'] = data['apoio_recebido']
+        processed_data['operacao_integrada'] = data['operacao_integrada']
+        processed_data['unidades_apoiadoras'] = [{'nome_unidade': x} for x in data['unidades_apoiadoras']]
+        processed_data['orgaos_externos'] = [{'nome_orgao': x} for x in data['orgaos_externos']]
 
         # nb_fields = len(data.keys())
         # nb_location_fields = nb_fields - 3
