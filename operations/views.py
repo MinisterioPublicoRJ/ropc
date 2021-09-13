@@ -199,6 +199,9 @@ class OperationResultsPageOneView(LoginRequiredMixin, OperationViewMixin, Templa
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tipos_drogas"] = ["Cannabis", "Cocaína", "Outras"]
+        context["operacao_info"]["registro_ocorrencia"] = ",".join(
+            x['numero_ro'] for x in context["operacao_info"]["registro_ocorrencia"]
+        )
         return context
 
 

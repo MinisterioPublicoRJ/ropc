@@ -1,0 +1,161 @@
+.tagsinput {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+	background: #fff;
+	font-family: sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+	color: #556270;
+	padding: 5px 5px 0 5px;
+	border: 0px solid #e6e6e6;
+	border-radius: 2px;
+}
+
+.tagsinput.focus {
+	border-color: transparent;
+}
+
+.tagsinput {
+	/* position: relative;
+	display: block;
+	width: 1000px;
+	height: 70px;
+	margin-left: 2px;
+	background-color: #333333; */
+	border-radius: 9px;
+	margin: 5px 5px 0px 0px;
+	background-color: #333333;
+}
+
+.tagsinput * {
+	box-sizing: border-box;
+	/* text-align: left;
+	color: #AEAEAE;
+	display: block;
+	justify-content: left;
+	align-items: center;
+	flex-direction: column; */
+}
+
+.tagsinput .tag {
+	position: relative;
+	background: #707070;
+	display: block;
+	/* max-width: 100px; */
+	width: 128px;
+	/* word-wrap: break-word; */
+	color: #121212;
+	padding: 5px 30px 5px 5px;
+	border-radius: 9px;
+	margin: 0 5px 5px 0;
+}
+
+.tagsinput span {
+  position:absolute; 
+  margin-left: 0px;
+  margin-top: 0px;
+  color: #121212;
+  font-size: 1.4375rem;
+  display: block;
+}
+
+.tagsinput .tag .tag-remove {
+	position: absolute;
+	background: none;
+	display: block;
+	width: 30px;
+	height: 30px;
+	top: 0;
+	right: 0;
+	cursor: pointer;
+	text-decoration: none;
+	text-align: center;
+	color: #121212;
+	line-height: 30px;
+	padding: 0;
+	border: 0;
+}
+
+.tagsinput .tag .tag-text {
+	position: absolute;
+	display: flex;
+	width: 100%;
+	height: 100%;
+	top: 14px;
+	left: 10px;
+	font-size: 14px;
+}
+
+.tagsinput .tag .tag-remove:before,
+.tagsinput .tag .tag-remove:after {
+	background: #121212;
+	position: absolute;
+	display: block;
+	width: 10px;
+	height: 2px;
+	top: 14px;
+	left: 10px;
+	content: '';
+}
+
+.tagsinput .tag .tag-remove:before {
+	-webkit-transform: rotateZ(45deg);
+	transform: rotateZ(45deg);
+}
+
+.tagsinput .tag .tag-remove:after {
+	-webkit-transform: rotateZ(-45deg);
+	transform: rotateZ(-45deg);
+}
+
+.tagsinput div {
+	-webkit-box-flex: 1;
+	-webkit-flex-grow: 1;
+	-ms-flex-positive: 1;
+	flex-grow: 1;
+}
+
+.tagsinput div input {
+	background: transparent;
+	display: block;
+	width: 100%;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 5px;
+	border: 0 none;
+	margin: 0 5px 5px 0;
+}
+
+.tagsinput div input.error {
+	color: #ff6b6b;
+}
+
+.tagsinput div input::-ms-clear {
+	display: none;
+}
+
+.tagsinput div input::-webkit-input-placeholder {
+	color: #ccc;
+	opacity: 1.0;
+}
+
+.tagsinput div input:-moz-placeholder {
+	color: #ccc;
+	opacity: 1.0;
+}
+
+.tagsinput div input::-moz-placeholder {
+	color: #ccc;
+	opacity: 1.0;
+}
+
+.tagsinput div input:-ms-input-placeholder {
+	color: #ccc;
+	opacity: 1.0;
+}
