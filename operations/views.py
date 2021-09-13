@@ -120,19 +120,27 @@ class OperationGeneralInfoPageOneView(LoginRequiredMixin, OperationViewMixin, Te
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["nb_localidades"] = len(context["operacao_info"]["localidade_operacao"])
-        context["municipios"] = Municipio.objects.get_ordered_values()
+        # context["municipios"] = Municipio.objects.get_ordered_values()
+        context["municipios"] = [{"nm_mun": "Rio de Janeiro"}, {"nm_mun": "Niterói"}]
         context["bairros"] = []
+        # Mock
+        mock_bairros_rio = [{"bairro": "Centro"}, {"bairro": "Santa Teresa"}]
+        mock_bairros_nit = [{"bairro": "Centro"}, {"bairro": "Icaraí"}]
         for i in range(context["nb_localidades"]):
             try:
                 selected_municipio = context["operacao_info"]["localidade_operacao"][i]["municipio"]
             except:
                 selected_municipio = context["municipios"][0]["nm_mun"]
-            context[f"bairros_{i+1}"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
-            context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
+            #context[f"bairros_{i+1}"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
+            #context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
+            context[f"bairros_{i+1}"] = mock_bairros_rio if selected_municipio == "Rio de Janeiro" else mock_bairros_nit
+            context[f"bairros"].append(mock_bairros_rio if selected_municipio == "Rio de Janeiro" else mock_bairros_nit)
         if not context["nb_localidades"]:
             selected_municipio = context["municipios"][0]["nm_mun"]
-            context[f"bairros_1"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
-            context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
+            #context[f"bairros_1"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
+            #context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
+            context[f"bairros_1"] = mock_bairros_rio if selected_municipio == "Rio de Janeiro" else mock_bairros_nit
+            context[f"bairros"].append(mock_bairros_rio if selected_municipio == "Rio de Janeiro" else mock_bairros_nit)
         
         return context
 
