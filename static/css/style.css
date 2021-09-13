@@ -54,6 +54,8 @@ ul .wrapper-initial-page{
   margin-top: 13px;
   color: #707070;
   width: 100vh;
+  justify-content: space-between;
+  margin-bottom: 13px;
 }
 progress::-moz-progress-bar {
   background: #0055FF;
