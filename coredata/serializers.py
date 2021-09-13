@@ -17,7 +17,9 @@ class MunicipioSerializer(serializers.ModelSerializer):
 class BairroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bairro
-        fields = "__all__"
+        # Mock
+        fields = ["municipio", "bairro"]
+        # fields = "__all__"
 
 
 class BatalhaoSerializer(serializers.ModelSerializer):

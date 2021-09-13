@@ -28,7 +28,11 @@ class BairrosView(ListAPIView):
 
     def get_queryset(self):
         nm_mun = self.kwargs.get(self.lookup_url_kwarg)
-        return Bairro.objects.get_ordered_for_municipio(nm_mun)
+        # Mock
+        mock_bairros_rio = [{"bairro": "Centro", "cod_mun": 1, "municipio": "Rio de Janeiro", "bairro_id": "1"}, {"bairro": "Santa Teresa", "cod_mun": 1, "municipio": "Rio de Janeiro", "bairro_id": "2"}]
+        mock_bairros_nit = [{"bairro": "Centro", "cod_mun": 2, "municipio": "Niterói", "bairro_id": "3"}, {"bairro": "Icaraí", "cod_mun": 2, "municipio": "Niterói", "bairro_id": "4"}]
+        return mock_bairros_rio if nm_mun == "Rio de Janeiro" else mock_bairros_nit
+        #return Bairro.objects.get_ordered_for_municipio(nm_mun)
 
 
 class BatalhaoView(ListAPIView):
