@@ -46,14 +46,14 @@ class InfoGeralOperacaoOneSerializer(OperacaoSerializer):
         endereco_referencia = serializers.CharField(required=True)
 
         def validate(self, attrs):
-            # bairros_validos = Bairro.objects.get_ordered_for_municipio(
-            #     attrs["municipio"]
-            # ).values_list("bairro", flat=True)
+            bairros_validos = Bairro.objects.get_ordered_for_municipio(
+                attrs["municipio"]
+            ).values_list("bairro", flat=True)
 
-            # if attrs["bairro"] not in bairros_validos:
-            #     raise serializers.ValidationError(
-            #         {"bairro": "Bairro inválido para município selecionado."}
-            #     )
+            if attrs["bairro"] not in bairros_validos:
+                raise serializers.ValidationError(
+                    {"bairro": "Bairro inválido para município selecionado."}
+                )
             return attrs
 
         # class Meta:
