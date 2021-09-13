@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Cadastro de Operaçãoes</title>
+{% endblock title %}
+
+{% block content %}
+<div class="operation-form">
+    <progress id="myProgress">
+        <p>Cadastro da operação sendo realizado...</p>
+        <div id="myBar"></div>
+    </progress>
+         
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+var i = 0;
+function move() {
+  if (i == 0) {
+    i = 1;
+    var elem = document.getElementById("myBar");
+    var width = 1;
+    var id = setInterval(frame, 10);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+        i = 0;
+        window.location.href = "http://stackoverflow.com"; 
+      } else {
+        width++;
+        elem.style.width = width + "%";
+      }
+    }
+  }
+}
+
+</script>
+
+{% endblock extra_js %}

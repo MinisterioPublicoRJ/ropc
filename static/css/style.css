@@ -15,6 +15,15 @@ a:link{
 .navbarLeft-list ul a li:hover{
   color: #FDBC2D;
 }
+#myProgress {
+  width: 100%;
+  background-color: #1A1A1A;
+}
+#myBar {
+  width: 1%;
+  height: 7px;
+  background-color: #FDBC2D;
+}
 #first-li,
 #second-li,
 #third-li,
@@ -173,6 +182,8 @@ progress[value]{
 }
 .input-type-checked-info{
   display: flex;
+  flex-direction: row;
+
 }
 .input-type-checked-info input[type="radio"]{
   width: 15px;
@@ -333,16 +344,7 @@ label {
 #box-form-group-result-operation-one #registro_ocorrencia{
   width:100vh;
 }
-/* #box-form-group-info-operation-two{
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
 
-#box-form-group-info-operation-two input{
-  width: 100px;
-  margin: 30px;
-} */
 .box-form-group h3{
   color: #707070;
 }
@@ -357,7 +359,7 @@ label {
   margin-left: 10px;
 }
 .error-message{
-  color: #ED0606;
+  color: #fff;
   font-size: 0.875rem;
   margin-top: 0px;
 }
