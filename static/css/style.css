@@ -21,7 +21,7 @@ a:link{
   align-items: center;
   margin: 2vh 0 2vh 0.75vw;
 }
-a[id$="-li"]:hover {
+a[id$="-li"]:hover > li{
   color: #FDBC2D;
 }
 .main-page{
