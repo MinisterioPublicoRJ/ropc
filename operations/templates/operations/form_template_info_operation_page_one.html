@@ -36,7 +36,7 @@
         <div id="box-form-group-info-operation-one">
           <div>
             <label for="name">Delegado responsável</label>
-            <input type="text" value="{{ operacao_info.nome_delegado_operacao|default:'' }}" id="nome_delegado_operacao" name="nome_delegado_operacao" required>
+            <input type="text" value="{{ operacao_info.nome_delegado_operacao|default:'' }}" id="nome_delegado_operacao" name="nome_delegado_operacao" >
           </div>
           <div>
             <label for="name">ID Funcional</label>
@@ -44,7 +44,7 @@
           </div>
           <div class="styled-select">
             <label>Natureza da operação </label>
-            <select style="width: 150px; class="form-control required" id="natureza_operacao" name="natureza_operacao" required>
+            <select style="width: 150px; class="form-control required" id="natureza_operacao" name="natureza_operacao" >
               <option value="">-</option>
               {% for natureza in natureza_operacoes %}
               <option value="{{ natureza.0 }}" {% if natureza.0 == operacao_info.natureza_operacao|default:'' %} selected {% endif %}>
@@ -54,7 +54,7 @@
           </div>
           <div class="styled-select">
             <label>Unidade da polícia judiciária responsável (UPAJ)</label>
-            <select class="form-control required" id="unidade_responsavel" name="unidade_responsavel" required>
+            <select class="form-control required" id="unidade_responsavel" name="unidade_responsavel" >
               <option value="">-</option>
               {% for unidade in unidades_policia_judiciaria %}
               <option value="{{ unidade.0 }}" {% if unidade.0 == operacao_info.unidade_responsavel|default:'' %} selected {% endif %}>
@@ -68,7 +68,7 @@
           <div class="form-group">
             <label>Recebeu apoio de outras unidades policiais?</label>
             <div class="input-type-checked">
-            <div class="form-control" id="apoio_recebido" name="apoio_recebido" required>
+            <div class="form-control" id="apoio_recebido" name="apoio_recebido" >
               <label>Sim</label>
               <input type="radio" name="option-apoio" {% if operacao_info.apoio_recebido %}checked{% endif %} value="1">
               <label style="margin-left: 20px">Não</label>
@@ -87,7 +87,7 @@
           <div class="form-group">
             <label style="margin-top: 30px;">Operação integrada com órgãos externos?</label>
             <div class="input-type-checked">
-              <div class="form-control" id="operacao_integrada" name="operacao_integrada" required>
+              <div class="form-control" id="operacao_integrada" name="operacao_integrada" >
                 <label >Sim</label>
                 <input type="radio" name="option-integrada" {% if operacao_info.operacao_integrada %}checked{% endif %} value="1">
                 <label style="margin-left: 20px">Não</label>

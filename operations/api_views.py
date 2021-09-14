@@ -87,10 +87,16 @@ class GeneralInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
 
         for i in range(1, nb_location_objs+1):
             loc_obj = {}
-
+            loc_obj['loc_position'] = i
             obj_keys = [k for k in data.keys() if str(i) in k]
+
             for k in obj_keys:
                 loc_obj[k.split('-')[0]] = data[k]
+            for k in obj_keys:
+                if data[k]:
+                    break
+            else:
+                continue
 
             processed_data['localidade_operacao'].append(loc_obj)
 
@@ -307,10 +313,16 @@ class ResultInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
 
         for i in range(1, nb_cartucho_objs+1):
             cart_obj = {}
-
+            cart_obj['cart_position'] = i
             obj_keys = [k for k in data.keys() if str(i) in k]
+
             for k in obj_keys:
                 cart_obj[k.split('-')[0]] = data[k]
+            for k in obj_keys:
+                if data[k]:
+                    break
+            else:
+                continue
 
             processed_data['cartuchos_calibres'].append(cart_obj)
 

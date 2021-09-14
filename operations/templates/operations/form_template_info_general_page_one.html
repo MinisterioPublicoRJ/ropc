@@ -37,14 +37,14 @@
         <div class="box-form-group">
         <div class="">
             <label for="name">Data da operação </label>
-            <input type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" required>
+            <input type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" >
           <div class="styled-select">
             <label>Hora de início da operação </label>
-            <input type="time" id="hora_inicio" value={{ operacao_info.hora_inicio|default:"''" }} name="hora_inicio" required>
+            <input type="time" id="hora_inicio" value={{ operacao_info.hora_inicio|default:"''" }} name="hora_inicio" >
           </div>
           <div class="styled-select">
             <label>Hora de término da operação </label>
-            <input type="time" id="hora_termino" value={{ operacao_info.hora_termino|default:"''" }} name="hora_termino" required>
+            <input type="time" id="hora_termino" value={{ operacao_info.hora_termino|default:"''" }} name="hora_termino" >
           </div>
         </div>
 
@@ -57,7 +57,6 @@
                   id="municipio-1"
                   name="municipio-1"
                   onchange="getBairros(this);"
-                  required
                   >
                   <option value="">-</option>
                   {% for municipio in municipios %}
@@ -68,7 +67,7 @@
           </div>
           <div class="styled-select">
             <label>Bairro da operação </label>
-            <select class="form-control required" id="bairro-1" name="bairro-1" required>
+            <select class="form-control required" id="bairro-1" name="bairro-1" >
                 <option value="">-</option>
                 {% for bairro in bairros|getattribute:1 %}
                 <option value="{{ bairro.bairro }}" {% if bairro.bairro == operacao_info.localidade_operacao.0.bairro|default:"''" %} selected {% endif %}>{{ bairro.bairro }}</option>
@@ -77,11 +76,11 @@
           </div>
           <div class="form-group">
             <label>Endereço de Referência</label>
-            <input type="text" name="endereco_referencia-1" value="{{ operacao_info.localidade_operacao.0.endereco_referencia|default:'' }}" id="endereco_referencia-1" class="form-control required" required>
+            <input type="text" name="endereco_referencia-1" value="{{ operacao_info.localidade_operacao.0.endereco_referencia|default:'' }}" id="endereco_referencia-1" class="form-control required" >
           </div>
           <div class="styled-select">
             <label>Localidade</label>
-            <input type="text" id="localidade-1" value="{{ operacao_info.localidade_operacao.0.localidade|default:'' }}" name="localidade-1" required>
+            <input type="text" id="localidade-1" value="{{ operacao_info.localidade_operacao.0.localidade|default:'' }}" name="localidade-1" >
           </div>
         </div>
         <button id="add-another" onclick="addAnother(event)">Adicionar localidade +</button>
@@ -99,7 +98,7 @@
                       id="municipio-{{ forloop.counter }}"
                       name="municipio-{{ forloop.counter }}"
                       onchange="getBairros(this);"
-                      required
+                      
                       >
                       <option value="">-</option>
                       {% for municipio in municipios %}
@@ -110,7 +109,7 @@
               </div>
               <div class="styled-select">
                 <label>Bairro da operação </label>
-                <select class="form-control required" id="bairro-{{ forloop.counter }}" name="bairro-{{ forloop.counter }}" required>
+                <select class="form-control required" id="bairro-{{ forloop.counter }}" name="bairro-{{ forloop.counter }}" >
                     <option value="">-</option>
                     {% with y=forloop.counter|stringformat:"s" %}
                     {% with bairros_x="bairros_"|add:y %}
@@ -123,11 +122,11 @@
               </div>
               <div class="form-group">
                 <label>Endereço de Referência</label>
-                <input type="text" name="endereco_referencia-{{ forloop.counter }}" value="{{ localidade.endereco_referencia|default:'' }}" id="endereco_referencia-{{ forloop.counter }}" class="form-control required" required>
+                <input type="text" name="endereco_referencia-{{ forloop.counter }}" value="{{ localidade.endereco_referencia|default:'' }}" id="endereco_referencia-{{ forloop.counter }}" class="form-control required" >
               </div>
               <div class="styled-select">
                 <label>Localidade</label>
-                <input type="text" id="localidade-{{ forloop.counter }}" value="{{ localidade.localidade|default:'' }}" name="localidade-{{ forloop.counter }}" required>
+                <input type="text" id="localidade-{{ forloop.counter }}" value="{{ localidade.localidade|default:'' }}" name="localidade-{{ forloop.counter }}" >
               </div>
           </div>
           {% endif %}
@@ -188,7 +187,6 @@
                       id="municipio-${COUNT_LOCALIDADE}"
                       name="municipio-${COUNT_LOCALIDADE}"
                       onchange="getBairros(this);"
-                      required
                       >
                       <option value="">-</option>
                       {% for municipio in municipios %}
@@ -199,7 +197,7 @@
               </div>
               <div class="styled-select">
                 <label>Bairro da operação </label>
-                <select class="form-control required" id="bairro-${COUNT_LOCALIDADE}" name="bairro-${COUNT_LOCALIDADE}" required>
+                <select class="form-control required" id="bairro-${COUNT_LOCALIDADE}" name="bairro-${COUNT_LOCALIDADE}" >
                     <option value="">-</option>
                     {% for bairro in bairros %}
                     <option value="{{ bairro.bairro }}" {% if bairro.bairro == operacao_info.bairro|default:"''" %} selected {% endif %}>{{ bairro.bairro}}</option>
@@ -208,11 +206,11 @@
               </div>
               <div class="form-group">
                 <label>Endereço de Referência</label>
-                <input type="text" name="endereco_referencia-${COUNT_LOCALIDADE}" value="{{ operacao_info.endereco_referencia|default:'' }}" id="endereco_referencia-${COUNT_LOCALIDADE}" class="form-control required" required>
+                <input type="text" name="endereco_referencia-${COUNT_LOCALIDADE}" value="{{ operacao_info.endereco_referencia|default:'' }}" id="endereco_referencia-${COUNT_LOCALIDADE}" class="form-control required" >
               </div>
               <div class="styled-select">
                 <label>Localidade</label>
-                <input type="text" id="localidade-${COUNT_LOCALIDADE}" value="{{ operacao_info.localidade|default:'' }}" name="localidade-${COUNT_LOCALIDADE}" required>
+                <input type="text" id="localidade-${COUNT_LOCALIDADE}" value="{{ operacao_info.localidade|default:'' }}" name="localidade-${COUNT_LOCALIDADE}" >
               </div>
           </div>`;
 

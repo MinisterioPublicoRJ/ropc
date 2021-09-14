@@ -37,7 +37,7 @@
             <div class="box-form-group"></div>
             <div class="input-type-checked">
                 <label for="data">Houve disparos embarcado da aeronave?</label>
-                <div class="form-control" id="houve_disparados_aeronave" name="houve_disparados_aeronave" required>
+                <div class="form-control" id="houve_disparados_aeronave" name="houve_disparados_aeronave" >
                     <label> Sim</label>
                     <input type="radio" name="option-disparos" {% if operacao_info.houve_disparados_aeronave %}checked{% endif %}
                         value="1">
@@ -46,14 +46,14 @@
                         value="0">
                 </div>
                 <label for="data">Foram feitos registros de imagem a partir da aeronave?</label>
-                <div class="form-control" id="houve_registros_imagem" name="houve_registros_imagem" required>
+                <div class="form-control" id="houve_registros_imagem" name="houve_registros_imagem" >
                     <label> Sim</label>
                     <input type="radio" name="option-registros" value="1" {% if operacao_info.houve_registros_imagem %}checked{% endif %}>
                     <label style="margin-left: 20px">Não</label>
                     <input type="radio" name="option-registros" value="0" {% if operacao_info.houve_registros_imagem == False %}checked{% endif %}>
                 </div>
                 <label for="data">O local permaneceu preservado?</label>
-                <div class="form-control" id="local_preservado" name="local_preservado" required>
+                <div class="form-control" id="local_preservado" name="local_preservado" >
                     <label> Sim</label>
                     <input type="radio" name="option-preservado" value="1" {% if operacao_info.local_preservado %}checked{% endif %}>
                     <label style="margin-left: 20px">Não</label>
@@ -97,7 +97,7 @@
                     <label for="name">Observações Gerais</label>
                     <textarea style="width: 100vh; height: 150px;" type="text" id="observacoes_gerais"
                         value="{{ operacao_info.observacoes_gerais|default:'' }}" name="observacoes_gerais"
-                        required>{{ operacao_info.observacoes_gerais|default:'' }}</textarea>
+                        >{{ operacao_info.observacoes_gerais|default:'' }}</textarea>
                 </div>
             </div>
             
