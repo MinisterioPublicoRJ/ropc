@@ -248,20 +248,11 @@ class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         processed_data['numero_civis_mortos'] = data['numero_civis_mortos']
         processed_data['numero_civis_feridos'] = data['numero_civis_feridos']
         processed_data['numero_veiculos_recuperados'] = data['numero_veiculos_recuperados']
-        processed_data['registro_ocorrencia'] = [{'numero_ro': data['registro_ocorrencia']}]
 
-        # nb_fields = len(data.keys())
-        # nb_location_fields = nb_fields - 3
-        # nb_location_objs = int(nb_location_fields/4)
-
-        # for i in range(1, nb_location_objs+1):
-        #     loc_obj = {}
-
-        #     obj_keys = [k for k in data.keys() if str(i) in k]
-        #     for k in obj_keys:
-        #         loc_obj[k.split('-')[0]] = data[k]
-
-        #     processed_data['localidade_operacao'].append(loc_obj)
+        processed_data['registro_ocorrencia'] = []
+        registros = data['registro_ocorrencia'].split(',')
+        for ro in registros:
+            processed_data['registro_ocorrencia'].append({'numero_ro': ro})
 
         return processed_data
 
