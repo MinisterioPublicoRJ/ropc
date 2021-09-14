@@ -83,7 +83,6 @@
             <input type="text" id="localidade-1" value="{{ operacao_info.localidade_operacao.0.localidade|default:'' }}" name="localidade-1" >
           </div>
         </div>
-        <button id="add-another" onclick="addAnother(event)">Adicionar localidade +</button>
       </div>
 
         <div id="localidades-container">
@@ -127,11 +126,13 @@
               <div class="styled-select">
                 <label>Localidade</label>
                 <input type="text" id="localidade-{{ forloop.counter }}" value="{{ localidade.localidade|default:'' }}" name="localidade-{{ forloop.counter }}" >
-              </div>
-          </div>
+              </div> 
+            </div>
           {% endif %}
           {% endfor %}
         </div>
+        
+        <button id="add-another" onclick="addAnother(event)">Adicionar localidade +</button>
       </form>
       <div class="btns-forms">
           <a href="{% url 'operations:form-update' form_uuid %}">

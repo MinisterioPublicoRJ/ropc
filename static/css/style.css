@@ -121,6 +121,7 @@ progress[value]{
   height: 120px;
   border-radius: 9px 9px 0px 0px;
   display: flex;
+  justify-content: center;
 }
 
 .text-header-form{
@@ -301,6 +302,7 @@ label {
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 20px;
+  column-gap: 2vw;
 }
 .page-final-cadastro strong{
   border: 0;
@@ -426,7 +428,7 @@ ul.pagination li a:hover{
 }
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
-} 
+}
 @media(max-width: 1080px){
   html {
     font-size: 93.75%;
