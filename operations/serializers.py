@@ -30,10 +30,15 @@ class OperationRegisterInfoSerializer(OperacaoSerializer):
     numero_tjrj = serializers.CharField(required=True)
 
     def validate(self, attrs):
+        errs = {}
         if attrs["tipo_operacao"] == "Pr" and not attrs["numero_inquerito_mae"]:
-            raise serializers.ValidationError(
-                {"numero_inquerito_mae": "Número de inquérito mãe deve ser fornecido para operação de tipo Programada."}
-            )
+            errs["numero_inquerito_mae"] = "Número de inquérito mãe deve ser fornecido para operação de tipo Programada."
+        if attrs["numero_tjrj"] and (not attrs["numero_tjrj"].isdigit() or len(attrs["numero_tjrj"]) != 20):
+            errs["numero_tjrj"] = "Número do TJRJ deve consistir de 20 dígitos."
+        if attrs["numero_inquerito_mae"] and (not attrs["numero_inquerito_mae"].isdigit() or len(attrs["numero_inquerito_mae"]) != 12):
+            errs["numero_inquerito_mae"] = "Número do inquérito mãe deve consistir de 12 dígitos."
+        if errs:
+            raise serializers.ValidationError(errs)
         return attrs
 
 
@@ -56,14 +61,44 @@ class InfoGeralOperacaoOneSerializer(OperacaoSerializer):
             #     )
             return attrs
 
-        # class Meta:
-        #     model = LocalidadeOperacao
-        #     fields = '__all__'
+        def to_internal_value(self, data):
+            try:
+                return super().to_internal_value(data)
+            except serializers.ValidationError as exer:
+                err = exer.__dict__
+                err['detail']['loc_position'] = data['loc_position']
+                raise serializers.ValidationError(err)
+
 
     data = serializers.DateField(format="%Y-%m-%d", required=True)
     hora_inicio = serializers.TimeField(format="%H:%M:%S", required=True)
     hora_termino = serializers.TimeField(format="%H:%M:%S", required=True)
-    localidade_operacao = LocalidadeOperacaoSerializer(many=True)
+    localidade_operacao = LocalidadeOperacaoSerializer(many=True, required=True)
+
+    def validate(self, attrs):
+        errs = {}
+        if len(attrs['localidade_operacao']) < 1:
+            errs["localidade-1"] = "É necessário fornecer pelo menos uma localidade!"
+        if errs:
+            raise serializers.ValidationError(errs)
+        return attrs
+
+    def is_valid(self, raise_exception=False):
+        try:
+            super().is_valid(raise_exception)
+        except serializers.ValidationError as exer:
+            errs = exer.__dict__['detail']
+            if 'localidade_operacao' in errs:
+                details = exer.__dict__['detail']['localidade_operacao']
+                for det in details:
+                    if not det:
+                        continue
+                    pos = det['detail']['loc_position']
+                    keys = [k for k in det['detail'] if k != 'loc_position']
+                    for k in keys:
+                        errs[f'{k}-{pos}'] = det['detail'][k]
+                errs.pop('localidade_operacao')
+            raise serializers.ValidationError(errs)
 
     def update(self, instance, validated_data):
         for key, val in validated_data.items():
@@ -101,15 +136,25 @@ class InfoOperacionaisOperacaoOneSerializer(OperacaoSerializer):
     operacao_integrada = serializers.BooleanField(required=True)
     orgaos_externos = OrgaoExternoSerializer(many=True)
 
-    # def validate_matricula_id_delegado_operacao(self, value):
-    #     match = re.match(r"\d{5,6}", value)
-    #     if not match:
-    #         raise serializers.ValidationError("Número RG PM inválido.")
+    def validate_matricula_id_delegado_operacao(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError("Número de matrícula deve ser numérico.")
 
-    #     return value
+        return value
 
 
     def validate(self, attrs):
+        errs = {}
+        if attrs['apoio_recebido'] and not attrs['unidades_apoiadoras']:
+            errs["unidades_apoiadoras"] = "Apoio recebido sem unidades apoiadoras selecionadas!"
+        if not attrs['apoio_recebido'] and attrs['unidades_apoiadoras']:
+            errs["unidades_apoiadoras"] = "Unidades apoiadoras selecionadas, porém apoio recebido marcado como não!"
+        if attrs['operacao_integrada'] and not attrs['orgaos_externos']:
+            errs["orgaos_externos"] = "Operação integrada sem órgãos externos selecionados!"
+        if not attrs['operacao_integrada'] and attrs['orgaos_externos']:
+            errs["orgaos_externos"] = "Órgãos externos selecionados para operação não integrada!"
+        if errs:
+            raise serializers.ValidationError(errs)
         # unidades_validas = Bairro.objects.get_ordered_for_municipio(
         #     attrs["municipio"]
         # ).values_list("bairro", flat=True)
@@ -148,12 +193,23 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
     numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0)
     numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
     numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0)
+    comunicou_escolas_saude = serializers.BooleanField(required=True)
+    escolas_perto = serializers.BooleanField(required=True)
+    hospitais_perto = serializers.BooleanField(required=True)
     descricao_analise_risco = serializers.CharField(required=True)
 
 
 class InfoResultadosOneSerializer(OperacaoSerializer):
     class ROApensadoSerializer(OperacaoSerializer):
         numero_ro = serializers.CharField(required=True)
+
+        def validate_numero_ro(self, value):
+            if not value.isdigit():
+                raise serializers.ValidationError("Número de registro de ocorrência deve ser numérico.")
+            if len(value) != 12:
+                raise serializers.ValidationError("Número de registro de ocorrência deve ter 12 dígitos.")
+
+            return value
 
     registro_ocorrencia = ROApensadoSerializer(many=True)
     houve_confronto_daf = serializers.BooleanField(required=True)
@@ -169,6 +225,19 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     numero_civis_feridos = serializers.IntegerField(required=True, min_value=0)
     # numero_civis_mortos_npap = serializers.IntegerField(required=True, min_value=0)
     numero_veiculos_recuperados = serializers.IntegerField(required=True, min_value=0)
+
+    def is_valid(self, raise_exception=False):
+        try:
+            super().is_valid(raise_exception)
+        except serializers.ValidationError as exer:
+            details = exer.__dict__['detail']['registro_ocorrencia']
+            print(details)
+            errs = {'registro_ocorrencia': []}
+            for det in details:
+                if not det:
+                    continue
+                errs['registro_ocorrencia'].append(det['numero_ro'])
+            raise serializers.ValidationError(errs)
 
     def validate(self, attrs):
         # Verifica se já existem dados de ocorrência
@@ -214,6 +283,14 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
         tipo_cartucho = serializers.CharField(required=True)
         tipo_calibre = serializers.CharField(required=True)
 
+        def to_internal_value(self, data):
+            try:
+                return super().to_internal_value(data)
+            except serializers.ValidationError as exer:
+                err = exer.__dict__
+                err['detail']['cart_position'] = data['cart_position']
+                raise serializers.ValidationError(err)
+
     droga_cocaina = serializers.BooleanField(required=True)
     droga_cannabis = serializers.BooleanField(required=True)
     droga_haxixe = serializers.BooleanField(required=True)
@@ -233,6 +310,23 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
     #         raise serializers.ValidationError("Número de RO inválido.")
 
     #     return value
+
+    def is_valid(self, raise_exception=False):
+        try:
+            super().is_valid(raise_exception)
+        except serializers.ValidationError as exer:
+            errs = exer.__dict__['detail']
+            if 'cartuchos_calibres' in errs:
+                details = exer.__dict__['detail']['cartuchos_calibres']
+                for det in details:
+                    if not det:
+                        continue
+                    pos = det['detail']['cart_position']
+                    keys = [k for k in det['detail'] if k != 'cart_position']
+                    for k in keys:
+                        errs[f'{k}-{pos}'] = det['detail'][k]
+                errs.pop('cartuchos_calibres')
+            raise serializers.ValidationError(errs)
 
     def update(self, instance, validated_data):
         for key, val in validated_data.items():

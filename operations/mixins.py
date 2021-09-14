@@ -9,7 +9,6 @@ class AllowPUTAsCreateMixin:
         partial = kwargs.pop('partial', False)
         data = self.preprocess_data(request.data)
         serializer = self.get_serializer(self.instance, data=data, partial=partial)
-        print(serializer)
         serializer.is_valid(raise_exception=True)
         self.perform_create_or_update(serializer)
 
