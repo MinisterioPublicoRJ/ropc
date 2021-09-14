@@ -33,13 +33,15 @@
         <div class="form-main">
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
-                <div id="box-form-group-result-operation-one">
+
+                <div>
                     <div>
                         <label>Registro de ocorrência apensado:</label>
                         <input type="text" value="{{ operacao_info.registro_ocorrencia|default:'' }}" name="registro_ocorrencia"
-                        id="registro_ocorrencia" class="form-control" >
+                            id="registro_ocorrencia" class="form-control" >
                     </div>
                 </div>
+
                     <div class="input-type-checked">
                             <div class="form-control" id="houve_confronto_daf" name="houve_confronto_daf" >
                                 <div style="margin-left: 27px; text-align: left;">
@@ -55,7 +57,7 @@
                             <div class="form-control" id="houve_resultados_operacao" name="houve_resultados_operacao"
                             >
                                 <div style="text-align: left; margin-left: 40px;">
-                                <label style="margin-top: -18px;" for="data">Houve resultados na operação?</label>
+                                <label for="data">Houve resultados na operação?</label>
                                 <div class="form-control-input-radios">
                                 <label> Sim</label>
                                 <input type="radio" name="option-resultados" value="1" {% if operacao_info.houve_resultados_operacao %}checked{% endif %}>
@@ -136,6 +138,9 @@
 {% endblock content %}
 
 {% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="{% static 'css/jquery.tagsinput-revisited.css' %}" rel="stylesheet">
+<script src="{% static 'js/jquery.tagsinput-revisited.js' %}"></script>
 <script>
 const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/parte-2/';
 const API_URL = '/v1/operacoes/cria-informacoes-resultado-parte-1/';
@@ -150,21 +155,15 @@ const FORM_VAR_LIST = {
     "numero_policiais_feridos": "#numero_policiais_feridos",
     "numero_mortes_policiais": "#numero_mortes_policiais",
     "numero_civis_mortos": "#numero_civis_mortos",
-    //"numero_mortes_interv_estado": "#numero_mortes_interv_estado",
     "numero_civis_feridos": "#numero_civis_feridos",
-    //"numero_civis_mortos_npap": "#numero_civis_mortos_npap",
     "numero_veiculos_recuperados": "#numero_veiculos_recuperados",
 };
 
-function displayOcorrenciaDialog(){
-    let msg = "Gostaria de confirmar que não houve ocorrência?";
-    let fieldObj = document.getElementById("radio-houve-ocorrencia");
-    if (fieldObj.value === "0"){
-        let ans = confirm(msg);
-        if (!ans){
-            fieldObj.checked = false;
-        }
-    }
-}
+$(document).ready(function () {
+    $('#registro_ocorrencia').tagsInput(
+        {placeholder: 'Adicionar Registro de Ocorrência'}
+    );
+});
+
 </script>
 {% endblock extra_js %}
