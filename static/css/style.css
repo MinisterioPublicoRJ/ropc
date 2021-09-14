@@ -41,8 +41,13 @@ ul .wrapper-initial-page{
   opacity: 1;
   grid-area: navBar;
   width: 260px;
-  height: 100%;
-  position:relative; 
+  /* height: 98vh; */
+  position:relative;
+  padding: 5vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 #progressbar{
   background-color: #E5E5E5;
@@ -60,10 +65,10 @@ ul .wrapper-initial-page{
 progress::-moz-progress-bar {
   background: #0055FF;
 }
-progress::-webkit-progress-value { 
+progress::-webkit-progress-value {
   background: #0055FF;
 }
-progress { 
+progress {
   color: #0055FF;
 }
 progress[value]{
@@ -74,7 +79,7 @@ progress[value]{
 .navbarLeft-img-logo{
   width: 210px;
   height: 50px;
-  padding-top: 30px;
+  /* padding-top: 30px; */
 }
 .navbarLeft ul li{
   list-style: none;
@@ -85,7 +90,7 @@ progress[value]{
   margin-left: 6px;
 }
 .navbarLeft ul {
-  margin-top: 40px;
+  /* margin-top: 40px; */
   padding-left: 0px;
 }
 .navbarLeft-list img{
@@ -95,10 +100,10 @@ progress[value]{
 }
 .operation-form{
   grid-area: pageForm;
-  position:relative; 
+  position:relative;
 }
 .operation-form span{
-  position:absolute; 
+  position:absolute;
   margin-left: 90px;
   margin-top: 50px;
   color: #D4D4D5;
@@ -352,9 +357,9 @@ label {
   justify-content: space-around;
 }
 .box-logo-mp{
-  position:absolute;
-  bottom: 0px; 
-  margin-left: 10px;
+  /* position:absolute;
+  bottom: 0px;
+  margin-left: 10px; */
 }
 .error-message{
   color: #ED0606;
@@ -435,7 +440,7 @@ ul.pagination li a:hover{
 }
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
-} 
+}
 @media(max-width: 1080px){
   html {
     font-size: 93.75%;
