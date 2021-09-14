@@ -12,15 +12,17 @@ a:link{
   text-decoration: inherit;
   text-decoration: none;
 }
-.navbarLeft-list ul a li:hover{
-  color: #FDBC2D;
-}
+
 #first-li,
 #second-li,
 #third-li,
 #fourth-li{
   display: flex;
-  margin-left: 30px;
+  align-items: center;
+  margin: 2vh 0 2vh 0.75vw;
+}
+a[id$="-li"]:hover > li{
+  color: #FDBC2D;
 }
 .main-page{
   display: grid;
@@ -41,8 +43,12 @@ ul .wrapper-initial-page{
   opacity: 1;
   grid-area: navBar;
   width: 260px;
-  height: 100%;
-  position:relative; 
+  position:relative;
+  padding: 5vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 #progressbar{
   background-color: #E5E5E5;
@@ -60,10 +66,10 @@ ul .wrapper-initial-page{
 progress::-moz-progress-bar {
   background: #0055FF;
 }
-progress::-webkit-progress-value { 
+progress::-webkit-progress-value {
   background: #0055FF;
 }
-progress { 
+progress {
   color: #0055FF;
 }
 progress[value]{
@@ -74,31 +80,28 @@ progress[value]{
 .navbarLeft-img-logo{
   width: 210px;
   height: 50px;
-  padding-top: 30px;
 }
 .navbarLeft ul li{
   list-style: none;
   text-align: left;
   font-size: 1.300rem;
   color: #D4D4D5;
-  margin-top: 60px;
   margin-left: 6px;
 }
 .navbarLeft ul {
-  margin-top: 40px;
   padding-left: 0px;
 }
 .navbarLeft-list img{
-  height: 33px;
-  width: 29px;
-  margin-top: 50px;
+  height: 25px;
+  width: 25px;
+  margin-right: 0.5vw;
 }
 .operation-form{
   grid-area: pageForm;
-  position:relative; 
+  position:relative;
 }
 .operation-form span{
-  position:absolute; 
+  position:absolute;
   margin-left: 90px;
   margin-top: 50px;
   color: #D4D4D5;
@@ -135,14 +138,15 @@ progress[value]{
 }
 .form-main {
   margin-top: 30px;
+  text-align: center;
   color: #AEAEAE;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-.form-main > p {
-  text-align: center;
+.form-main p {
+  max-width: 460px;
 }
 .form-main input, select, textarea {
   border: none;
@@ -168,6 +172,7 @@ progress[value]{
 .input-type-checked{
   display: flex;
   flex-direction: row;
+  margin-right: 570px;
 }
 .input-type-checked-info{
   display: flex;
@@ -211,6 +216,7 @@ progress[value]{
 .input-type-checked-results-two {
   display: flex;
   margin-top: 30px;
+  margin-left: -31px;
 }
 .input-type-checked-results-two input[type="checkbox"]{
   width: 26px;
@@ -233,6 +239,11 @@ progress[value]{
   margin-bottom: 10px;
 }
 
+.input-type-checked p{
+  color: #ED0606;
+  font-size: 0.875rem;
+  margin-top: 0px;
+}
 .input-type-checked .form-control{
   display: flex;
   font-size: 0.75rem;
@@ -315,13 +326,7 @@ label {
   margin: 20px;
   margin-top: 30px;
 }
-.box-form-group-cartuchos-container{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 20px;
-  margin-top: 30px;
-}
+
 #box-form-group-result-operation-one{
   display: flex;
   flex-wrap: wrap;
@@ -331,7 +336,16 @@ label {
 #box-form-group-result-operation-one #registro_ocorrencia{
   width:100vh;
 }
+/* #box-form-group-info-operation-two{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
 
+#box-form-group-info-operation-two input{
+  width: 100px;
+  margin: 30px;
+} */
 .box-form-group h3{
   color: #707070;
 }
@@ -340,23 +354,16 @@ label {
   flex-wrap: wrap;
   justify-content: space-around;
 }
-.box-logo-mp{
-  position:absolute;
-  bottom: 0px; 
-  margin-left: 10px;
-}
 .error-message{
-  color:#FDBC2D;
+  color: #ED0606;
   font-size: 0.875rem;
   margin-top: 0px;
-  text-align: left;
-  max-width: 240px;
 }
 .tela-login-main a:link{
   margin-bottom: 40px;
 }
 .tela-login-main a:link:hover{
-  color:#FDBC2D
+  color:red
 }
 .page-final-cadastro {
   display: flex;
@@ -426,7 +433,7 @@ ul.pagination li a:hover{
 }
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
-} 
+}
 @media(max-width: 1080px){
   html {
     font-size: 93.75%;
