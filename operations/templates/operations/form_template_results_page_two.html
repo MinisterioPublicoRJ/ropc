@@ -62,46 +62,57 @@
                     <div class="input-type-checked-results-one"> 
                     <div class="form-group">
                         <label style="margin-top: -12px;">Artefatos explosivos apreendidos?</label>
-                        <input type="number" min="1" value="{{ operacao_info.numero_explosivos_apreendidos|default:0 }}"
-                            name="numero_explosivos_apreendidos" id="numero_explosivos_apreendidos" class="form-control" required>
+                        <input type="number" min="0" value="{{ operacao_info.numero_explosivos_apreendidos|default:0 }}"
+                            name="numero_explosivos_apreendidos" id="numero_explosivos_apreendidos" class="form-control" >
                     </div>
                     <div class="form-group">
                         <label>Armas apreendidas?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_armas_apreendidas|default:0 }}"
-                            name="numero_armas_apreendidas" id="numero_armas_apreendidas" class="form-control" required>
+                            name="numero_armas_apreendidas" id="numero_armas_apreendidas" class="form-control" >
                     </div>
                     <div class="form-group">
                         <label>Do total de armas, quantos fuzis?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_fuzis_apreendidos|default:0 }}"
-                            name="numero_fuzis_apreendidos" id="numero_fuzis_apreendidos" class="form-control" required>
+                            name="numero_fuzis_apreendidos" id="numero_fuzis_apreendidos" class="form-control" >
                     </div>
                     <div class="form-group">
                         <label>Carregadores apreendidos?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_carregadores_apreendidos|default:0 }}"
-                            name="numero_carregadores_apreendidos" id="numero_carregadores_apreendidos" class="form-control" required>
+                            name="numero_carregadores_apreendidos" id="numero_carregadores_apreendidos" class="form-control" >
                     </div>
                     <div class="form-group">
                         <label>Munições apreendidas?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_municoes_apreendidas|default:0 }}"
-                            name="numero_municoes_apreendidas" id="numero_municoes_apreendidas" class="form-control" required>
+                            name="numero_municoes_apreendidas" id="numero_municoes_apreendidas" class="form-control" >
                     </div>
                     </div>
                 </div>
                 <div class="info-results-cartuchos">
                     <label>Especifique nestes campos os cartuchos e calibres apreendidos:</label>
                     <button style="margin-left: -114px;" id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
-                </div>      
+                </div>
                 <div class="box-form-group">
                         <div id="cartuchos-container">
+                            <div class="form-group">
+                                <label>Cartucho</label>
+                                <input type="text" name="tipo_cartucho-1" value="{{ cartucho.tipo_cartucho|default:'' }}"
+                                    id="tipo_cartucho-1" class="form-control required">
+                            
+                                <label>Calibre</label>
+                                <input type="text" id="tipo_calibre-1" value="{{ cartucho.tipo_calibre|default:'' }}"
+                                    name="tipo_calibre-1">
+                            </div>
                             {% for cartucho in operacao_info.cartuchos_calibres %}
+                            {% if forloop.counter != 1 %}
                             <div class="form-group">
                                 <label>Cartucho</label>
                                 <input type="text" name="tipo_cartucho-{{ forloop.counter }}" value="{{ cartucho.tipo_cartucho|default:'' }}"
-                                    id="tipo_cartucho-{{ forloop.counter }}" class="form-control required" required>
+                                    id="tipo_cartucho-{{ forloop.counter }}" class="form-control required" >
 
                                 <label>Calibre</label>
-                                <input type="text" id="tipo_calibre-{{ forloop.counter }}" value="{{ cartucho.tipo_calibre|default:'' }}" name="tipo_calibre-{{ forloop.counter }}" required>
+                                <input type="text" id="tipo_calibre-{{ forloop.counter }}" value="{{ cartucho.tipo_calibre|default:'' }}" name="tipo_calibre-{{ forloop.counter }}" >
                             </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                 </div>
@@ -153,14 +164,17 @@ let FORM_VAR_LIST = {
     function addAnother(event) {
         event.preventDefault();
         COUNT_CARTUCHOS++;
+        if (COUNT_CARTUCHOS == 1) {
+            COUNT_CARTUCHOS++;
+        }
 
         let element = `<div class="form-group">
                     <label>Cartucho</label>
                     <input type="text" name="tipo_cartucho-${COUNT_CARTUCHOS}" value=""
-                        id="tipo_cartucho-${COUNT_CARTUCHOS}" class="form-control required" required>
+                        id="tipo_cartucho-${COUNT_CARTUCHOS}" class="form-control required" >
 
                     <label>Calibre</label>
-                    <input type="text" id="tipo_calibre-${COUNT_CARTUCHOS}" value="" name="tipo_calibre-${COUNT_CARTUCHOS}" required>
+                    <input type="text" id="tipo_calibre-${COUNT_CARTUCHOS}" value="" name="tipo_calibre-${COUNT_CARTUCHOS}" >
                 </div>
         `;
 
