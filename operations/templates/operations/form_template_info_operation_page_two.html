@@ -61,36 +61,52 @@
           </div>
         </div>
 
-        <div class="box-form-group">
-          <div class="input-type-checked-info">
-            <label for="data">Comunicou a equipamentos de saúde e escolas?</label>
-            <div class="" id="comunicou_escolas_saude" name="comunicou_escolas_saude" >
+          <div class="input-type-checked" style="margin-bottom: 30px; margin-top: 30px;">
+            <div class="form-control"id="comunicou_escolas_saude" name="comunicou_escolas_saude" >
+            <div style="margin-left: 20px; text-align: left;">
+            <label style="max-width: 200px; margin-top: -16px;" for="data">Comunicou a equipamentos de saúde e escolas?</label>
+            <div class="form-control-input-radios" >
               <label> Sim</label>
               <input type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude %}checked{% endif %} value="1">
               <label style="margin-left: 20px">Não</label>
               <input type="radio" name="option-comunicou" {% if operacao_info.comunicou_escolas_saude == False %}checked{% endif %} value="0">
             </div>
+            </div>
+          </div>
+
+          <div class="form-control" id="escolas_perto" name="escolas_perto" >
+            <div style="margin-left: 20px; text-align: left;">
             <label for="data">Escolas nas proximidades?</label>
-            <div class="" id="escolas_perto" name="escolas_perto" >
+            <div class="form-control-input-radios"  >
               <label> Sim</label>
               <input type="radio" name="option-escolas" value="1" {% if operacao_info.escolas_perto %}checked{% endif %}>
               <label style="margin-left: 20px">Não</label>
               <input type="radio" name="option-escolas" value="0" {% if operacao_info.escolas_perto == False %}checked{% endif %}>
             </div>
+            </div>
+          </div>
+            
+          <div class="form-control" id="hospitais_perto" name="hospitais_perto"  >
+            <div style="margin-left: 20px; text-align: left;">
             <label for="data">Hospitais nas proximidades?</label>
-            <div class="" id="hospitais_perto" name="hospitais_perto" >
+            <div class="form-control-input-radios" >
               <label> Sim</label>
               <input type="radio" name="option-hospitais" value="1" {% if operacao_info.hospitais_perto %}checked{% endif %}>
               <label style="margin-left: 20px">Não</label>
               <input type="radio" name="option-hospitais" value="0" {% if operacao_info.hospitais_perto == False %}checked{% endif %}>
             </div>
           </div>
+          </div>
         </div>
 
         <div class="box-form-group">
           <div class="">
             <label>Análise de riscos e medidas de controle de danos colaterais das operações...</label>
-            <textarea style="width: 100vh; height: 200px;" type="text" value="{{ operacao_info.descricao_analise_risco|default:'' }}" name="descricao_analise_risco" id="descricao_analise_risco" class="form-control" ></textarea>
+            <textarea style="width: 100vh; height: 200px;" type="text"
+             value="{{ operacao_info.descricao_analise_risco|default:'' }}"
+             name="descricao_analise_risco"
+             id="descricao_analise_risco">
+            </textarea>
           </div>
         </div>
         
