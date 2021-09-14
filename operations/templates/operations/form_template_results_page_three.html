@@ -34,66 +34,76 @@
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
               <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
 
-            <div class="box-form-group"></div>
             <div class="input-type-checked">
-                <label for="data">Houve disparos embarcado da aeronave?</label>
                 <div class="form-control" id="houve_disparados_aeronave" name="houve_disparados_aeronave" >
+                    <div style="margin-left: 69px; text-align: left; margin-bottom: 30px;">
+                    <label for="data">Houve disparos embarcado da aeronave?</label>
+                    <div class="form-control-input-radios">
                     <label> Sim</label>
                     <input type="radio" name="option-disparos" {% if operacao_info.houve_disparados_aeronave %}checked{% endif %}
                         value="1">
                     <label style="margin-left: 20px">Não</label>
                     <input type="radio" name="option-disparos" {% if operacao_info.houve_disparados_aeronave == False %}checked{% endif %}
                         value="0">
+                    </div>
+                    </div>
                 </div>
-                <label for="data">Foram feitos registros de imagem a partir da aeronave?</label>
                 <div class="form-control" id="houve_registros_imagem" name="houve_registros_imagem" >
+                    <div style="margin-left: 27px; text-align: left;">
+                    <label for="data">Foram feitos registros de imagem a partir da aeronave?</label>
+                    <div class="form-control-input-radios">
                     <label> Sim</label>
                     <input type="radio" name="option-registros" value="1" {% if operacao_info.houve_registros_imagem %}checked{% endif %}>
                     <label style="margin-left: 20px">Não</label>
                     <input type="radio" name="option-registros" value="0" {% if operacao_info.houve_registros_imagem == False %}checked{% endif %}>
+                    </div>
+                     </div>
                 </div>
-                <label for="data">O local permaneceu preservado?</label>
                 <div class="form-control" id="local_preservado" name="local_preservado" >
+                    <div style="margin-left: 27px; text-align: left;">
+                    <label for="data">O local permaneceu preservado?</label>
+                    <div class="form-control-input-radios">
                     <label> Sim</label>
                     <input type="radio" name="option-preservado" value="1" {% if operacao_info.local_preservado %}checked{% endif %}>
                     <label style="margin-left: 20px">Não</label>
                     <input type="radio" name="option-preservado" value="0" {% if operacao_info.local_preservado == False %}checked{% endif %}>
+                    </div>
+                    </div>
                 </div>
             </div>
-            </div>
 
-              <div class="box-form-group">
-                <div class="">
-                    <label for="data">Caso a pericia tenha sido acionada, quais delas foram feitas?</label>
+                <div style="margin-left: 40px; ">
+                    <label style="margin-left: 30px;" for="data">Caso a pericia tenha sido acionada, quais delas foram feitas?</label>
+                    <div class="input-type-checked-results-two">
                         <div class="form-control" id="pericia_local" name="pericia_local" >
-                            <label> Local</label>
+                            <label style="margin-left: 28px;"> Local</label>
                             <input type="checkbox" name="pericia_local" id="pericia_local" value="1" {% if operacao_info.pericia_local %}checked{% endif %}>
                         </div>
                         <div class="form-control" id="pericia_aeronave" name="pericia_aeronave" >
-                            <label> Aeronave</label>
+                            <label style="margin-left: 28px;"> Aeronave</label>
                             <input type="checkbox" name="pericia_aeronave" id="pericia_aeronave" value="1" {% if operacao_info.pericia_aeronave %}checked{% endif %}>
                         </div>
                         <div class="form-control" id="pericia_veiculo_blindado" name="pericia_veiculo_blindado" >
-                            <label> Veículo blindado</label>
+                            <label style="margin-left: 28px;"> Veículo blindado</label>
                             <input type="checkbox" name="pericia_veiculo_blindado" id="pericia_veiculo_blindado" value="0" {% if operacao_info.pericia_veiculo_blindado %}checked{% endif %}>
                         </div>
                         <div class="form-control" id="pericia_viaturas" name="pericia_viaturas" >
-                            <label> Viaturas</label>
+                            <label style="margin-left: 28px;"> Viaturas</label>
                             <input type="checkbox" name="pericia_viaturas" id="pericia_viaturas" value="1" {% if operacao_info.pericia_viaturas %}checked{% endif %}>
                         </div>
                         <div class="form-control" id="pericia_iml" name="pericia_iml" >
-                            <label> IML</label>
+                            <label style="margin-left: 28px;"> IML</label>
                             <input type="checkbox" name="pericia_iml" id="pericia_iml" value="1" {% if operacao_info.pericia_iml %}checked{% endif %}>
                         </div>
                         <div class="form-control" id="pericia_outras" name="pericia_outras" >
-                            <label> Outras</label>
+                            <label style="margin-left: 28px;"> Outras</label>
                             <input type="checkbox" name="pericia_outras" id="pericia_outras" value="1" {% if operacao_info.pericia_outras %}checked{% endif %}>
                         </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="box-form-group">
-                <div class="">
+            <div class="box-form-group" style="margin-top: 30px;">
+                <div>
                     <label for="name">Observações Gerais</label>
                     <textarea style="width: 100vh; height: 150px;" type="text" id="observacoes_gerais"
                         value="{{ operacao_info.observacoes_gerais|default:'' }}" name="observacoes_gerais"

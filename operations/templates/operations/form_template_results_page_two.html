@@ -91,9 +91,9 @@
                     <label>Especifique nestes campos os cartuchos e calibres apreendidos:</label>
                     <button style="margin-left: -114px;" id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
                 </div>
-                <div class="box-form-group">
+                <div class="box-form-group-cartuchos-container">
                         <div id="cartuchos-container">
-                            <div class="form-group">
+                            <div class="">
                                 <label>Cartucho</label>
                                 <input type="text" name="tipo_cartucho-1" value="{{ cartucho.tipo_cartucho|default:'' }}"
                                     id="tipo_cartucho-1" class="form-control required">
@@ -104,7 +104,7 @@
                             </div>
                             {% for cartucho in operacao_info.cartuchos_calibres %}
                             {% if forloop.counter != 1 %}
-                            <div class="form-group">
+                            <div class="">
                                 <label>Cartucho</label>
                                 <input type="text" name="tipo_cartucho-{{ forloop.counter }}" value="{{ cartucho.tipo_cartucho|default:'' }}"
                                     id="tipo_cartucho-{{ forloop.counter }}" class="form-control required" >

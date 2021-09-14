@@ -135,15 +135,14 @@ progress[value]{
 }
 .form-main {
   margin-top: 30px;
-  text-align: center;
   color: #AEAEAE;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-.form-main p {
-  max-width: 460px;
+.form-main > p {
+  text-align: center;
 }
 .form-main input, select, textarea {
   border: none;
@@ -169,7 +168,6 @@ progress[value]{
 .input-type-checked{
   display: flex;
   flex-direction: row;
-  margin-right: 570px;
 }
 .input-type-checked-info{
   display: flex;
@@ -213,7 +211,6 @@ progress[value]{
 .input-type-checked-results-two {
   display: flex;
   margin-top: 30px;
-  margin-left: -31px;
 }
 .input-type-checked-results-two input[type="checkbox"]{
   width: 26px;
@@ -236,11 +233,6 @@ progress[value]{
   margin-bottom: 10px;
 }
 
-.input-type-checked p{
-  color: #ED0606;
-  font-size: 0.875rem;
-  margin-top: 0px;
-}
 .input-type-checked .form-control{
   display: flex;
   font-size: 0.75rem;
@@ -323,7 +315,13 @@ label {
   margin: 20px;
   margin-top: 30px;
 }
-
+.box-form-group-cartuchos-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px;
+  margin-top: 30px;
+}
 #box-form-group-result-operation-one{
   display: flex;
   flex-wrap: wrap;
@@ -333,16 +331,7 @@ label {
 #box-form-group-result-operation-one #registro_ocorrencia{
   width:100vh;
 }
-/* #box-form-group-info-operation-two{
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
 
-#box-form-group-info-operation-two input{
-  width: 100px;
-  margin: 30px;
-} */
 .box-form-group h3{
   color: #707070;
 }
@@ -357,15 +346,17 @@ label {
   margin-left: 10px;
 }
 .error-message{
-  color: #ED0606;
+  color:#FDBC2D;
   font-size: 0.875rem;
   margin-top: 0px;
+  text-align: left;
+  max-width: 240px;
 }
 .tela-login-main a:link{
   margin-bottom: 40px;
 }
 .tela-login-main a:link:hover{
-  color:red
+  color:#FDBC2D
 }
 .page-final-cadastro {
   display: flex;
