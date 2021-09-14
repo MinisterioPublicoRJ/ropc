@@ -9,12 +9,30 @@
     <p>Aqui é onde as informações referentes as operações devem ser cadastradas</p>
     <div class="info-initial-page">
         <div class="container">
-            <ul class="progressbar">
-                <li class="active">login</li>
-                <li>choose interest</li>
-                <li>add friends</li>
-                <li>View map</li>
-            </ul>
+            <!-- <script type='text/javascript' src='https://tableau2020.mprj.mp.br/javascripts/api/viz_v1.js'></script>
+            <div class='tableauPlaceholder' style='width: 1600px; height: 850px;'>
+                <object class='tableauViz' width='1600'
+                    height='850' style='display:none;'>
+                    <param name='host_url' value='https%3A%2F%2Ftableau2020.mprj.mp.br%2F' />
+                    <param name='embed_code_version' value='3' />
+                    <param name='site_root' value='&#47;t&#47;MPMAPAS' />
+                    <param name='name'
+                        value='ROPC-PainelGerencial&#47;ROPC&#47;bernardo.cordeiro@pgj.rj.gov.br&#47;d1fa1c67-e199-4363-b5e2-5de26602f4f1' />
+                    <param name='tabs' value='no' />
+                    <param name='toolbar' value='yes' />
+                    <param name='origin' value='card_share_link' />
+                    <param name='showAppBanner' value='false' />
+                </object></div> -->
+            <script type="text/javascript" src="{{ tableau_host }}javascripts/api/viz_v1.js"></script>
+            <object class="tableauViz" width="900" height="700" style="display:none;">
+                <param name="path"
+                    value="{{ tableau_trunc_url }}" />
+            </object>
+
+            <!-- <iframe
+                src="{{ tableau_url }}"
+                width="800" height="600">
+            </iframe> -->
         </div>
     </div>
 {% endblock content %}
