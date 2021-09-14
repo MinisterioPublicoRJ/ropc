@@ -65,6 +65,7 @@ form button {
     background-color: #F7CF32;
     color: #111111;
     margin-top: 10px;
+    text-transform: uppercase;
 }
 form button:hover {
     background-color: #3133af;
