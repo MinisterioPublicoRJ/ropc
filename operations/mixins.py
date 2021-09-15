@@ -4,10 +4,15 @@ from rest_framework.response import Response
 
 class AllowPUTAsCreateMixin:
     def update(self, request, *args, **kwargs):
-        self.instance = self.get_operation()
-
         partial = kwargs.pop('partial', False)
         data = self.preprocess_data(request.data)
+        # First checks for validity
+        serializer = self.get_serializer(data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        # And THEN creates the operation if everything is OK
+        # Could be refactored to reduce duplicity BUT will stay like this for now
+        self.instance = self.get_operation()
         serializer = self.get_serializer(self.instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_create_or_update(serializer)
