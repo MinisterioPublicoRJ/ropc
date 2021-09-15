@@ -240,7 +240,7 @@ progress[value]{
 }
 
 .input-type-checked p{
-  color: #ED0606;
+  color: #FDBC2D;
   font-size: 0.875rem;
   margin-top: 0px;
 }
@@ -434,6 +434,13 @@ ul.pagination li a:hover{
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
 }
+
+.input-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 @media(max-width: 1080px){
   html {
     font-size: 93.75%;
