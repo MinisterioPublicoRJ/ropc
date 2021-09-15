@@ -24,10 +24,10 @@ class OperacaoSerializer(serializers.Serializer):
 
 
 class OperationRegisterInfoSerializer(OperacaoSerializer):
-    numero_inquerito_mae = serializers.CharField(allow_blank=True)
+    numero_inquerito_mae = serializers.CharField(allow_blank=True, min_length=12, max_length=12)
     tipo_operacao = serializers.CharField(required=True)
     nome_operacao = serializers.CharField(required=True)
-    numero_tjrj = serializers.CharField(allow_blank=True)
+    numero_tjrj = serializers.CharField(allow_blank=True, min_length=20, max_length=20)
 
     def validate(self, attrs):
         errs = {}
@@ -128,7 +128,7 @@ class InfoOperacionaisOperacaoOneSerializer(OperacaoSerializer):
         nome_orgao = serializers.CharField(required=True)
 
     nome_delegado_operacao = serializers.CharField(required=True)
-    matricula_id_delegado_operacao = serializers.CharField(required=True)
+    matricula_id_delegado_operacao = serializers.CharField(required=True, max_length=32)
     natureza_operacao = serializers.CharField(required=True)
     unidade_responsavel = serializers.CharField(required=True)
     apoio_recebido = serializers.BooleanField(required=True)
@@ -313,6 +313,13 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
     #         raise serializers.ValidationError("Número de RO inválido.")
 
     #     return value
+
+    def validate(self, attrs):
+        errs = {}
+        if attrs['numero_fuzis_apreendidos'] > attrs['numero_armas_apreendidas']:
+            errs["numero_fuzis_apreendidos"] = "Número de armas menor que número de fuzis!"
+        if errs:
+            raise serializers.ValidationError(errs)
 
     def is_valid(self, raise_exception=False):
         try:
