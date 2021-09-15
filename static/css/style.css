@@ -172,15 +172,8 @@ progress[value]{
 .input-type-checked{
   display: flex;
   flex-direction: row;
-  margin-right: 570px;
 }
-.input-type-checked-info{
-  display: flex;
-}
-.input-type-checked-info input[type="radio"]{
-  width: 15px;
-  height: 11px;
-}
+
 .input-type-checked input[type="radio"]{
   width: 15px;
   height: 11px;
@@ -216,18 +209,16 @@ progress[value]{
 .input-type-checked-results-two {
   display: flex;
   margin-top: 30px;
-  margin-left: -31px;
 }
 .input-type-checked-results-two input[type="checkbox"]{
   width: 26px;
   height: 26px;
   margin-left: 30px;
 }
-.info-results-cartuchos{
-  display: flex;
-  flex-direction: column;
+.info-results-cartuchos label{
   margin-top: 30px;
-  margin-left: 15px;
+  margin-bottom: 20px;
+
 }
 .input-type-checked-results-two label{
   margin-left: 40px;
@@ -240,7 +231,7 @@ progress[value]{
 }
 
 .input-type-checked p{
-  color: #ED0606;
+  color: #FDBC2D;
   font-size: 0.875rem;
   margin-top: 0px;
 }
@@ -259,9 +250,7 @@ progress[value]{
   height: 14px;
   margin-left: 2px;
 }
-.input-disabled {
-  background-color:#CBCDCB !important;
-}
+
 .btns-forms{
   display: flex;
   align-items: center;
@@ -279,6 +268,7 @@ progress[value]{
   border: none;
   color: #FDBC2D;
   text-transform: lowercase;
+  display: flex;
 }
 .btns-forms button{
   border-radius: 12px;
@@ -327,25 +317,10 @@ label {
   margin-top: 30px;
 }
 
-#box-form-group-result-operation-one{
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 20px;
-
-}
 #box-form-group-result-operation-one #registro_ocorrencia{
   width:100vh;
 }
-/* #box-form-group-info-operation-two{
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
 
-#box-form-group-info-operation-two input{
-  width: 100px;
-  margin: 30px;
-} */
 .box-form-group h3{
   color: #707070;
 }
@@ -354,17 +329,25 @@ label {
   flex-wrap: wrap;
   justify-content: space-around;
 }
+#cartuchos-container{
+  display: flex;
+  flex-wrap: wrap;
+}
+#cartuchos-container input{
+  width: 140px;
+}
 .error-message{
-  color: #ED0606;
+  color: #FDBC2D;
   font-size: 0.875rem;
-  margin-top: 0px;
+  text-align: left;
+}
+p.error-message{
+  max-width: 250px;
 }
 .tela-login-main a:link{
   margin-bottom: 40px;
 }
-.tela-login-main a:link:hover{
-  color:red
-}
+
 .page-final-cadastro {
   display: flex;
   flex-direction: column;
@@ -403,15 +386,14 @@ ul.pagination li{
   list-style: none;
 }
 ul.pagination li a, strong {
-  color: black;
+  color: #ffff;
   padding: 8px 16px;
   text-decoration: none;
   transition: background-color .3s;
-  border: 1px solid #ddd;
+  border: 1px solid #FDBC2D;
 }
 ul.pagination strong {
-  margin: 0;
-  color: #0055FF;
+  color: #FDBC2D;
 }
 .pagination li:first-child a, strong {
   border-top-left-radius: 5px;
@@ -420,11 +402,9 @@ ul.pagination strong {
 .pagination li:last-child a, strong{
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+  border-color: #FDBC2D ;
 }
-ul.pagination li a:hover{
-  background-color: #0055FF;
-  color: #E5E5E5;
-}
+
 .sr-only {
   display: none;
 }
@@ -434,6 +414,13 @@ ul.pagination li a:hover{
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
 }
+
+.input-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 @media(max-width: 1080px){
   html {
     font-size: 93.75%;

@@ -27,12 +27,12 @@ class OperationRegisterInfoSerializer(OperacaoSerializer):
     numero_inquerito_mae = serializers.CharField(allow_blank=True, min_length=12, max_length=12)
     tipo_operacao = serializers.CharField(required=True)
     nome_operacao = serializers.CharField(required=True)
-    numero_tjrj = serializers.CharField(required=True, min_length=20, max_length=20)
+    numero_tjrj = serializers.CharField(allow_blank=True, min_length=20, max_length=20)
 
     def validate(self, attrs):
         errs = {}
-        if attrs["tipo_operacao"] == "Pr" and not attrs["numero_inquerito_mae"]:
-            errs["numero_inquerito_mae"] = "Número de inquérito mãe deve ser fornecido para operação de tipo Programada."
+        # if attrs["tipo_operacao"] == "Pr" and not attrs["numero_inquerito_mae"]:
+        #     errs["numero_inquerito_mae"] = "Número de inquérito mãe deve ser fornecido para operação de tipo Programada."
         if attrs["numero_tjrj"] and (not attrs["numero_tjrj"].isdigit() or len(attrs["numero_tjrj"]) != 20):
             errs["numero_tjrj"] = "Número do TJRJ deve consistir de 20 dígitos."
         if attrs["numero_inquerito_mae"] and (not attrs["numero_inquerito_mae"].isdigit() or len(attrs["numero_inquerito_mae"]) != 12):
@@ -230,13 +230,16 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
         try:
             super().is_valid(raise_exception)
         except serializers.ValidationError as exer:
-            details = exer.__dict__['detail']['registro_ocorrencia']
-            print(details)
-            errs = {'registro_ocorrencia': []}
-            for det in details:
-                if not det:
-                    continue
-                errs['registro_ocorrencia'].append(det['numero_ro'])
+            errs = exer.__dict__['detail']
+            if 'registro_ocorrencia' in errs:
+                details = exer.__dict__['detail']['registro_ocorrencia']
+                ro_errs = []
+                for det in details:
+                    if not det:
+                        continue
+                    ro_errs.append(det['numero_ro'][0])
+                    break
+                errs['registro_ocorrencia'] = ro_errs
             raise serializers.ValidationError(errs)
 
     def validate(self, attrs):
