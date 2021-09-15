@@ -10,14 +10,14 @@
     <div class="main-page-form">
         <div class="header-form">
             <div class="text-header-form">
-                <p>Informações Gerais</p>
+                <p>Informações gerais</p>
             </div>
             <div style="margin-left: 30px">
              <div class="progressbar-text">
-                <p>Informações de Registro</p>
-                <p>Informações Gerais</p>
-                <p>Informações Operacionais</p>
-                <p>Informações da Ocorrência</p>
+                <p>Informações de registro</p>
+                <p>Informações gerais</p>
+                <p>Informações operacionais</p>
+                <p>Informações da ocorrência</p>
                 <p>Finalizar cadastro</p>
              </div>
                 <progress max="100" value="25" id="progressbar"></progress>
@@ -34,8 +34,8 @@
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
                 <div class="box-form-group">
-                    <div class="">
-                        <label for="name">Objetivo Estratégico da Operação</label>
+                    <div>
+                        <label for="name">Objetivo estratégico da operação</label>
                         <textarea style="width: 100vh; height: 85px" type="text"
                         id="objetivo_estrategico_operacao"
                         value="{{ operacao_info.objetivo_estrategico_operacao|default:'' }}"
@@ -45,13 +45,12 @@
                     </div>
                 </div>
                 <div class="box-form-group">
-                    <div class="">
+                    <div>
                         <label for="name">Justificativa da excepcionalidade da operação...</label>
                         <textarea style="width: 100vh; height: 200px;" type="text"
                         id="justificativa_excepcionalidade_operacao"
                         value="{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}"
-                        name="justificativa_excepcionalidade_operacao"
-                        required>{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}
+                        name="justificativa_excepcionalidade_operacao">{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}
                         </textarea>   
                     </div>
                 </div>
