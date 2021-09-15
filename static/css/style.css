@@ -429,6 +429,37 @@ ul.pagination li a:hover{
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
 }
+.operation-time, .operation-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  column-gap: 1vw;
+  width: 100%;
+  padding: 1vh 1vw;
+}
+.operation-location {
+  border-bottom: 1px solid #707070;
+}
+.operation-time div, .operation-location div {
+  flex-shrink: 1;
+}
+.operation-time > div, .operation-location > div {
+  width: calc(25% - 2vw);
+} 
+.operation-time input {
+  width: 100%;
+}
+.operation-location select {
+  width: 100%;
+}
+.operation-location input {
+  width: 100%;
+}
+.form-group.location-form {
+  width: 100%;
+  display: flex;
+}
+
 @media(max-width: 1080px){
   html {
     font-size: 93.75%;
