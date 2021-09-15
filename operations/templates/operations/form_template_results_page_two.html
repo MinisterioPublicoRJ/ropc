@@ -91,11 +91,11 @@
                         <div id="cartuchos-container">
                             <div>
                                 <label>Cartucho</label>
-                                <input type="text" name="tipo_cartucho-1" value="{{ cartucho.tipo_cartucho|default:'' }}"
+                                <input type="text" name="tipo_cartucho-1" value="{{ operacao_info.cartuchos_calibres.0.tipo_cartucho|default:'' }}"
                                     id="tipo_cartucho-1" class="form-control required">
                             
                                 <label>Calibre</label>
-                                <input type="text" id="tipo_calibre-1" value="{{ cartucho.tipo_calibre|default:'' }}"
+                                <input type="text" id="tipo_calibre-1" value="{{ operacao_info.cartuchos_calibres.0.tipo_calibre|default:'' }}"
                                     name="tipo_calibre-1">
                             </div>
                             {% for cartucho in operacao_info.cartuchos_calibres %}
