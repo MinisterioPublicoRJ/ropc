@@ -320,6 +320,7 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
             errs["numero_fuzis_apreendidos"] = "Número de armas menor que número de fuzis!"
         if errs:
             raise serializers.ValidationError(errs)
+        return attrs
 
     def is_valid(self, raise_exception=False):
         try:
