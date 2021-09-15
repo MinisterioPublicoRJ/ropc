@@ -19,14 +19,14 @@ a:link{
 #fourth-li{
   display: flex;
   align-items: center;
-  margin: 2vh 0 2vh 0.75vw;
+  margin: 3vh 0 3vh 0.75vw;
 }
 a[id$="-li"]:hover > li{
   color: #FDBC2D;
 }
 .main-page{
   display: grid;
-  height: 100%;
+  height: 100vh;
   background-color: #292929;
   grid-template-areas:
   'navBar pageForm pageForm pageForm pageForm pageForm'
@@ -43,7 +43,8 @@ ul .wrapper-initial-page{
   opacity: 1;
   grid-area: navBar;
   width: 260px;
-  position:relative;
+  height: 90vh;
+  position:relative; 
   padding: 5vh 0;
   display: flex;
   flex-direction: column;
@@ -98,17 +99,17 @@ progress[value]{
 }
 .operation-form{
   grid-area: pageForm;
-  position:relative;
+  position:relative; 
+  height: 100vh;
+  overflow-y: scroll;
 }
 .operation-form span{
-  position:absolute;
-  margin-left: 90px;
-  margin-top: 50px;
+  position:relative;
   color: #D4D4D5;
   font-size: 1.4375rem;
 }
 .main-page-form{
-  margin: 90px;
+  margin: 4vh;
   box-shadow: 0px 5px 6px #00000029;
   border-radius: 9px;
   opacity: 1;
@@ -124,17 +125,18 @@ progress[value]{
   height: 120px;
   border-radius: 9px 9px 0px 0px;
   display: flex;
+  justify-content: center;
+  padding-top: 3vh;
 }
 
 .text-header-form{
   padding: 13px;
-  margin-top: 20px;
-  max-width: 170px;
+  max-width: 250px;
 }
 .text-header-form p{
   color: #AEAEAE;
   font-size: 0.835rem;
-  max-width: 110px;
+  max-width: 150px;
 }
 .form-main {
   margin-top: 30px;
@@ -172,15 +174,8 @@ progress[value]{
 .input-type-checked{
   display: flex;
   flex-direction: row;
-  margin-right: 570px;
 }
-.input-type-checked-info{
-  display: flex;
-}
-.input-type-checked-info input[type="radio"]{
-  width: 15px;
-  height: 11px;
-}
+
 .input-type-checked input[type="radio"]{
   width: 15px;
   height: 11px;
@@ -216,18 +211,16 @@ progress[value]{
 .input-type-checked-results-two {
   display: flex;
   margin-top: 30px;
-  margin-left: -31px;
 }
 .input-type-checked-results-two input[type="checkbox"]{
   width: 26px;
   height: 26px;
   margin-left: 30px;
 }
-.info-results-cartuchos{
-  display: flex;
-  flex-direction: column;
+.info-results-cartuchos label{
   margin-top: 30px;
-  margin-left: 15px;
+  margin-bottom: 20px;
+
 }
 .input-type-checked-results-two label{
   margin-left: 40px;
@@ -240,7 +233,7 @@ progress[value]{
 }
 
 .input-type-checked p{
-  color: #ED0606;
+  color: #FDBC2D;
   font-size: 0.875rem;
   margin-top: 0px;
 }
@@ -259,9 +252,7 @@ progress[value]{
   height: 14px;
   margin-left: 2px;
 }
-.input-disabled {
-  background-color:#CBCDCB !important;
-}
+
 .btns-forms{
   display: flex;
   align-items: center;
@@ -272,13 +263,14 @@ progress[value]{
   border: none;
   color: #FDBC2D;
   text-transform: lowercase;
-  margin-left: 250px;
+  float: right;
 }
 #add-another-cartucho{
   background: none;
   border: none;
   color: #FDBC2D;
   text-transform: lowercase;
+  display: flex;
 }
 .btns-forms button{
   border-radius: 12px;
@@ -312,6 +304,7 @@ label {
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 20px;
+  column-gap: 2vw;
 }
 .page-final-cadastro strong{
   border: 0;
@@ -327,25 +320,10 @@ label {
   margin-top: 30px;
 }
 
-#box-form-group-result-operation-one{
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 20px;
-
-}
 #box-form-group-result-operation-one #registro_ocorrencia{
   width:100vh;
 }
-/* #box-form-group-info-operation-two{
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
 
-#box-form-group-info-operation-two input{
-  width: 100px;
-  margin: 30px;
-} */
 .box-form-group h3{
   color: #707070;
 }
@@ -354,17 +332,25 @@ label {
   flex-wrap: wrap;
   justify-content: space-around;
 }
+#cartuchos-container{
+  display: flex;
+  flex-wrap: wrap;
+}
+#cartuchos-container input{
+  width: 140px;
+}
 .error-message{
-  color: #ED0606;
+  color: #FDBC2D;
   font-size: 0.875rem;
-  margin-top: 0px;
+  text-align: left;
+}
+p.error-message{
+  max-width: 250px;
 }
 .tela-login-main a:link{
   margin-bottom: 40px;
 }
-.tela-login-main a:link:hover{
-  color:red
-}
+
 .page-final-cadastro {
   display: flex;
   flex-direction: column;
@@ -380,7 +366,6 @@ label {
   color:#D4D4D5;
   font-weight: bold;
   font-size: 2.1875rem;
-  margin-bottom: 150px
 }
 .page-final-cadastro p {
   color:#D4D4D5;
@@ -403,15 +388,14 @@ ul.pagination li{
   list-style: none;
 }
 ul.pagination li a, strong {
-  color: black;
+  color: #ffff;
   padding: 8px 16px;
   text-decoration: none;
   transition: background-color .3s;
-  border: 1px solid #ddd;
+  border: 1px solid #FDBC2D;
 }
 ul.pagination strong {
-  margin: 0;
-  color: #0055FF;
+  color: #FDBC2D;
 }
 .pagination li:first-child a, strong {
   border-top-left-radius: 5px;
@@ -420,11 +404,9 @@ ul.pagination strong {
 .pagination li:last-child a, strong{
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+  border-color: #FDBC2D ;
 }
-ul.pagination li a:hover{
-  background-color: #0055FF;
-  color: #E5E5E5;
-}
+
 .sr-only {
   display: none;
 }
@@ -434,6 +416,47 @@ ul.pagination li a:hover{
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
 }
+.operation-time, .operation-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  column-gap: 1vw;
+  width: 100%;
+  padding: 1vh 1vw;
+}
+.operation-location {
+  border-bottom: 1px solid #707070;
+}
+.operation-time div, .operation-location div {
+  flex-shrink: 1;
+}
+.operation-time > div, .operation-location > div {
+  width: calc(25% - 2vw);
+} 
+.operation-time input {
+  width: 100%;
+}
+.operation-location select {
+  width: 100%;
+}
+.operation-location input {
+  width: 100%;
+}
+.form-group.location-form {
+  width: 100%;
+  display: flex;
+}
+.progress-container {
+  margin-left: auto;
+  margin-right: 1vw;
+}
+
+.input-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 @media(max-width: 1080px){
   html {
     font-size: 93.75%;

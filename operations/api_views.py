@@ -250,9 +250,10 @@ class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         processed_data['numero_veiculos_recuperados'] = data['numero_veiculos_recuperados']
 
         processed_data['registro_ocorrencia'] = []
-        registros = data['registro_ocorrencia'].split(',')
-        for ro in registros:
-            processed_data['registro_ocorrencia'].append({'numero_ro': ro})
+        if data['registro_ocorrencia']:
+            registros = data['registro_ocorrencia'].split(',')
+            for ro in registros:
+                processed_data['registro_ocorrencia'].append({'numero_ro': ro})
 
         return processed_data
 

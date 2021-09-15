@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-<title>Cadastro de Operaçãoes</title>
+<title>Cadastro de Operações</title>
 {% endblock title %}
 
 {% block content %}
 <div class="operation-form">
-    <span>Cadastro de Operações</span>
     <div class="main-page-form">
         <div class="header-form">
             <div class="text-header-form">
+                <span>Cadastro de Operações</span>
                 <p>Informações de Resultado</p>
             </div>
             <div>
                 <div class="progressbar-text">
-                    <p>Informações de Registro</p>
-                    <p>Informações Gerais</p>
-                    <p>Informações Operacionais</p>
-                    <p>Informações da Ocorrência</p>
+                    <p>Informações de registro</p>
+                    <p>Informações gerais</p>
+                    <p>Informações operacionais</p>
+                    <p>Informações da ocorrência</p>
                     <p>Finalizar cadastro</p>
                 </div>
                 <progress  max="100" value="75" id="progressbar"></progress>
@@ -33,8 +33,8 @@
         <div class="form-main">
             <form action="/" id="main-form" method="post" enctype="multipart/form-data">
               <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
-                <div>
-                    <label style="margin-left: 11px;" for="data">Houve apreensão de drogas? Se sim, quais?</label>
+                <div style="margin-left: -36px;">
+                    <label style="margin-left: 40px;" for="data">Houve apreensão de drogas? Se sim, quais?</label>
                     <div class="input-type-checked-results-two">
                         <div class="form-control" id="droga_cocaina" name="droga_cocaina" >
                             <label> Cocaína</label>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="box-form-group">
-                    <div class="input-type-checked-results-one"> 
+                    <div class="input-type-checked-results-one" style="margin-left: -10px;"> 
                     <div class="form-group">
                         <label style="margin-top: -12px;">Artefatos explosivos apreendidos?</label>
                         <input type="number" min="0" value="{{ operacao_info.numero_explosivos_apreendidos|default:0 }}"
@@ -87,13 +87,9 @@
                     </div>
                     </div>
                 </div>
-                <div class="info-results-cartuchos">
-                    <label>Especifique nestes campos os cartuchos e calibres apreendidos:</label>
-                    <button style="margin-left: -114px;" id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
-                </div>
-                <div class="box-form-group-cartuchos-container">
+                        <label style="margin-bottom: 30px; margin-top: 30px;">Especifique nestes campos os cartuchos e calibres apreendidos:</label>
                         <div id="cartuchos-container">
-                            <div class="">
+                            <div>
                                 <label>Cartucho</label>
                                 <input type="text" name="tipo_cartucho-1" value="{{ cartucho.tipo_cartucho|default:'' }}"
                                     id="tipo_cartucho-1" class="form-control required">
@@ -104,7 +100,7 @@
                             </div>
                             {% for cartucho in operacao_info.cartuchos_calibres %}
                             {% if forloop.counter != 1 %}
-                            <div class="">
+                            <div>
                                 <label>Cartucho</label>
                                 <input type="text" name="tipo_cartucho-{{ forloop.counter }}" value="{{ cartucho.tipo_cartucho|default:'' }}"
                                     id="tipo_cartucho-{{ forloop.counter }}" class="form-control required" >
@@ -115,7 +111,8 @@
                             {% endif %}
                             {% endfor %}
                         </div>
-                </div>
+                        <button  id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
+
             </form>
             <div class="btns-forms">
                 <div class="btns-forms">
@@ -168,15 +165,19 @@ let FORM_VAR_LIST = {
             COUNT_CARTUCHOS++;
         }
 
-        let element = `<div class="form-group">
-                    <label>Cartucho</label>
-                    <input type="text" name="tipo_cartucho-${COUNT_CARTUCHOS}" value=""
+        let element = `
+                    <div id="cartuchos-container">
+                    <div style="margin-left: 5px">
+                        <label>Cartucho</label>
+                        <input type="text" name="tipo_cartucho-${COUNT_CARTUCHOS}" value=""
                         id="tipo_cartucho-${COUNT_CARTUCHOS}" class="form-control required" >
+                   
+                        <label>Calibre</label>
+                        <input type="text" id="tipo_calibre-${COUNT_CARTUCHOS}" value="" name="tipo_calibre-${COUNT_CARTUCHOS}" >
+                    </div>
+                    </div>
 
-                    <label>Calibre</label>
-                    <input type="text" id="tipo_calibre-${COUNT_CARTUCHOS}" value="" name="tipo_calibre-${COUNT_CARTUCHOS}" >
-                </div>
-        `;
+                     `;
 
         document.getElementById('cartuchos-container').insertAdjacentHTML('beforeend', element);
 

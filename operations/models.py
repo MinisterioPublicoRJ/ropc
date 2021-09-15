@@ -308,7 +308,7 @@ class Operacao(models.Model):
     )
 
     SITUACAO_INCOMPLETO = "incompleto"
-    SITUACAO_CSO = "completo sem ocorrencia"
+    SITUACAO_CSO = "completo"
     SITUACAO_CCO = "completo com ocorrencia"
     SITUACAO_CADASTRO = [
         (SITUACAO_INCOMPLETO, "Incompleto"),
@@ -316,10 +316,10 @@ class Operacao(models.Model):
         (SITUACAO_CCO, "Completo com Ocorrência"),
     ]
     NATUREZA_OPERACAO = [
-        ("NatO I", "Ações de inteligência"),
-        ("NatO II", "Cumprimento de Medidas Cautelares Judiciais"),
-        ("NatO III", "Apoio operacional a outras instituições"),
-        ("NatO IV", "Prestação de auxílio e assistência em emergências"),
+        ("Ações de inteligência", "Ações de inteligência"),
+        ("Cumprimento de Medidas Cautelares Judiciais", "Cumprimento de Medidas Cautelares Judiciais"),
+        ("Apoio operacional a outras instituições", "Apoio operacional a outras instituições"),
+        ("Prestação de auxílio e assistência em emergências", "Prestação de auxílio e assistência em emergências"),
     ]
     TIPO_OPERACAO = [
         ("Pr", "Programada"),
@@ -392,7 +392,7 @@ class Operacao(models.Model):
     natureza_operacao = models.CharField(
         "Natureza da operação",
         choices=NATUREZA_OPERACAO,
-        max_length=10,
+        max_length=255,
         null=True
     )
     unidade_responsavel = models.CharField("Unidade da polícia judiciária responsável", choices=UNIDADES_POLICIA, max_length=255, null=True, blank=True)
@@ -499,11 +499,11 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
-    numero_mortes_interv_estado = models.PositiveIntegerField(
-        "Número de mortes por intervenção de agentes do Estado",
-        default=0,
-        blank=True
-    )
+    # numero_mortes_interv_estado = models.PositiveIntegerField(
+    #     "Número de mortes por intervenção de agentes do Estado",
+    #     default=0,
+    #     blank=True
+    # )
     numero_civis_mortos = models.PositiveIntegerField(
         "Número de civis mortos",
         default=0,
@@ -514,11 +514,11 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
-    numero_civis_mortos_npap = models.PositiveIntegerField(
-        "Número de civis mortos – morte não provocada por agente policiais",
-        default=0,
-        blank=True
-    )
+    # numero_civis_mortos_npap = models.PositiveIntegerField(
+    #     "Número de civis mortos – morte não provocada por agente policiais",
+    #     default=0,
+    #     blank=True
+    # )
     numero_veiculos_recuperados = models.PositiveIntegerField(
         "Número de veículos recuperados",
         default=0,
@@ -647,7 +647,7 @@ class Operacao(models.Model):
     def make_complete(self):
         if self.completo is False:
             self.completo = True
-            self.notify_completion()
+            # self.notify_completion()
 
         self.situacao = self.SITUACAO_CSO
         # if self.houve_ocorrencia_operacao is True:
