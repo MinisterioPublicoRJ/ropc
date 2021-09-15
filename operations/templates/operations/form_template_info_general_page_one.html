@@ -7,18 +7,18 @@
 
 {% block content %}
 <div class="operation-form">
-  <span>Cadastro de Operações</span>
+  <span>Cadastro de operações</span>
   <div class="main-page-form">
     <div class="header-form">
       <div class="text-header-form">
-        <p>Informações Gerais</p>
+        <p>Informações gerais</p>
       </div>
       <div>
         <div class="progressbar-text">
-          <p>Informações de Registro</p>
-          <p>Informações Gerais</p>
-          <p>Informações Operacionais</p>
-          <p>Informações da Ocorrência</p>
+          <p>Informações de registro</p>
+          <p>Informações gerais</p>
+          <p>Informações operacionais</p>
+          <p>Informações da ocorrência</p>
           <p>Finalizar cadastro</p>
         </div>
         <progress  max="100" value="25" id="progressbar"></progress>
@@ -36,8 +36,8 @@
           <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
         <div class="box-form-group">
         <div class="">
-            <label for="name">Data da operação </label>
-            <input type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" >
+            <label>Data da operação </label>
+            <input placeholder="Data da operação" type="date" id="data" value={{ operacao_info.data|default:"''" }} name="data" >
           <div class="styled-select">
             <label>Hora de início da operação </label>
             <input type="time" id="hora_inicio" value={{ operacao_info.hora_inicio|default:"''" }} name="hora_inicio" >
@@ -50,8 +50,8 @@
 
         <div class="form-group">
            <div>
-            <label>Município da Operação </label>
             <div class="styled-select">
+              <label>Município da operação</label>
               <select
                   class="form-control required"
                   id="municipio-1"
@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class="styled-select">
-            <label>Bairro da operação </label>
+            <label>Bairro da operação</label>
             <select class="form-control required" id="bairro-1" name="bairro-1" >
                 <option value="">-</option>
                 {% for bairro in bairros|getattribute:1 %}
@@ -75,12 +75,12 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Endereço de Referência</label>
-            <input type="text" name="endereco_referencia-1" value="{{ operacao_info.localidade_operacao.0.endereco_referencia|default:'' }}" id="endereco_referencia-1" class="form-control required" >
+            <label>Endereço</label>
+            <input placeholder="Endereço" type="text" name="endereco_referencia-1" value="{{ operacao_info.localidade_operacao.0.endereco_referencia|default:'' }}" id="endereco_referencia-1" class="form-control required" >
           </div>
           <div class="styled-select">
             <label>Localidade</label>
-            <input type="text" id="localidade-1" value="{{ operacao_info.localidade_operacao.0.localidade|default:'' }}" name="localidade-1" >
+            <input placeholder="Localidade" type="text" id="localidade-1" value="{{ operacao_info.localidade_operacao.0.localidade|default:'' }}" name="localidade-1" >
           </div>
         </div>
         <button id="add-another" onclick="addAnother(event)">Adicionar localidade +</button>
@@ -121,7 +121,7 @@
                 </select>
               </div>
               <div class="form-group">
-                <label>Endereço de Referência</label>
+                <label>Endereço de referência</label>
                 <input type="text" name="endereco_referencia-{{ forloop.counter }}" value="{{ localidade.endereco_referencia|default:'' }}" id="endereco_referencia-{{ forloop.counter }}" class="form-control required" >
               </div>
               <div class="styled-select">
