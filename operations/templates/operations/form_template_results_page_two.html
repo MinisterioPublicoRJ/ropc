@@ -89,9 +89,7 @@
                 </div>
                 <div class="info-results-cartuchos">
                     <label>Especifique nestes campos os cartuchos e calibres apreendidos:</label>
-                    <button style="margin-left: -114px;" id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
                 </div>
-                <div class="box-form-group-cartuchos-container">
                         <div id="cartuchos-container">
                             <div class="">
                                 <label>Cartucho</label>
@@ -115,7 +113,8 @@
                             {% endif %}
                             {% endfor %}
                         </div>
-                </div>
+                        <button  id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
+
             </form>
             <div class="btns-forms">
                 <div class="btns-forms">
