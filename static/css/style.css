@@ -19,14 +19,14 @@ a:link{
 #fourth-li{
   display: flex;
   align-items: center;
-  margin: 2vh 0 2vh 0.75vw;
+  margin: 3vh 0 3vh 0.75vw;
 }
 a[id$="-li"]:hover > li{
   color: #FDBC2D;
 }
 .main-page{
   display: grid;
-  height: 100%;
+  height: 100vh;
   background-color: #292929;
   grid-template-areas:
   'navBar pageForm pageForm pageForm pageForm pageForm'
@@ -43,7 +43,8 @@ ul .wrapper-initial-page{
   opacity: 1;
   grid-area: navBar;
   width: 260px;
-  position:relative;
+  height: 90vh;
+  position:relative; 
   padding: 5vh 0;
   display: flex;
   flex-direction: column;
@@ -98,17 +99,17 @@ progress[value]{
 }
 .operation-form{
   grid-area: pageForm;
-  position:relative;
+  position:relative; 
+  height: 100vh;
+  overflow-y: scroll;
 }
 .operation-form span{
-  position:absolute;
-  margin-left: 90px;
-  margin-top: 50px;
+  position:relative;
   color: #D4D4D5;
   font-size: 1.4375rem;
 }
 .main-page-form{
-  margin: 90px;
+  margin: 4vh;
   box-shadow: 0px 5px 6px #00000029;
   border-radius: 9px;
   opacity: 1;
@@ -124,17 +125,18 @@ progress[value]{
   height: 120px;
   border-radius: 9px 9px 0px 0px;
   display: flex;
+  justify-content: center;
+  padding-top: 3vh;
 }
 
 .text-header-form{
   padding: 13px;
-  margin-top: 20px;
-  max-width: 170px;
+  max-width: 250px;
 }
 .text-header-form p{
   color: #AEAEAE;
   font-size: 0.835rem;
-  max-width: 110px;
+  max-width: 150px;
 }
 .form-main {
   margin-top: 30px;
@@ -261,7 +263,7 @@ progress[value]{
   border: none;
   color: #FDBC2D;
   text-transform: lowercase;
-  margin-left: 250px;
+  float: right;
 }
 #add-another-cartucho{
   background: none;
@@ -302,6 +304,7 @@ label {
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 20px;
+  column-gap: 2vw;
 }
 .page-final-cadastro strong{
   border: 0;
@@ -363,7 +366,7 @@ p.error-message{
   color:#D4D4D5;
   font-weight: bold;
   font-size: 2.1875rem;
-  margin-bottom: 150px
+  margin-bottom: 110px;
 }
 .page-final-cadastro p {
   color:#D4D4D5;
@@ -413,6 +416,40 @@ ul.pagination strong {
 }
 .tr-lista-operacao:hover{
   background-color:#F5F5F5;
+}
+.operation-time, .operation-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  column-gap: 1vw;
+  width: 100%;
+  padding: 1vh 1vw;
+}
+.operation-location {
+  border-bottom: 1px solid #707070;
+}
+.operation-time div, .operation-location div {
+  flex-shrink: 1;
+}
+.operation-time > div, .operation-location > div {
+  width: calc(25% - 2vw);
+} 
+.operation-time input {
+  width: 100%;
+}
+.operation-location select {
+  width: 100%;
+}
+.operation-location input {
+  width: 100%;
+}
+.form-group.location-form {
+  width: 100%;
+  display: flex;
+}
+.progress-container {
+  margin-left: auto;
+  margin-right: 1vw;
 }
 
 .input-wrapper {
