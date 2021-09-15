@@ -316,10 +316,10 @@ class Operacao(models.Model):
         (SITUACAO_CCO, "Completo com Ocorrência"),
     ]
     NATUREZA_OPERACAO = [
-        ("NatO I", "Ações de inteligência"),
-        ("NatO II", "Cumprimento de Medidas Cautelares Judiciais"),
-        ("NatO III", "Apoio operacional a outras instituições"),
-        ("NatO IV", "Prestação de auxílio e assistência em emergências"),
+        ("Ações de inteligência", "Ações de inteligência"),
+        ("Cumprimento de Medidas Cautelares Judiciais", "Cumprimento de Medidas Cautelares Judiciais"),
+        ("Apoio operacional a outras instituições", "Apoio operacional a outras instituições"),
+        ("Prestação de auxílio e assistência em emergências", "Prestação de auxílio e assistência em emergências"),
     ]
     TIPO_OPERACAO = [
         ("Pr", "Programada"),
@@ -392,7 +392,7 @@ class Operacao(models.Model):
     natureza_operacao = models.CharField(
         "Natureza da operação",
         choices=NATUREZA_OPERACAO,
-        max_length=10,
+        max_length=255,
         null=True
     )
     unidade_responsavel = models.CharField("Unidade da polícia judiciária responsável", choices=UNIDADES_POLICIA, max_length=255, null=True, blank=True)
