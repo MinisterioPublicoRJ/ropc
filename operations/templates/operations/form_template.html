@@ -14,10 +14,10 @@
       </div>
       <div>
         <div class="progressbar-text">
-          <p>Informações de Registro</p>
-          <p>Informações Gerais</p>
-          <p>Informações Operacionais</p>
-          <p>Informações da Ocorrência</p>
+          <p>Informações de registro</p>
+          <p>Informações gerais</p>
+          <p>Informações operacionais</p>
+          <p>Informações da ocorrência</p>
           <p>Finalizar cadastro</p>
       </div>
         <progress  max="100" value="0" id="progressbar"></progress>
@@ -38,14 +38,16 @@
       </p>
       <form action="/" id="main-form"   method="post" enctype="multipart/form-data">
           <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
+        <label>Nome da operação</label>
         <div class="form-group">
-          <input type="text" placeholder="Nome da Operação" name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
+          <input type="text"  name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
             id="nome_operacao" class="form-control required" >
         </div>
         <div class="form-group">
           <div class="styled-select">
+            <label>Tipo de operação</label>
             <select class="form-control required" id="tipo_operacao" name="tipo_operacao" >
-              <option value="">Tipo de operação</option>
+              <option value="">-</option>
               {% for tipo_operacao in tipos_operacoes %}
               <option value="{{ tipo_operacao.0 }}" {% if tipo_operacao.0 == operacao_info.tipo_operacao %}selected{% endif %}> {{ tipo_operacao.1 }} </option>
               {% endfor %}
@@ -53,11 +55,13 @@
           </div>
         </div>
         <div class="form-group">
-          <input type="text" class="cor-vermelha" placeholder="Número do inquérito mãe" name="numero_inquerito_mae" value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
+          <label>Número do inquérito mãe</label>
+          <input type="text" class="cor-vermelha" name="numero_inquerito_mae" value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
             id="numero_inquerito_mae" class="form-control required" >
         </div>
         <div class="form-group">
-          <input placeholder="Número do procedimento (TJRJ)" type="text" name="numero_tjrj" value="{{ operacao_info.numero_tjrj|default:'' }}"
+          <label>Número do procedimento (TJRJ)</label>
+          <input type="text" name="numero_tjrj" value="{{ operacao_info.numero_tjrj|default:'' }}"
             id="numero_tjrj" class="form-control required" >
         </div>
       </form>

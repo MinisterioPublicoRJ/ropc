@@ -1,5 +1,5 @@
 import uuid
-import requests
+import os
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -343,6 +343,8 @@ class PanelListView(LoginRequiredMixin, TemplateView):
         workbook = settings.TABLEAU_WORKBOOK
 
         ticket_url = f'{host}trusted?username={username}&&target_site={target_site}'
+        stream = os.popen(f'curl -X POST {ticket_url}')
+        tableau_ticket = stream.read()
         
         # get_view_url = f'{host}trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}?:embed=yes'
         trunc_url = f'trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}'

@@ -66,8 +66,4 @@ form button {
     color: #111111;
     margin-top: 10px;
 }
-form button:hover {
-    background-color: #3133af;
-    color: #F8F8F8;
-    border-radius: 6px;
-}
+
