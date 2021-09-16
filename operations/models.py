@@ -388,7 +388,7 @@ class Operacao(models.Model):
 
     ### Info Operacionais One
     nome_delegado_operacao = models.CharField("Nome do Delegado Responsável", max_length=255, null=True, blank=True)
-    matricula_id_delegado_operacao = models.CharField("Matrícula/ID Funcional do Delegado", max_length=10, null=True, blank=True)
+    matricula_id_delegado_operacao = models.CharField("Matrícula/ID Funcional do Delegado", max_length=32, null=True, blank=True)
     natureza_operacao = models.CharField(
         "Natureza da operação",
         choices=NATUREZA_OPERACAO,
