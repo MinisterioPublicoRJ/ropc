@@ -13,10 +13,12 @@ a:link{
   text-decoration: none;
 }
 
+#greetings-li,
 #first-li,
 #second-li,
 #third-li,
-#fourth-li{
+#fourth-li,
+#fifth-li{
   display: flex;
   align-items: center;
   margin: 3vh 0 3vh 0.75vw;

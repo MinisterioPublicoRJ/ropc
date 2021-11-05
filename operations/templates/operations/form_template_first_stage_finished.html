@@ -17,7 +17,7 @@
                 <p>Informações de registro</p>
                 <p>Informações gerais</p>
                 <p>Informações operacionais</p>
-                <p>Informações da ocorrência</p>
+                <p>Informações de resultado</p>
                 <p>Finalizar cadastro</p>
             </div>
             <progress max="100" value="50" id="progressbar"></progress>
@@ -32,12 +32,11 @@
     </div>
     <div class="page-final-cadastro">
         <img src="{% static "img/icon-checked.png" %}" alt="icon-checked">
-        <span>Etapa 01 do cadastro concluído!</span>
-        <p>As próximas informações a serem preenchidas são informações referentes
-        aos resultados da operação. Caso a operação ainda não tenha sido finalizada
-        clique em<strong>“Salvar e fechar cadastro”</strong>para preenche-lo futuramente.
-        Se já possui as informações conclusivas da operação, clique em
-        <strong>“Continuar cadastro da operação”.</strong>
+        <span>Etapa 01 do cadastro concluída e salva automaticamente!</span>
+        <p>
+        As próximas informações a serem preenchidas são informações referentes aos resultados da operação. Caso a operação ainda
+        não tenha sido finalizada, é possível preenchê-la futuramente na aba <strong>"Lista de Operações"</strong>. Se já possui as informações
+        conclusivas da operação, clique em <strong>"Continuar cadastro da operação"</strong>.
         </p>
         <div class="btns-forms">
             <div class="btns-forms">
@@ -47,7 +46,7 @@
             </div>
             <div class="btns-forms">
                 <a href="{% url 'operations:form-info-result-page-one' form_uuid %}">
-                    <button type="submit" class="btn-next">Cadastrar resultados</button>
+                    <button type="submit" class="btn-next">Continuar cadastro da operação</button>
                 </a>
             </div>
         </div>
