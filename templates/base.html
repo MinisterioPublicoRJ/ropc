@@ -30,6 +30,10 @@
       <img class="navbarLeft-img-logo" src="{% static "img/logo.png" %}" type="images/png" alt="logo_painel">
       <div class="navbarLeft-list">
         <ul>
+          <div id="greetings-li">
+            <li>Olá, <b>{{ user.get_username }}</b>!</li>
+          </div>
+          <div class="wrapper-initial-page"></div>
           <a href="{% url 'home' %}" id="first-li">
             <img id="target-image-first-li" src="{% static "img/home.png" %}" alt="logo-home">
             <li>Página inicial</li>
@@ -52,6 +56,10 @@
           <div class="wrapper-initial-page"></div>
           <a href="{% url 'logout' %}" id="fourth-li">
             <li>Fazer logout</li>
+          </a>
+          <div class="wrapper-initial-page"></div>
+          <a href="{% url 'password_change' %}" id="fifth-li">
+            <li>Alterar senha</li>
           </a>
           <div class="wrapper-initial-page"></div>
         </ul>

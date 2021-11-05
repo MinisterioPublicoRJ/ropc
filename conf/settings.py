@@ -156,6 +156,7 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = reverse_lazy("home")
 LOGIN_URL = reverse_lazy("login")
+LOGOUT_REDIRECT_URL = reverse_lazy("login")
 
 OPERATIONS_PER_PAGE = config("OPERATIONS_PER_PAGE", cast=int, default=10)
 

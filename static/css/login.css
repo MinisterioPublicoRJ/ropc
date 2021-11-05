@@ -66,4 +66,9 @@ form button {
     color: #111111;
     margin-top: 10px;
 }
+.help-change-password {
+    font-size: 1.5625rem;
+    color: #707070;
+    font-weight: bold;
+}
 
