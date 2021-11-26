@@ -315,7 +315,7 @@ class OperationListView(LoginRequiredMixin, ListView):
     paginate_by = settings.OPERATIONS_PER_PAGE
 
     def get_queryset(self):
-        return Operacao.objects.filter(usuario=self.request.user).order_by("-criado_em")
+        return Operacao.objects.order_by("-criado_em")
 
 
 class InitialPageListView(LoginRequiredMixin, TemplateView):
