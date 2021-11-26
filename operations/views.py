@@ -291,8 +291,7 @@ class FormCompleteView(LoginRequiredMixin, TemplateView):
     def get_operation(self, usuario, form_uuid):
         return get_object_or_404(
             Operacao,
-            identificador=form_uuid,
-            usuario=usuario
+            identificador=form_uuid
         )
 
     def get_context_data(self, **kwargs):
