@@ -150,7 +150,7 @@ UNIDADES_POLICIA = [
     ("168a.Delegacia de Policia", "168a.Delegacia de Policia"),
     ("901. DH Capital", "901. DH Capital"),
     ("861. DH Baixada Fluminense", "861. DH Baixada Fluminense"),
-    ("951. DH Niterói/São Gonçalo ", "951. DH Niterói/São Gonçalo "),
+    ("951. DH Niterói/São Gonçalo", "951. DH Niterói/São Gonçalo"),
     ("943. DH Oeste", "943. DH Oeste"),
     ("912. DEAM - Centro", "912. DEAM - Centro"),
     ("916. DEAM - Oeste", "916. DEAM - Oeste"),

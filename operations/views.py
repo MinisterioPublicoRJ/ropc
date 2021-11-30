@@ -86,8 +86,7 @@ class OperationViewMixin:
     def get_operation(self, usuario, form_uuid):
         return get_object_or_404(
             Operacao,
-            identificador=form_uuid,
-            usuario=usuario
+            identificador=form_uuid
         )
 
     def get_context_data(self, **kwargs):
@@ -134,7 +133,7 @@ class OperationGeneralInfoPageOneView(LoginRequiredMixin, OperationViewMixin, Te
             selected_municipio = context["municipios"][0]["nm_mun"]
             context[f"bairros_1"] = Bairro.objects.get_ordered_for_municipio(selected_municipio)
             context[f"bairros"].append(Bairro.objects.get_ordered_for_municipio(selected_municipio))
-        
+
         return context
 
 
@@ -184,7 +183,7 @@ class OperationFirstStageFinishedView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         self.form_uuid = self.kwargs.get(self.lookup_url_kwarg)
-        
+
         context = super().get_context_data(**kwargs)
         context["form_uuid"] = self.form_uuid
         return context
@@ -248,7 +247,7 @@ class FormCompleteView(LoginRequiredMixin, TemplateView):
         self.operacao = self.get_operation(self.request.user, self.form_uuid)
 
         secao_atual_url = URL_SECTION_MAPPER.get(self.operacao.secao_atual)
-        
+
         # if self.operacao.houve_ocorrencia_operacao is None:
         #     return redirect(
         #         reverse(secao_atual_url, kwargs={"form_uuid": self.form_uuid})
@@ -292,8 +291,7 @@ class FormCompleteView(LoginRequiredMixin, TemplateView):
     def get_operation(self, usuario, form_uuid):
         return get_object_or_404(
             Operacao,
-            identificador=form_uuid,
-            usuario=usuario
+            identificador=form_uuid
         )
 
     def get_context_data(self, **kwargs):
@@ -337,7 +335,7 @@ class PanelListView(LoginRequiredMixin, TemplateView):
         ticket_url = f'{host}trusted?username={username}&&target_site={target_site}'
         stream = os.popen(f'curl -X POST {ticket_url}')
         tableau_ticket = stream.read()
-        
+
         # get_view_url = f'{host}trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}?:embed=yes'
         trunc_url = f'trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}'
 

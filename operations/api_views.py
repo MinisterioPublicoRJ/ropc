@@ -29,7 +29,6 @@ class RegistrationInfoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
 
@@ -38,7 +37,7 @@ class RegistrationInfoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         objs = Operacao.objects.filter(identificador=identificador)
         if objs:
-            obj = get_object_or_404(objs, usuario=user)
+            obj = get_object_or_404(objs)
         else:
             obj = Operacao.objects.create(identificador=identificador, usuario=user)
 
@@ -58,7 +57,6 @@ class GeneralInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
 
@@ -67,7 +65,7 @@ class GeneralInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         objs = Operacao.objects.filter(identificador=identificador)
         if objs:
-            obj = get_object_or_404(objs, usuario=user)
+            obj = get_object_or_404(objs)
         else:
             obj = Operacao.objects.create(identificador=identificador, usuario=user)
 
@@ -116,15 +114,13 @@ class GeneralInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return get_object_or_404(
             Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
+            identificador=identificador
         )
 
     def get_queryset(self):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
 
@@ -142,15 +138,13 @@ class OperationalInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return get_object_or_404(
             Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
+            identificador=identificador
         )
 
     def get_queryset(self):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
 
@@ -195,15 +189,13 @@ class OperationalInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return get_object_or_404(
             Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
+            identificador=identificador
         )
 
     def get_queryset(self):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
 
@@ -221,18 +213,16 @@ class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return get_object_or_404(
             Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
+            identificador=identificador
         )
 
     def get_queryset(self):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
-    
+
     def preprocess_data(self, data):
         ### Modificar com ros
         processed_data = {}
@@ -271,15 +261,13 @@ class ResultInfoTwoViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return get_object_or_404(
             Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
+            identificador=identificador
         )
 
     def get_queryset(self):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
 
@@ -334,15 +322,13 @@ class ResultInfoThreeViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return get_object_or_404(
             Operacao,
-            identificador=identificador,
-            usuario=self.request.user,
+            identificador=identificador
         )
 
     def get_queryset(self):
         user = self.request.user
         identificador = self.kwargs.get(self.lookup_url_kwarg)
         return Operacao.objects.filter(
-            usuario=user,
             identificador=identificador
         )
 
