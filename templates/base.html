@@ -72,6 +72,10 @@
 
     {% block content %}
     {% endblock content %}
+
+    {% block footer %}
+    <img src="{% static "img/logo-MP.png" %}" alt="logo_MP" class="logo">
+    {% endblock footer %}
   </div>
   <script>
       var STATIC_PREFIX = "{% get_static_prefix %}";

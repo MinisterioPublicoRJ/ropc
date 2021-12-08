@@ -32,6 +32,11 @@ a[id$="-li"]:hover > li{
   background-color: #292929;
   grid-template-areas:
   'navBar pageForm pageForm pageForm pageForm pageForm'
+  'navBar pageForm pageForm pageForm pageForm pageForm'
+  'navbar .     logo     logo     logo     logo'
+}
+.logo {
+  grid-area: logo;
 }
 ul .wrapper-initial-page{
   width: 100%;
