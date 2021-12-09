@@ -28,16 +28,28 @@ a[id$="-li"]:hover > li{
 }
 .main-page{
   display: grid;
-  height: 100vh;
+  height:100vh;
   background-color: #292929;
   grid-template-areas:
   'navBar pageForm pageForm pageForm pageForm pageForm'
   'navBar pageForm pageForm pageForm pageForm pageForm'
-  'navbar .     logo     logo     logo     logo'
+  'navBar logo logo     logo     logo     logo'
 }
 .logo {
   grid-area: logo;
+  width: calc(100vw - 260px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  position: relative;
+  height: var(--footerHeight);
 }
+.logo img {
+  position: relative;
+  right: 42px;
+  bottom: 42px;
+}
+
 ul .wrapper-initial-page{
   width: 100%;
   margin-top: 10px;
@@ -107,7 +119,7 @@ progress[value]{
 .operation-form{
   grid-area: pageForm;
   position:relative; 
-  height: 100vh;
+  height: calc(100vh - var(--footerHeight));
   overflow-y: scroll;
 }
 .operation-form span{
