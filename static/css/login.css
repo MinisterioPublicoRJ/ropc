@@ -4,6 +4,7 @@
     align-items: center;
     flex-direction: column;
     background-color: #292929;
+    margin-bottom: 10vh;
 }
 .tela-login-main img {
     margin-top: 30px ;
