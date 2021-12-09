@@ -1,3 +1,7 @@
+:root {
+    --footerHeight: 72px;
+}
+
 body{
     overflow-x: hidden;
 }
@@ -5,7 +9,7 @@ body{
     color: #D4D4D5;
     background-color: #292929;
     opacity: 1;
-    height: 100vh;
+    height: calc(100vh - var(--footerHeight));
     width: calc(100vw - 260px);
     overflow-y: auto;
 }
