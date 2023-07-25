@@ -1,88 +1,98 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-<title>Cadastro de Operações</title>
+    <title>Cadastro de Operações</title>
 {% endblock title %}
-
 {% block content %}
-<div class="operation-form">
-  <div class="main-page-form">
-    <div class="header-form">
-      <div class="text-header-form">
-        <span>Cadastro de Operações</span>
-        <p>Informações do Registro</p>
-      </div>
-      <div>
-        <div class="progressbar-text">
-          <p>Informações de registro</p>
-          <p>Informações gerais</p>
-          <p>Informações operacionais</p>
-          <p>Informações de resultado</p>
-          <p>Finalizar cadastro</p>
-      </div>
-        <progress  max="100" value="0" id="progressbar"></progress>
-        <ul class="progressbar">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
-      </div>
+    <div class="operation-form">
+        <div class="main-page-form">
+            <div class="header-form">
+                <div class="text-header-form">
+                    <span>Cadastro de Operações</span>
+                    <p>Informações do Registro</p>
+                </div>
+                <div>
+                    <div class="progressbar-text">
+                        <p>Informações de registro</p>
+                        <p>Informações gerais</p>
+                        <p>Informações operacionais</p>
+                        <p>Informações de resultado</p>
+                        <p>Finalizar cadastro</p>
+                    </div>
+                    <progress max="100" value="0" id="progressbar"></progress>
+                    <ul class="progressbar">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-main">
+                <p>Bem-vindo ao formulário de cadastro de operações.</p>
+                <p style="max-width: 420px;">
+                    Para começar sugerimos o preenchimento destes campos a seguir.
+                    Assim poderemos dar seguimento ao preenchimento de maneira estratégica.
+                </p>
+                <form action="/" id="main-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
+                    <label>Nome da operação</label>
+                    <div class="form-group">
+                        <input type="text"
+                               name="nome_operacao"
+                               value="{{ operacao_info.nome_operacao|default:'' }}"
+                               id="nome_operacao"
+                               class="form-control required">
+                    </div>
+                    <div class="form-group">
+                        <div class="styled-select">
+                            <label>Tipo de operação</label>
+                            <select class="form-control required" id="tipo_operacao" name="tipo_operacao">
+                                <option value="">-</option>
+                                {% for tipo_operacao in tipos_operacoes %}
+                                    <option value="{{ tipo_operacao.0 }}"
+                                            {% if tipo_operacao.0 == operacao_info.tipo_operacao %}selected{% endif %}>
+                                        {{ tipo_operacao.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Número do inquérito mãe</label>
+                        <input type="text"
+                               class="cor-vermelha"
+                               name="numero_inquerito_mae"
+                               value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
+                               id="numero_inquerito_mae"
+                               class="form-control required">
+                    </div>
+                    <div class="form-group">
+                        <label>Número do procedimento (TJRJ)</label>
+                        <input type="text"
+                               name="numero_tjrj"
+                               value="{{ operacao_info.numero_tjrj|default:'' }}"
+                               id="numero_tjrj"
+                               class="form-control required">
+                    </div>
+                </form>
+                <div class="btns-forms">
+                    <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-main">
-      <p>Bem-vindo ao formulário de cadastro de operações.</p>
-      <p style="max-width: 420px;">
-        Para começar sugerimos o preenchimento destes campos a seguir.
-        Assim poderemos dar seguimento ao preenchimento de maneira estratégica.
-      </p>
-      <form action="/" id="main-form"   method="post" enctype="multipart/form-data">
-          <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
-        <label>Nome da operação</label>
-        <div class="form-group">
-          <input type="text"  name="nome_operacao" value="{{ operacao_info.nome_operacao|default:'' }}"
-            id="nome_operacao" class="form-control required" >
-        </div>
-        <div class="form-group">
-          <div class="styled-select">
-            <label>Tipo de operação</label>
-            <select class="form-control required" id="tipo_operacao" name="tipo_operacao" >
-              <option value="">-</option>
-              {% for tipo_operacao in tipos_operacoes %}
-              <option value="{{ tipo_operacao.0 }}" {% if tipo_operacao.0 == operacao_info.tipo_operacao %}selected{% endif %}> {{ tipo_operacao.1 }} </option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Número do inquérito mãe</label>
-          <input type="text" class="cor-vermelha" name="numero_inquerito_mae" value="{{ operacao_info.numero_inquerito_mae|default:'' }}"
-            id="numero_inquerito_mae" class="form-control required" >
-        </div>
-        <div class="form-group">
-          <label>Número do procedimento (TJRJ)</label>
-          <input type="text" name="numero_tjrj" value="{{ operacao_info.numero_tjrj|default:'' }}"
-            id="numero_tjrj" class="form-control required" >
-        </div>
-      </form>
-      <div class="btns-forms">
-        <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 {% endblock content %}
-
 {% block extra_js %}
-     <script>
-      const FORWARD_URL = '/operacoes/cadastro/informacoes/gerais/parte-1/';
-      const API_URL = '/v1/operacoes/cria-informacoes-registro/';
-      const FORM_VAR_LIST = {
-        "numero_inquerito_mae": "#numero_inquerito_mae",
-        "tipo_operacao": "#tipo_operacao",
-        "nome_operacao": "#nome_operacao",
-        "numero_tjrj": "#numero_tjrj",
-      };
-      </script> 
+    <script>
+        const FORWARD_URL = '/operacoes/cadastro/informacoes/gerais/parte-1/';
+        const API_URL = '/v1/operacoes/cria-informacoes-registro/';
+        const FORM_VAR_LIST = {
+            "numero_inquerito_mae": "#numero_inquerito_mae",
+            "tipo_operacao": "#tipo_operacao",
+            "nome_operacao": "#nome_operacao",
+            "numero_tjrj": "#numero_tjrj",
+        };
+    </script>
 {% endblock extra_js %}
