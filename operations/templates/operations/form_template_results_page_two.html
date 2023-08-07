@@ -1,171 +1,193 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-<title>Cadastro de Operações</title>
+    <title>Cadastro de Operações</title>
 {% endblock title %}
 
 {% block content %}
-<div class="operation-form">
-    <div class="main-page-form">
-        <div class="header-form">
-            <div class="text-header-form">
-                <span>Cadastro de Operações</span>
-                <p>Informações de Resultado</p>
+    <div class="operation-form">
+        <div class="main-page-form">
+            <div class="header-form">
+                <div class="text-header-form">
+                    <span>Cadastro de Operações</span>
+                    <p>Informações de Resultado</p>
+                </div>
+                <div>
+                    <div class="progressbar-text">
+                        <p>Informações de registro</p>
+                        <p>Informações gerais</p>
+                        <p>Informações operacionais</p>
+                        <p>Informações de resultado</p>
+                        <p>Finalizar cadastro</p>
+                    </div>
+                    <progress max="100" value="75" id="progressbar"></progress>
+                    <ul class="progressbar">
+                        <li class="progressbar-checked"></li>
+                        <li class="progressbar-checked"></li>
+                        <li class="progressbar-checked"></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <div class="progressbar-text">
-                    <p>Informações de registro</p>
-                    <p>Informações gerais</p>
-                    <p>Informações operacionais</p>
-                    <p>Informações de resultado</p>
-                    <p>Finalizar cadastro</p>
-                </div>
-                <progress  max="100" value="75" id="progressbar"></progress>
-                <ul class="progressbar">
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li class="progressbar-checked"></li>
-                    <li></li>
-                    <li></li>
-                </ul>
-            </div>
-        </div>
-        <div class="form-main">
-            <form action="/" id="main-form" method="post" enctype="multipart/form-data">
-              <input type="hidden" id="form_uuid" value="{{ form_uuid }}" >
-                <div style="margin-left: -36px;">
-                    <label style="margin-left: 40px;" for="data">Houve apreensão de drogas? Se sim, quais?</label>
-                    <div class="input-type-checked-results-two">
-                        <div class="form-control" id="droga_cocaina" name="droga_cocaina" >
-                            <label> Cocaína</label>
-                            <input type="checkbox" name="droga_cocaina" id="droga_cocaina" value="1" {% if operacao_info.droga_cocaina %}checked{% endif %}>
-                        </div>
-                        <div class="form-control" id="droga_cannabis" name="droga_cannabis" >
-                            <label> Cannabis</label>
-                            <input type="checkbox" name="droga_cannabis" id="droga_cannabis" value="1" {% if operacao_info.droga_cannabis %}checked{% endif %}>
-                        </div>
-                        <div class="form-control" id="droga_haxixe" name="droga_haxixe" >
-                            <label> Haxixe</label>
-                            <input type="checkbox" name="droga_haxixe" id="droga_haxixe" value="1" {% if operacao_info.droga_haxixe %}checked{% endif %}>
-                        </div>
-                        <div class="form-control" id="droga_sinteticos" name="droga_sinteticos" >
-                            <label> Sintéticos</label>
-                            <input type="checkbox" name="droga_sinteticos" id="droga_sinteticos" value="1" {% if operacao_info.droga_sinteticos %}checked{% endif %}>
-                        </div>
-                        <div class="form-control" id="droga_outros" name="droga_outros" >
-                            <label> Outros</label>
-                            <input type="checkbox" name="droga_outros" id="droga_outros" value="1" {% if operacao_info.droga_outros %}checked{% endif %}>
-                        </div>
-                    </div>
-                </div>
-                <div class="box-form-group">
-                    <div class="input-type-checked-results-one" style="margin-left: -10px;"> 
-                    <div class="form-group">
-                        <label style="margin-top: -12px;">Artefatos explosivos apreendidos?</label>
-                        <input type="number" min="0" value="{{ operacao_info.numero_explosivos_apreendidos|default:0 }}"
-                            name="numero_explosivos_apreendidos" id="numero_explosivos_apreendidos" class="form-control" >
-                    </div>
-                    <div class="form-group">
-                        <label>Armas apreendidas?</label>
-                        <input type="number" min="0" value="{{ operacao_info.numero_armas_apreendidas|default:0 }}"
-                            name="numero_armas_apreendidas" id="numero_armas_apreendidas" class="form-control" >
-                    </div>
-                    <div class="form-group">
-                        <label>Do total de armas, quantos fuzis?</label>
-                        <input type="number" min="0" value="{{ operacao_info.numero_fuzis_apreendidos|default:0 }}"
-                            name="numero_fuzis_apreendidos" id="numero_fuzis_apreendidos" class="form-control" >
-                    </div>
-                    <div class="form-group">
-                        <label>Carregadores apreendidos?</label>
-                        <input type="number" min="0" value="{{ operacao_info.numero_carregadores_apreendidos|default:0 }}"
-                            name="numero_carregadores_apreendidos" id="numero_carregadores_apreendidos" class="form-control" >
-                    </div>
-                    <div class="form-group">
-                        <label>Munições apreendidas?</label>
-                        <input type="number" min="0" value="{{ operacao_info.numero_municoes_apreendidas|default:0 }}"
-                            name="numero_municoes_apreendidas" id="numero_municoes_apreendidas" class="form-control" >
-                    </div>
-                    </div>
-                </div>
-                        <label style="margin-bottom: 30px; margin-top: 30px;">Especifique nestes campos os cartuchos e calibres apreendidos:</label>
-                        <div id="cartuchos-container">
-                            <div>
-                                <label>Cartucho</label>
-                                <input type="text" name="tipo_cartucho-1" value="{{ operacao_info.cartuchos_calibres.0.tipo_cartucho|default:'' }}"
-                                    id="tipo_cartucho-1" class="form-control required">
-                            
-                                <label>Calibre</label>
-                                <input type="text" id="tipo_calibre-1" value="{{ operacao_info.cartuchos_calibres.0.tipo_calibre|default:'' }}"
-                                    name="tipo_calibre-1">
+            <div class="form-main">
+                <form action="/" id="main-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
+                    <div style="margin-left: -36px;">
+                        <label style="margin-left: 40px;" for="data">Houve apreensão de drogas? Se sim, quais?</label>
+                        <div class="input-type-checked-results-two">
+                            <div class="form-control" id="droga_cocaina" name="droga_cocaina">
+                                <label> Cocaína</label>
+                                <input type="checkbox" name="droga_cocaina" id="droga_cocaina" value="1"
+                                       {% if operacao_info.droga_cocaina %}checked{% endif %}>
                             </div>
-                            {% for cartucho in operacao_info.cartuchos_calibres %}
+                            <div class="form-control" id="droga_cannabis" name="droga_cannabis">
+                                <label> Cannabis</label>
+                                <input type="checkbox" name="droga_cannabis" id="droga_cannabis" value="1"
+                                       {% if operacao_info.droga_cannabis %}checked{% endif %}>
+                            </div>
+                            <div class="form-control" id="droga_haxixe" name="droga_haxixe">
+                                <label> Haxixe</label>
+                                <input type="checkbox" name="droga_haxixe" id="droga_haxixe" value="1"
+                                       {% if operacao_info.droga_haxixe %}checked{% endif %}>
+                            </div>
+                            <div class="form-control" id="droga_sinteticos" name="droga_sinteticos">
+                                <label> Sintéticos</label>
+                                <input type="checkbox" name="droga_sinteticos" id="droga_sinteticos" value="1"
+                                       {% if operacao_info.droga_sinteticos %}checked{% endif %}>
+                            </div>
+                            <div class="form-control" id="droga_outros" name="droga_outros">
+                                <label> Outros</label>
+                                <input type="checkbox" name="droga_outros" id="droga_outros" value="1"
+                                       {% if operacao_info.droga_outros %}checked{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-form-group">
+                        <div class="input-type-checked-results-one" style="margin-left: -10px;">
+                            <div class="form-group">
+                                <label style="margin-top: -12px;">Artefatos explosivos apreendidos?</label>
+                                <input type="number" min="0"
+                                       value="{{ operacao_info.numero_explosivos_apreendidos|default:0 }}"
+                                       name="numero_explosivos_apreendidos" id="numero_explosivos_apreendidos"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Armas apreendidas?</label>
+                                <input type="number" min="0"
+                                       value="{{ operacao_info.numero_armas_apreendidas|default:0 }}"
+                                       name="numero_armas_apreendidas" id="numero_armas_apreendidas"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Do total de armas, quantos fuzis?</label>
+                                <input type="number" min="0"
+                                       value="{{ operacao_info.numero_fuzis_apreendidos|default:0 }}"
+                                       name="numero_fuzis_apreendidos" id="numero_fuzis_apreendidos"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Carregadores apreendidos?</label>
+                                <input type="number" min="0"
+                                       value="{{ operacao_info.numero_carregadores_apreendidos|default:0 }}"
+                                       name="numero_carregadores_apreendidos" id="numero_carregadores_apreendidos"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Munições apreendidas?</label>
+                                <input type="number" min="0"
+                                       value="{{ operacao_info.numero_municoes_apreendidas|default:0 }}"
+                                       name="numero_municoes_apreendidas" id="numero_municoes_apreendidas"
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <label style="margin-bottom: 30px; margin-top: 30px;">Especifique nestes campos os cartuchos e
+                        calibres apreendidos:</label>
+                    <div id="cartuchos-container">
+                        <div>
+                            <label>Cartucho</label>
+                            <input type="text" name="tipo_cartucho-1"
+                                   value="{{ operacao_info.cartuchos_calibres.0.tipo_cartucho|default:'' }}"
+                                   id="tipo_cartucho-1" class="form-control required">
+
+                            <label>Calibre</label>
+                            <input type="text" id="tipo_calibre-1"
+                                   value="{{ operacao_info.cartuchos_calibres.0.tipo_calibre|default:'' }}"
+                                   name="tipo_calibre-1">
+                        </div>
+                        {% for cartucho in operacao_info.cartuchos_calibres %}
                             {% if forloop.counter != 1 %}
-                            <div>
-                                <label>Cartucho</label>
-                                <input type="text" name="tipo_cartucho-{{ forloop.counter }}" value="{{ cartucho.tipo_cartucho|default:'' }}"
-                                    id="tipo_cartucho-{{ forloop.counter }}" class="form-control required" >
+                                <div>
+                                    <label>Cartucho</label>
+                                    <input type="text" name="tipo_cartucho-{{ forloop.counter }}"
+                                           value="{{ cartucho.tipo_cartucho|default:'' }}"
+                                           id="tipo_cartucho-{{ forloop.counter }}" class="form-control required">
 
-                                <label>Calibre</label>
-                                <input type="text" id="tipo_calibre-{{ forloop.counter }}" value="{{ cartucho.tipo_calibre|default:'' }}" name="tipo_calibre-{{ forloop.counter }}" >
-                            </div>
+                                    <label>Calibre</label>
+                                    <input type="text" id="tipo_calibre-{{ forloop.counter }}"
+                                           value="{{ cartucho.tipo_calibre|default:'' }}"
+                                           name="tipo_calibre-{{ forloop.counter }}">
+                                </div>
                             {% endif %}
-                            {% endfor %}
-                        </div>
-                        <button  id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
+                        {% endfor %}
+                    </div>
+                    <button id="add-another-cartucho" onclick="addAnother(event)">Adicionar cartucho</button>
 
-            </form>
-            <div class="btns-forms">
+                </form>
                 <div class="btns-forms">
-                    <a href="{% url 'operations:form-info-result-page-one' form_uuid %}">
-                        <button type="submit" class="btn-previus">Anterior</button>
-                    </a>
-                </div>
-                <div class="btns-forms">
-                    <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
+                    <div class="btns-forms">
+                        <a href="{% url 'operations:form-info-result-page-one' form_uuid %}">
+                            <button type="submit" class="btn-previus">Anterior</button>
+                        </a>
+                    </div>
+                    <div class="btns-forms">
+                        <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock content %}
 
 {% block extra_js %}
-<script>
-const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/parte-3/';
-const API_URL = '/v1/operacoes/cria-informacoes-resultado-parte-2/';
-let FORM_VAR_LIST = {
-    "droga_cocaina": "#droga_cocaina",
-    "droga_cannabis": "#droga_cannabis",
-    "droga_haxixe": "#droga_haxixe",
-    "droga_sinteticos": "#droga_sinteticos",
-    "droga_outros": "#droga_outros",
-    "numero_explosivos_apreendidos": "#numero_explosivos_apreendidos",
-    "numero_municoes_apreendidas": "#numero_municoes_apreendidas",
-    "numero_carregadores_apreendidos": "#numero_carregadores_apreendidos",
-    "numero_armas_apreendidas": "#numero_armas_apreendidas",
-    "numero_fuzis_apreendidos": "#numero_fuzis_apreendidos",
-    "tipo_cartucho-1": "#tipo_cartucho-1",
-    "tipo_calibre-1": "#tipo_calibre-1",
-};
+    <script>
+        const FORWARD_URL = '/operacoes/cadastro/informacoes/resultado/parte-3/';
+        const API_URL = '/v1/operacoes/cria-informacoes-resultado-parte-2/';
+        let FORM_VAR_LIST = {
+            "droga_cocaina": "#droga_cocaina",
+            "droga_cannabis": "#droga_cannabis",
+            "droga_haxixe": "#droga_haxixe",
+            "droga_sinteticos": "#droga_sinteticos",
+            "droga_outros": "#droga_outros",
+            "numero_explosivos_apreendidos": "#numero_explosivos_apreendidos",
+            "numero_municoes_apreendidas": "#numero_municoes_apreendidas",
+            "numero_carregadores_apreendidos": "#numero_carregadores_apreendidos",
+            "numero_armas_apreendidas": "#numero_armas_apreendidas",
+            "numero_fuzis_apreendidos": "#numero_fuzis_apreendidos",
+            "tipo_cartucho-1": "#tipo_cartucho-1",
+            "tipo_calibre-1": "#tipo_calibre-1",
+        };
 
-    let COUNT_CARTUCHOS = {{ nb_cartuchos|escapejs }};
+        let COUNT_CARTUCHOS = {{ nb_cartuchos|escapejs }};
 
-    for (i = 1; i < COUNT_CARTUCHOS + 1; i++) {
-        FORM_VAR_LIST[`tipo_cartucho-${i}`] = `#tipo_cartucho-${i}`
-        FORM_VAR_LIST[`tipo_calibre-${i}`] = `#tipo_calibre-${i}`
-    };
-
-    // get extra form count so we know what index to use for the next item.
-
-    function addAnother(event) {
-        event.preventDefault();
-        COUNT_CARTUCHOS++;
-        if (COUNT_CARTUCHOS == 1) {
-            COUNT_CARTUCHOS++;
+        for (i = 1; i < COUNT_CARTUCHOS + 1; i++) {
+            FORM_VAR_LIST[`tipo_cartucho-${i}`] = `#tipo_cartucho-${i}`
+            FORM_VAR_LIST[`tipo_calibre-${i}`] = `#tipo_calibre-${i}`
         }
+        ;
 
-        let element = `
+        // get extra form count so we know what index to use for the next item.
+
+        function addAnother(event) {
+            event.preventDefault();
+            COUNT_CARTUCHOS++;
+            if (COUNT_CARTUCHOS == 1) {
+                COUNT_CARTUCHOS++;
+            }
+
+            let element = `
                     <div id="cartuchos-container">
                     <div style="margin-left: 5px">
                         <label>Cartucho</label>
@@ -179,12 +201,12 @@ let FORM_VAR_LIST = {
 
                      `;
 
-        document.getElementById('cartuchos-container').insertAdjacentHTML('beforeend', element);
+            document.getElementById('cartuchos-container').insertAdjacentHTML('beforeend', element);
 
-        FORM_VAR_LIST[`tipo_cartucho-${COUNT_CARTUCHOS}`] = `#tipo_cartucho-${COUNT_CARTUCHOS}`
-        FORM_VAR_LIST[`tipo_calibre-${COUNT_CARTUCHOS}`] = `#tipo_calibre-${COUNT_CARTUCHOS}`
-    }
+            FORM_VAR_LIST[`tipo_cartucho-${COUNT_CARTUCHOS}`] = `#tipo_cartucho-${COUNT_CARTUCHOS}`
+            FORM_VAR_LIST[`tipo_calibre-${COUNT_CARTUCHOS}`] = `#tipo_calibre-${COUNT_CARTUCHOS}`
+        }
 
-</script>
+    </script>
 
 {% endblock extra_js %}

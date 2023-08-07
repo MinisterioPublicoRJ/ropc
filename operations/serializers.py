@@ -35,7 +35,8 @@ class OperationRegisterInfoSerializer(OperacaoSerializer):
         #     errs["numero_inquerito_mae"] = "Número de inquérito mãe deve ser fornecido para operação de tipo Programada."
         if attrs["numero_tjrj"] and (not attrs["numero_tjrj"].isdigit() or len(attrs["numero_tjrj"]) != 20):
             errs["numero_tjrj"] = "Número do TJRJ deve consistir de 20 dígitos."
-        if attrs["numero_inquerito_mae"] and (not attrs["numero_inquerito_mae"].isdigit() or len(attrs["numero_inquerito_mae"]) != 12):
+        if attrs["numero_inquerito_mae"] and (
+                not attrs["numero_inquerito_mae"].isdigit() or len(attrs["numero_inquerito_mae"]) != 12):
             errs["numero_inquerito_mae"] = "Número do inquérito mãe deve consistir de 12 dígitos."
         if errs:
             raise serializers.ValidationError(errs)
@@ -43,7 +44,6 @@ class OperationRegisterInfoSerializer(OperacaoSerializer):
 
 
 class InfoGeralOperacaoOneSerializer(OperacaoSerializer):
-    
     class LocalidadeOperacaoSerializer(OperacaoSerializer):
         localidade = serializers.CharField(required=True)
         municipio = serializers.CharField(required=True)
@@ -68,7 +68,6 @@ class InfoGeralOperacaoOneSerializer(OperacaoSerializer):
                 err = exer.__dict__
                 err['detail']['loc_position'] = data['loc_position']
                 raise serializers.ValidationError(err)
-
 
     data = serializers.DateField(format="%Y-%m-%d", required=True)
     hora_inicio = serializers.TimeField(format="%H:%M:%S", required=True)
@@ -142,7 +141,6 @@ class InfoOperacionaisOperacaoOneSerializer(OperacaoSerializer):
 
         return value
 
-
     def validate(self, attrs):
         errs = {}
         if attrs['apoio_recebido'] and not attrs['unidades_apoiadoras']:
@@ -192,11 +190,21 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
     numero_agentes_mobilizados = serializers.IntegerField(required=True, min_value=1)
     numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0)
     numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
+    justificativa_uso_aeronave = serializers.CharField(required=False)
     numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0)
     comunicou_escolas_saude = serializers.BooleanField(required=True)
     escolas_perto = serializers.BooleanField(required=True)
     hospitais_perto = serializers.BooleanField(required=True)
     descricao_analise_risco = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        errs = {}
+
+        if attrs["numero_aeronaves"] > 0 and (attrs["justificativa_uso_aeronave"] == None):
+            errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
+        if errs:
+            raise serializers.ValidationError(errs)
+        return attrs
 
 
 class InfoResultadosOneSerializer(OperacaoSerializer):

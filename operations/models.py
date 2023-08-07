@@ -7,7 +7,6 @@ from users.models import User
 from operations.exceptions import OperationNotCompleteException
 from operations.mail import notifica_por_email
 
-
 UNIDADES_POLICIA = [
     ("001a.Delegacia de Policia", "001a.Delegacia de Policia"),
     ("004a.Delegacia de Policia", "004a.Delegacia de Policia"),
@@ -270,14 +269,15 @@ class InformacaoManager(models.Manager):
 
 
 class LocalidadeOperacao(models.Model):
-    localidade = models.CharField("Localidade", max_length=255, null=True, blank=True) 
+    localidade = models.CharField("Localidade", max_length=255, null=True, blank=True)
     municipio = models.CharField("Município", max_length=255, null=True, blank=True)
     bairro = models.CharField("Bairro", max_length=255, null=True, blank=True)
     endereco_referencia = models.CharField("Endereço de referência", max_length=255, null=True, blank=True)
 
 
 class UnidadesApoiadores(models.Model):
-    nome_unidade = models.CharField("Unidade Apoiadora", choices=UNIDADES_POLICIA, max_length=255, null=True, blank=True)
+    nome_unidade = models.CharField("Unidade Apoiadora", choices=UNIDADES_POLICIA, max_length=255, null=True,
+                                    blank=True)
 
 
 class OrgaosExternosOperacao(models.Model):
@@ -372,7 +372,6 @@ class Operacao(models.Model):
     hora_termino = models.TimeField("Hora de término da operação", null=True, blank=True)
     localidade_operacao = models.ManyToManyField(LocalidadeOperacao)
 
-
     ### Info Gerais Two
     justificativa_excepcionalidade_operacao = models.TextField(
         "Justificativa da excepcionalidade da operação",
@@ -385,17 +384,18 @@ class Operacao(models.Model):
         blank=True
     )
 
-
     ### Info Operacionais One
     nome_delegado_operacao = models.CharField("Nome do Delegado Responsável", max_length=255, null=True, blank=True)
-    matricula_id_delegado_operacao = models.CharField("Matrícula/ID Funcional do Delegado", max_length=32, null=True, blank=True)
+    matricula_id_delegado_operacao = models.CharField("Matrícula/ID Funcional do Delegado", max_length=32, null=True,
+                                                      blank=True)
     natureza_operacao = models.CharField(
         "Natureza da operação",
         choices=NATUREZA_OPERACAO,
         max_length=255,
         null=True
     )
-    unidade_responsavel = models.CharField("Unidade da polícia judiciária responsável", choices=UNIDADES_POLICIA, max_length=255, null=True, blank=True)
+    unidade_responsavel = models.CharField("Unidade da polícia judiciária responsável", choices=UNIDADES_POLICIA,
+                                           max_length=255, null=True, blank=True)
     apoio_recebido = models.BooleanField(
         "Recebeu apoio de outras unidades policiais?",
         default=False
@@ -406,8 +406,7 @@ class Operacao(models.Model):
         default=False
     )
     orgaos_externos = models.ManyToManyField(OrgaosExternosOperacao)
-    
-    
+
     ### Info Operacionais Two
     numero_viaturas_mobilizadas = models.PositiveIntegerField(
         "Número de viaturas mobilizadas",
@@ -429,6 +428,7 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
+    justificativa_uso_aeronave = models.TextField("Justificativa do uso de aeronave", null=True, blank=True)
     numero_equipes_medicas = models.PositiveIntegerField(
         "Número de equipes médicas de apoio",
         default=0,
@@ -454,7 +454,6 @@ class Operacao(models.Model):
         null=True,
         blank=True
     )
-
 
     ### Info Resultados One
     # Caso tipo seja Em - Emergencial
@@ -525,7 +524,6 @@ class Operacao(models.Model):
         blank=True
     )
 
-
     ### Info Resultados Two
     # houve_apreensao_drogas = models.BooleanField(
     #     "Houve apreensão de Drogas?",
@@ -563,8 +561,7 @@ class Operacao(models.Model):
         blank=True
     )
     cartuchos_calibres = models.ManyToManyField(CartuchoCalibresApreendidos)
-    
-    
+
     # Info Resultados Three
     houve_disparados_aeronave = models.BooleanField(
         "Houve disparos embarcado da aeronave?",
@@ -616,7 +613,6 @@ class Operacao(models.Model):
         null=True,
         blank=True
     )
-
 
     class Meta:
         db_table = "operacao"

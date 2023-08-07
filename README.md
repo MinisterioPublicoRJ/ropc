@@ -47,3 +47,7 @@ python manage.py runserver
 ```
 
 Em seguida, basta acessar [localhost:8000](http://localhost:8000/) para ver a aplicação.
+
+### Observação
+
+Para buscar algumas informações utilizadas na aplicação (ex.: lista de municípios, bairros, etc), é necessário que a estação de trabalho do desenvolvedor enxergue os bancos internos do MPRJ - ou seja, que tenha acesso à rede interna. Caso contrário, a aplicação pode falhar em algumas telas quando utilizada localmente.
