@@ -74,8 +74,8 @@
                             <label>Justificativa para uso de aeronave</label>
                             <textarea style="width: 100vh; height: 200px;" type="text"
                                       id="justificativa_uso_aeronave"
-                                      value="{{ operacao_info.justificativa_uso_aeronave|default:'Não houve uso' }}"
-                                      name="justificativa_uso_aeronave">{{ operacao_info.justificativa_uso_aeronave|default:'Não houve uso' }}
+                                      value="{{operacao_info.justificativa_uso_aeronave|default:''}}"
+                                      name="justificativa_uso_aeronave">{{ operacao_info.justificativa_uso_aeronave|default:'' }}
                                 </textarea>
                         </div>
                     </div>
@@ -154,6 +154,9 @@
                     <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Proxímo</button>
                 </div>
             </div>
+        </div>
+        <div class="logo">
+            <img src="{% static "img/logo-MP.png" %}" alt="logo_MP">
         </div>
     </div>
 {% endblock content %}

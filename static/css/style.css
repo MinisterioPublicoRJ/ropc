@@ -33,7 +33,7 @@ a[id$="-li"]:hover > li{
   grid-template-areas:
   'navBar pageForm pageForm pageForm pageForm pageForm'
   'navBar pageForm pageForm pageForm pageForm pageForm'
-  'navBar logo logo     logo     logo     logo'
+  'navBar pageForm pageForm pageForm pageForm pageForm'
 }
 .logo {
   grid-area: logo;
@@ -325,6 +325,7 @@ label {
   justify-content: space-around;
   margin-top: 20px;
   column-gap: 2vw;
+  text-align: left;
 }
 .page-final-cadastro strong{
   border: 0;

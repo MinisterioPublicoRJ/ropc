@@ -1,82 +1,83 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    <title>Cadastro de Operações</title>
+<title>Cadastro de Operações</title>
 {% endblock title %}
 
 {% block content %}
-    <div class="operation-form">
-        <div class="main-page-form">
-            <div class="header-form">
-                <div class="text-header-form">
-                    <span>Cadastro de Operações</span>
-                    <p>Informações Gerais</p>
-                </div>
-                <div style="margin-left: 30px">
-                    <div class="progressbar-text">
-                        <p>Informações de registro</p>
-                        <p>Informações gerais</p>
-                        <p>Informações operacionais</p>
-                        <p>Informações de resultado</p>
-                        <p>Finalizar cadastro</p>
-                    </div>
-                    <progress max="100" value="25" id="progressbar"></progress>
-                    <ul class="progressbar">
-                        <li class="progressbar-checked"></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                    </ul>
-                </div>
+<div class="operation-form">
+    <div class="main-page-form">
+        <div class="header-form">
+            <div class="text-header-form">
+                <span>Cadastro de Operações</span>
+                <p>Informações Gerais</p>
             </div>
-            <div class="form-main">
-                <form action="/" id="main-form" method="post" enctype="multipart/form-data">
-                    <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
-                    <div class="box-form-group">
-                        <div>
-                            <label for="name">Objetivo estratégico da operação</label>
-                            <textarea style="width: 100vh; height: 85px" type="text"
-                                      id="objetivo_estrategico_operacao"
-                                      value="{{ operacao_info.objetivo_estrategico_operacao|default:'' }}"
-                                      name="objetivo_estrategico_operacao"
-                                      required>{{ operacao_info.objetivo_estrategico_operacao|default:'' }}
+            <div style="margin-left: 30px">
+                <div class="progressbar-text">
+                    <p>Informações de registro</p>
+                    <p>Informações gerais</p>
+                    <p>Informações operacionais</p>
+                    <p>Informações de resultado</p>
+                    <p>Finalizar cadastro</p>
+                </div>
+                <progress max="100" value="25" id="progressbar"></progress>
+                <ul class="progressbar">
+                    <li class="progressbar-checked"></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+        <div class="form-main">
+            <form action="/" id="main-form" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
+                <div class="box-form-group">
+                    <div>
+                        <label for="name">Objetivo estratégico da operação</label>
+                        <textarea style="width: 100vh; height: 85px" type="text" id="objetivo_estrategico_operacao"
+                            value="{{ operacao_info.objetivo_estrategico_operacao|default:'' }}"
+                            name="objetivo_estrategico_operacao" required>{{ operacao_info.objetivo_estrategico_operacao|default:'' }}
                         </textarea>
-                        </div>
                     </div>
-                    <div class="box-form-group">
-                        <div>
-                            <label for="name">Justificativa da excepcionalidade da operação...</label>
-                            <textarea style="width: 100vh; height: 200px;" type="text"
-                                      id="justificativa_excepcionalidade_operacao"
-                                      value="{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}"
-                                      name="justificativa_excepcionalidade_operacao">
+                </div>
+                <div class="box-form-group">
+                    <div>
+                        <label for="name">Justificativa da excepcionalidade da operação...</label>
+                        <textarea style="width: 100vh; height: 200px;" type="text"
+                            id="justificativa_excepcionalidade_operacao"
+                            value="{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}"
+                            name="justificativa_excepcionalidade_operacao">
                                 {{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}
                         </textarea>
-                        </div>
                     </div>
-                </form>
-                <div class="btns-forms">
-                    <div class="btns-forms">
-                        <a href="{% url 'operations:form-general-info-page-one' form_uuid %}">
-                            <button type="submit" class="btn-previus">Anterior</button>
-                        </a>
-                    </div>
-                    <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
                 </div>
+            </form>
+            <div class="btns-forms">
+                <div class="btns-forms">
+                    <a href="{% url 'operations:form-general-info-page-one' form_uuid %}">
+                        <button type="submit" class="btn-previus">Anterior</button>
+                    </a>
+                </div>
+                <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
             </div>
         </div>
     </div>
+    <div class="logo">
+        <img src="{% static "img/logo-MP.png" %}" alt="logo_MP">
+    </div>
+</div>
 
 {% endblock content %}
 
 {% block extra_js %}
-    <script>
-        const FORWARD_URL = '/operacoes/cadastro/informacoes/operacionais/parte-1/';
-        const API_URL = '/v1/operacoes/cria-informacoes-gerais-parte-2/';
-        const FORM_VAR_LIST = {
-            "justificativa_excepcionalidade_operacao": "#justificativa_excepcionalidade_operacao",
-            "objetivo_estrategico_operacao": "#objetivo_estrategico_operacao",
-        };
-    </script>
+<script>
+    const FORWARD_URL = '/operacoes/cadastro/informacoes/operacionais/parte-1/';
+    const API_URL = '/v1/operacoes/cria-informacoes-gerais-parte-2/';
+    const FORM_VAR_LIST = {
+        "justificativa_excepcionalidade_operacao": "#justificativa_excepcionalidade_operacao",
+        "objetivo_estrategico_operacao": "#objetivo_estrategico_operacao",
+    };
+</script>
 {% endblock extra_js %}
