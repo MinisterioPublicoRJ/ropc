@@ -170,6 +170,7 @@ progress[value]{
 .form-main p {
   max-width: 460px;
 }
+
 .form-main input, select, textarea {
   border: none;
   border-radius: 9px;
@@ -183,7 +184,6 @@ progress[value]{
   padding: 0 18px 0 18px;
   background: #333333 0% 0% no-repeat padding-box;
   opacity: 1;
-  text-align: left;
 }
 .cor-vermelha:-moz-placeholder {
   color: #AEAEAE !important;

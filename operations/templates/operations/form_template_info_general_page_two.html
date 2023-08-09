@@ -35,7 +35,7 @@
                 <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
                 <div class="box-form-group">
                     <div>
-                        <label for="name">Objetivo estratégico da operação</label>
+                        <label for="name">Objetivo estratégico da operação:</label>
                         <textarea style="width: 100vh; height: 85px" type="text" id="objetivo_estrategico_operacao"
                             value="{{ operacao_info.objetivo_estrategico_operacao|default:'' }}"
                             name="objetivo_estrategico_operacao" required>{{ operacao_info.objetivo_estrategico_operacao|default:'' }}
@@ -44,7 +44,7 @@
                 </div>
                 <div class="box-form-group">
                     <div>
-                        <label for="name">Justificativa da excepcionalidade da operação...</label>
+                        <label for="name">Justificativa da excepcionalidade da operação:</label>
                         <textarea style="width: 100vh; height: 200px;" type="text"
                             id="justificativa_excepcionalidade_operacao"
                             value="{{ operacao_info.justificativa_excepcionalidade_operacao|default:'' }}"
