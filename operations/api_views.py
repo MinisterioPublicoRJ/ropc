@@ -238,6 +238,10 @@ class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
         processed_data['numero_civis_mortos'] = data['numero_civis_mortos']
         processed_data['numero_civis_feridos'] = data['numero_civis_feridos']
         processed_data['numero_veiculos_recuperados'] = data['numero_veiculos_recuperados']
+        processed_data['numero_ambulancia'] = data['numero_ambulancia']
+        processed_data['numero_aeronaves'] = data['numero_aeronaves']
+        processed_data['justificativa_uso_aeronave'] = data['justificativa_uso_aeronave']
+
 
         processed_data['registro_ocorrencia'] = []
         if data['registro_ocorrencia']:
