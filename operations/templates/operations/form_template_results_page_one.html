@@ -152,23 +152,17 @@
                                    name="numero_aeronaves"
                                    id="numero_aeronaves" class="form-control">
                         </div>
-
-
-                        <br>
-                        <div class="box-form-group">
-                            <div class="">
-                                <label>Justificativa para uso de aeronave:</label>
-                                <textarea style="width: 100vh; height: 200px;" type="text"
-                                          id="justificativa_uso_aeronave"
-                                          value="{{ operacao_info.justificativa_uso_aeronave|default:'' }}"
-                                          name="justificativa_uso_aeronave">{{ operacao_info.justificativa_uso_aeronave|default:'' }}
-                                </textarea>
-                            </div>
-
-                        </div>
-
                     </div>
-
+                    <div class="box-form-group">
+                        <div class="">
+                            <label>Justificativa para uso de aeronave:</label>
+                            <textarea style="width: 100vh; height: 200px;" type="text"
+                                      id="justificativa_uso_aeronave"
+                                      value="{{ operacao_info.justificativa_uso_aeronave|default:'' }}"
+                                      name="justificativa_uso_aeronave">{{ operacao_info.justificativa_uso_aeronave|default:'' }}
+                            </textarea>
+                        </div>
+                    </div>
                 </form>
                 <div class="btns-forms">
                     <div class="btns-forms">
