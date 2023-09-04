@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    <title>Cadastro de Operações</title>
+<title>ROPC</title>
 {% endblock title %}
 
 {% block content %}
@@ -33,16 +33,12 @@
             <div class="form-main">
                 <form action="/" id="main-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
-
-                    <div>
                         <div>
                             <label>Registro de ocorrência apensado:</label>
                             <input type="text" value="{{ operacao_info.registro_ocorrencia|default:'' }}"
                                    name="registro_ocorrencia"
                                    id="registro_ocorrencia" class="form-control">
                         </div>
-                    </div>
-
                     <div class="input-type-checked">
                         <div class="form-control" id="houve_confronto_daf" name="houve_confronto_daf">
                             <div style="margin-left: 12px; text-align: left;">
@@ -138,12 +134,10 @@
                                    class="form-control">
                         </div>
 
-
                         <div class="">
-                            <label>Numero de ambulancia</label>
+                            <label>Número de ambulancias</label>
                             <input type="number" min="0" value="{{ operacao_info.numero_ambulancia|default:0 }}"
-                                   name="numero_ambulancia"
-                                   id="numero_ambulancia" class="form-control">
+                                   name="numero_ambulancia" id="numero_ambulancia" class="form-control">
                         </div>
 
                         <div class="">
@@ -152,21 +146,15 @@
                                    name="numero_aeronaves"
                                    id="numero_aeronaves" class="form-control">
                         </div>
-
-
-                        <br>
-                        <div class="box-form-group">
-                            <div class="">
-                                <label>Justificativa para uso de aeronave:</label>
-                                <textarea style="width: 100vh; height: 200px;" type="text"
-                                          id="justificativa_uso_aeronave"
-                                          value="{{ operacao_info.justificativa_uso_aeronave|default:'' }}"
-                                          name="justificativa_uso_aeronave">{{ operacao_info.justificativa_uso_aeronave|default:'' }}
-                                </textarea>
-                            </div>
-
+                    </div>
+                    <div class="box-form-group">
+                        <div class="">
+                            <label>Justificativa para uso de aeronave:</label>
+                            <textarea style="width: 100vh; height: 200px;" type="text" value="{{ operacao_info.justificativa_uso_aeronave|default:'' }}"
+                                      name="justificativa_uso_aeronave"
+                                      id="justificativa_uso_aeronave">
+                            </textarea>                          
                         </div>
-
                     </div>
 
                 </form>
