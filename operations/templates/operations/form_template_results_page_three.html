@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-<title>Cadastro de Operações</title>
+<title>ROPC</title>
 {% endblock title %}
 
 {% block content %}
@@ -110,12 +110,11 @@
                         >{{ operacao_info.observacoes_gerais|default:'' }}</textarea>
                 </div>
             </div>
-            
+            <div>Página 6</div>
 
                 <div class="btns-forms" style="margin-left: 300px;">
                     <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Próximo</button>
                 </div>
-
             </form>
             <div class="btns-forms" style="margin-right: 300px; margin-top: -80px;">
                 <a href="{% url 'operations:form-info-result-page-two' form_uuid %}">

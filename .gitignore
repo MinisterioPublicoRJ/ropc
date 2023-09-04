@@ -5,3 +5,6 @@ __pycache__/
 docker/*
 staticfiles/*
 env/
+bin/
+lib/
+.idea/
