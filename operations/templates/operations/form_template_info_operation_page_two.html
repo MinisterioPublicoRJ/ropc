@@ -67,6 +67,14 @@
                                    name="numero_equipes_medicas"
                                    id="numero_equipes_medicas" class="form-control">
                         </div>
+
+                        <div class="">
+                            <label>Numero de ambulancia</label>
+                            <input type="number" min="0" value="{{ operacao_info.numero_ambulancia|default:0 }}"
+                                   name="numero_ambulancia"
+                                   id="numero_ambulancia" class="form-control">
+                        </div>
+
                     </div>
 
                     <div class="box-form-group">
@@ -74,7 +82,7 @@
                             <label>Justificativa para uso de aeronave:</label>
                             <textarea style="width: 100vh; height: 200px;" type="text"
                                       id="justificativa_uso_aeronave"
-                                      value="{{operacao_info.justificativa_uso_aeronave|default:''}}"
+                                      value="{{ operacao_info.justificativa_uso_aeronave|default:'' }}"
                                       name="justificativa_uso_aeronave">{{ operacao_info.justificativa_uso_aeronave|default:'' }}
                             </textarea>
                         </div>
@@ -172,6 +180,7 @@
             "numero_agentes_mobilizados": "#numero_agentes_mobilizados",
             "numero_veiculos_blindados": "#numero_veiculos_blindados",
             "numero_aeronaves": "#numero_aeronaves",
+            "numero_ambulancia": "#numero_ambulancia",
             "justificativa_uso_aeronave": "#justificativa_uso_aeronave",
             "numero_equipes_medicas": "#numero_equipes_medicas",
             "comunicou_escolas_saude": "#comunicou_escolas_saude",
