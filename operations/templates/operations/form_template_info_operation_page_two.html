@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="">
-                            <label>Numero de ambulancia</label>
+                            <label>Numero de ambulâncias</label>
                             <input type="number" min="0" value="{{ operacao_info.numero_ambulancia|default:0 }}"
                                    name="numero_ambulancia"
                                    id="numero_ambulancia" class="form-control">
@@ -153,6 +153,7 @@
                     </div>
 
                 </form>
+                <div><p>Página 5</p></div>
                 <div class="btns-forms">
                     <div class="btns-forms">
                         <a href="{% url 'operations:form-operational-info-page-one' form_uuid %}">
