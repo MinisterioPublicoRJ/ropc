@@ -191,7 +191,7 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
     numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0)
     numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
     numero_ambulancia = serializers.IntegerField(required=True, min_value=0)
-    justificativa_uso_aeronave = serializers.CharField(required=True)
+    justificativa_uso_aeronave = serializers.CharField(required=False)
     numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0)
     comunicou_escolas_saude = serializers.BooleanField(required=True)
     escolas_perto = serializers.BooleanField(required=True)
@@ -201,7 +201,8 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
     def validate(self, attrs):
         errs = {}
 
-        if attrs["numero_aeronaves"] > 0 and (attrs["justificativa_uso_aeronave"] == None):
+        # if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == None:
+        if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
             errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
         if errs:
             raise serializers.ValidationError(errs)
@@ -233,7 +234,7 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     # Repitindo solicitações da P.C
     numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
     numero_ambulancia = serializers.IntegerField(required=True, min_value=0)
-    justificativa_uso_aeronave = serializers.CharField(required=True)
+    justificativa_uso_aeronave = serializers.CharField(required=False)
     
     # numero_mortes_interv_estado = serializers.IntegerField(required=True, min_value=0)
     numero_civis_feridos = serializers.IntegerField(required=True, min_value=0)
@@ -257,6 +258,14 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
             raise serializers.ValidationError(errs)
 
     def validate(self, attrs):
+        errs = {}
+
+        # if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == None:
+        if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
+            errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
+        if errs:
+            raise serializers.ValidationError(errs)
+        return attrs
         # Verifica se já existem dados de ocorrência
         # ser = InfoOcorrenciaOneSerializer(instance=self.instance)
         # has_occurence_data = any(ser.data.values())
@@ -278,7 +287,7 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
         #             "houve_ocorrencia_operacao": msg
         #         }
         #     )
-        return attrs
+        # return attrs
 
     def update(self, instance, validated_data):
         for key, val in validated_data.items():
