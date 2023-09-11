@@ -190,7 +190,8 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
     numero_agentes_mobilizados = serializers.IntegerField(required=True, min_value=1)
     numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0)
     numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
-    justificativa_uso_aeronave = serializers.CharField(required=False)
+    numero_ambulancia = serializers.IntegerField(required=True, min_value=0)
+    justificativa_uso_aeronave = serializers.CharField(required=True)
     numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0)
     comunicou_escolas_saude = serializers.BooleanField(required=True)
     escolas_perto = serializers.BooleanField(required=True)
@@ -229,6 +230,11 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     numero_policiais_feridos = serializers.IntegerField(required=True, min_value=0)
     numero_mortes_policiais = serializers.IntegerField(required=True, min_value=0)
     numero_civis_mortos = serializers.IntegerField(required=True, min_value=0)
+    # Repitindo solicitações da P.C
+    numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
+    numero_ambulancia = serializers.IntegerField(required=True, min_value=0)
+    justificativa_uso_aeronave = serializers.CharField(required=True)
+    
     # numero_mortes_interv_estado = serializers.IntegerField(required=True, min_value=0)
     numero_civis_feridos = serializers.IntegerField(required=True, min_value=0)
     # numero_civis_mortos_npap = serializers.IntegerField(required=True, min_value=0)

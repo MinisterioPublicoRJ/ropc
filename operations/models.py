@@ -428,6 +428,11 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
+    numero_ambulancia = models.PositiveIntegerField(
+        "Número de ambulancia",
+        default=0,
+        blank=True
+    )
     justificativa_uso_aeronave = models.TextField("Justificativa do uso de aeronave", null=True, blank=True)
     numero_equipes_medicas = models.PositiveIntegerField(
         "Número de equipes médicas de apoio",
