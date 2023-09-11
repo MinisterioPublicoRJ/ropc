@@ -262,7 +262,7 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
 
         # if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == None:
         if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
-            errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
+            errs["justificativa_uso_aeronave"] = "Havendo uso de aeronave, deve-se justifica-la."
         if errs:
             raise serializers.ValidationError(errs)
         return attrs
