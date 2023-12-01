@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="">
-                            <label>Numero de ambulâncias</label>
+                            <label>Número de ambulâncias</label>
                             <input type="number" min="0" value="{{ operacao_info.numero_ambulancia|default:0 }}"
                                    name="numero_ambulancia"
                                    id="numero_ambulancia" class="form-control">
@@ -88,57 +88,105 @@
                         </div>
                     </div>
 
-                    <div class="input-type-checked" style="margin-bottom: 30px; margin-top: 30px; width: 100%">
-                        <div class="input-wrapper">
-                            <div class="form-control" id="comunicou_escolas_saude" name="comunicou_escolas_saude">
-                                <div style="margin-left: 20px; text-align: left;">
-                                    <label style="max-width: 200px; margin-top: -16px;" for="data">Comunicou a
-                                        equipamentos de saúde e escolas?</label>
-                                    <div class="form-control-input-radios">
-                                        <label> Sim</label>
-                                        <input type="radio" name="option-comunicou"
-                                               {% if operacao_info.comunicou_escolas_saude %}checked{% endif %}
-                                               value="1">
-                                        <label style="margin-left: 20px">Não</label>
-                                        <input type="radio" name="option-comunicou"
-                                               {% if operacao_info.comunicou_escolas_saude == False %}checked{% endif %}
-                                               value="0">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="input-type-checked grupo" style="margin-bottom: 30px; margin-top: 30px; width: 100%;">
+                      <div class="divide">
                         <div class="input-wrapper">
                             <div class="form-control" id="escolas_perto" name="escolas_perto">
-                                <div style="margin-left: 20px; text-align: left;">
-                                    <label for="data">Escolas nas proximidades?</label>
-                                    <div class="form-control-input-radios">
-                                        <label> Sim</label>
-                                        <input type="radio" name="option-escolas" value="1"
-                                               {% if operacao_info.escolas_perto %}checked{% endif %}>
-                                        <label style="margin-left: 20px">Não</label>
-                                        <input type="radio" name="option-escolas" value="0"
-                                               {% if operacao_info.escolas_perto == False %}checked{% endif %}>
-                                    </div>
+                              <div style="margin-left: 20px; text-align: left; word-wrap: break-word; display: inline-block">
+                                  <label for="data">Escolas nas proximidades?</label>
+                                  <div class="form-control-input-radios">
+                                      <label> Sim</label>
+                                      <input type="radio" name="option-escolas" value="1" onclick="verifica_escola()"
+                                              {% if operacao_info.escolas_perto %}checked{% endif %}>
+                                      <label style="margin-left: 20px">Não</label>
+                                      <input type="radio" name="option-escolas" value="0" onclick="verifica_escola()"
+                                              {% if operacao_info.escolas_perto == False %}checked{% endif %}>
+                                  </div>
                                 </div>
+                              </div>
                             </div>
-                        </div>
 
                         <div class="input-wrapper">
-                            <div class="form-control" id="hospitais_perto" name="hospitais_perto">
-                                <div style="margin-left: 20px; text-align: left;">
-                                    <label for="data">Hospitais nas proximidades?</label>
+                            <div class="form-control" id="comunicacao_escola" name="comunicacao_escola">
+                                <div class="{% if operacao_info.escolas_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left; word-wrap: break-word;">
+                                    <label for="data">Houve comunicação prévia às autoridades de educação?</label>
                                     <div class="form-control-input-radios">
                                         <label> Sim</label>
-                                        <input type="radio" name="option-hospitais" value="1"
-                                               {% if operacao_info.hospitais_perto %}checked{% endif %}>
+                                        <input type="radio" name="option-comunicao-escola" value="1"
+                                               {% if operacao_info.comunicacao_escola %}checked{% endif %}>
                                         <label style="margin-left: 20px">Não</label>
-                                        <input type="radio" name="option-hospitais" value="0"
-                                               {% if operacao_info.hospitais_perto == False %}checked{% endif %}>
+                                        <input type="radio" name="option-comunicao-escola" value="0"
+                                               {% if operacao_info.comunicacao_escola == False %}checked{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+
+                        <div class="input-wrapper">
+                            <div class="form-control" id="utilizacao_escola" name="utilizacao_escola">
+                                <div class="{% if operacao_info.escolas_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left; word-wrap: break-word;">
+                                    <label for="data">Houve utilização de equipamento educacional para baseamento de recursos operacionais?</label>
+                                    <div class="form-control-input-radios">
+                                        <label> Sim</label>
+                                        <input type="radio" name="option-utilizacao-escola" value="1"
+                                               {% if operacao_info.utilizacao_escola %}checked{% endif %}>
+                                        <label style="margin-left: 20px">Não</label>
+                                        <input type="radio" name="option-utilizacao-escola" value="0"
+                                               {% if operacao_info.utilizacao_escola == False %}checked{% endif %}>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                      </div>
+
+                    <div class="divide">
+                    <!-- <div class="input-type-checked grupo" style="margin-bottom: 30px; margin-top: 30px; width: 100%"> -->
+                        <div class="input-wrapper">
+                            <div class="form-control" id="saude_perto" name="saude_perto">
+                                <div style="margin-left: 20px; text-align: left;">
+                                    <label for="data">Unidades de saúde nas proximidades?</label>
+                                    <div class="form-control-input-radios">
+                                        <label> Sim</label>
+                                        <input type="radio" name="option-saude" value="1" onclick="verifica_saude()"
+                                               {% if operacao_info.saude_perto %}checked{% endif %}>
+                                        <label style="margin-left: 20px">Não</label>
+                                        <input type="radio" name="option-saude" value="0" onclick="verifica_saude()"
+                                               {% if operacao_info.saude_perto == False %}checked{% endif %}>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="input-wrapper">
+                            <div class="form-control" id="comunicacao_saude" name="comunicacao_saude">
+                                <div class="{% if operacao_info.saude_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left;">
+                                    <label for="data">Houve comunicação prévia às autoridades de saúde?</label>
+                                    <div class="form-control-input-radios">
+                                        <label> Sim</label>
+                                        <input type="radio" name="option-comunicao-saude" value="1"
+                                               {% if operacao_info.comunicacao_saude %}checked{% endif %}>
+                                        <label style="margin-left: 20px">Não</label>
+                                        <input type="radio" name="option-comunicao-saude" value="0"
+                                               {% if operacao_info.comunicacao_saude == False %}checked{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                      
+                        <div class="input-wrapper">
+                            <div class="form-control" id="utilizacao_saude" name="utilizacao_saude">
+                                <div class="{% if operacao_info.saude_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left;">
+                                    <label for="data">Houve utilização de equipamento de saúde para baseamento de recursos operacionais?</label>
+                                    <div class="form-control-input-radios">
+                                        <label> Sim</label>
+                                        <input type="radio" name="option-utilizacao-saude" value="1"
+                                               {% if operacao_info.utilizacao_saude %}checked{% endif %}>
+                                        <label style="margin-left: 20px">Não</label>
+                                        <input type="radio" name="option-utilizacao-saude" value="0"
+                                               {% if operacao_info.utilizacao_saude == False %}checked{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                      </div>
                     </div>
 
                     <div class="box-form-group">
@@ -184,9 +232,12 @@
             "numero_ambulancia": "#numero_ambulancia",
             "justificativa_uso_aeronave": "#justificativa_uso_aeronave",
             "numero_equipes_medicas": "#numero_equipes_medicas",
-            "comunicou_escolas_saude": "#comunicou_escolas_saude",
             "escolas_perto": "#escolas_perto",
-            "hospitais_perto": "#hospitais_perto",
+            "comunicacao_escola":"#comunicacao_escola",
+            "utilizacao_escola": "#utilizacao_escola",
+            "saude_perto": "#saude_perto",
+            "comunicacao_saude":"#comunicacao_saude",
+            "utilizacao_saude": "#utilizacao_saude",
             "descricao_analise_risco": "#descricao_analise_risco"
         };
 
@@ -203,6 +254,55 @@
             }
 
         }
-    </script>
+        
 
+        function verifica_escola() {
+          const comunicacao_escola = document.getElementById("comunicacao_escola");
+          const primeiro_radio_escola = document.getElementsByName("option-escolas")[0].checked;
+          const segundo_radio_escola = document.getElementsByName("option-escolas")[1].checked;
+          comunicacao_escola_classe = comunicacao_escola.firstElementChild;
+          
+          const utilizacao_escola = document.getElementById("utilizacao_escola");
+          const primeiro_radio_utilizacao_escola = document.getElementsByName("option-utilizacao-escola")[0].checked;
+          const segundo_radio_utilizacao_escola = document.getElementsByName("option-utilizacao-escola")[1].checked;
+          utilizacao_escola_classe = utilizacao_escola.firstElementChild;
+  
+          if (primeiro_radio_escola) {
+            console.log('abre');
+            comunicacao_escola_classe.classList.remove('hide')
+            utilizacao_escola_classe.classList.remove('hide')
+           
+          } else if  (segundo_radio_escola) {
+            console.log('fecha');
+            comunicacao_escola_classe.classList.add('hide')
+            utilizacao_escola_classe.classList.add('hide')
+   
+          }
+        };
+
+        function verifica_saude() {
+            const comunicacao_saude = document.getElementById("comunicacao_saude");
+            const primeiro_radio_saude = document.getElementsByName("option-saude")[0].checked;
+            const segundo_radio_saude = document.getElementsByName("option-saude")[1].checked;
+            comunicacao_saude_classe = comunicacao_saude.firstElementChild;
+            
+            const utilizacao_saude = document.getElementById("utilizacao_saude");
+            const primeiro_radio_utilizacao_saude = document.getElementsByName("option-utilizacao-saude")[0].checked;
+            const segundo_radio_utilizacao_saude = document.getElementsByName("option-utilizacao-saude")[1].checked;
+            utilizacao_saude_classe = utilizacao_saude.firstElementChild;
+    
+            if (primeiro_radio_saude) {
+              console.log('abre');
+              comunicacao_saude_classe.classList.remove('hide')
+              utilizacao_saude_classe.classList.remove('hide')
+             
+            } else if  (segundo_radio_saude) {
+              console.log('fecha');
+              comunicacao_saude_classe.classList.add('hide')
+              utilizacao_saude_classe.classList.add('hide')
+     
+            }
+          };
+
+    </script>
 {% endblock extra_js %}

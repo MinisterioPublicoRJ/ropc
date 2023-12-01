@@ -193,9 +193,14 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
     numero_ambulancia = serializers.IntegerField(required=True, min_value=0)
     justificativa_uso_aeronave = serializers.CharField(required=False)
     numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0)
-    comunicou_escolas_saude = serializers.BooleanField(required=True)
+  
     escolas_perto = serializers.BooleanField(required=True)
-    hospitais_perto = serializers.BooleanField(required=True)
+    comunicacao_escola = serializers.BooleanField(required=True)
+    utilizacao_escola = serializers.BooleanField(required=True)
+    saude_perto = serializers.BooleanField(required=True)
+    comunicacao_saude = serializers.BooleanField(required=True)
+    utilizacao_saude = serializers.BooleanField(required=True)
+   
     descricao_analise_risco = serializers.CharField(required=True)
 
     def validate(self, attrs):
@@ -204,6 +209,12 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
         # if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == None:
         if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
             errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
+        if not attrs["escolas_perto"]:
+          attrs["comunicacao_escola"] = False
+          attrs["utilizacao_escola"] = False
+        if not attrs["saude_perto"]:
+          attrs["comunicacao_saude"] = False
+          attrs["utilizacao_saude"] = False
         if errs:
             raise serializers.ValidationError(errs)
         return attrs
