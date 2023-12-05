@@ -431,11 +431,11 @@ ul.pagination strong {
   border-bottom-right-radius: 5px;
   border-color: #FDBC2D ;
 }
-.proximity-group {
+/* .proximity-group {
   letter-spacing: 0.5px;
   max-width: 100%;
   flex-direction: column;
-}
+} */
 .divide {
   max-width: 80%;
   margin: 0px 0px;
