@@ -431,14 +431,14 @@ ul.pagination strong {
   border-bottom-right-radius: 5px;
   border-color: #FDBC2D ;
 }
-.grupo {
+.proximity-group {
   letter-spacing: 0.5px;
   max-width: 100%;
   flex-direction: column;
 }
 .divide {
   max-width: 80%;
-  margin: 20px 0px;
+  margin: 0px 0px;
 }
 .sr-only {
   display: none;
@@ -488,6 +488,8 @@ ul.pagination strong {
   display: flex;
   flex: 1;
   flex-direction: column;
+  max-width: 80%;
+  margin: 0px 0px;
 }
 
 @media(max-width: 1080px){

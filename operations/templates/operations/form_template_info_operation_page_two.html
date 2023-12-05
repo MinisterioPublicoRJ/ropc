@@ -30,8 +30,9 @@
                     </ul>
                 </div>
             </div>
-            <div class="form-main">
+            <div class="form-main" >
                 <form action="/" id="main-form" method="post" enctype="multipart/form-data">
+                
                     <input type="hidden" id="form_uuid" value="{{ form_uuid }}">
                     <div class="input-type-checked-results-one">
                         <div class="">
@@ -88,40 +89,40 @@
                         </div>
                     </div>
 
-                    <div class="input-type-checked grupo" style="margin-bottom: 30px; margin-top: 30px; width: 100%;">
-                      <div class="divide">
+             
+                    <div class="input-type-checked proximity-group" style="margin-bottom: 30px; margin-top: 30px; width: 100%">
                         <div class="input-wrapper">
                             <div class="form-control" id="escolas_perto" name="escolas_perto">
-                              <div style="margin-left: 20px; text-align: left; word-wrap: break-word; display: inline-block">
-                                  <label for="data">Escolas nas proximidades?</label>
-                                  <div class="form-control-input-radios">
-                                      <label> Sim</label>
-                                      <input type="radio" name="option-escolas" value="1" onclick="verifica_escola()"
-                                              {% if operacao_info.escolas_perto %}checked{% endif %}>
-                                      <label style="margin-left: 20px">Não</label>
-                                      <input type="radio" name="option-escolas" value="0" onclick="verifica_escola()"
-                                              {% if operacao_info.escolas_perto == False %}checked{% endif %}>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                        <div class="input-wrapper">
-                            <div class="form-control" id="comunicacao_escola" name="comunicacao_escola">
-                                <div class="{% if operacao_info.escolas_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left; word-wrap: break-word;">
-                                    <label for="data">Houve comunicação prévia às autoridades de educação?</label>
-                                    <div class="form-control-input-radios">
-                                        <label> Sim</label>
-                                        <input type="radio" name="option-comunicao-escola" value="1"
-                                               {% if operacao_info.comunicacao_escola %}checked{% endif %}>
-                                        <label style="margin-left: 20px">Não</label>
-                                        <input type="radio" name="option-comunicao-escola" value="0"
-                                               {% if operacao_info.comunicacao_escola == False %}checked{% endif %}>
+                                <div style="margin-left: 20px; text-align: left;">
+                                    <label for="data">Escolas nas proximidades?</label>
+                                        <div class="form-control-input-radios">
+                                            <label> Sim</label>
+                                            <input type="radio" name="option-escolas" value="1" onclick="verifica_escola()"
+                                                    {% if operacao_info.escolas_perto %}checked{% endif %}>
+                                            <label style="margin-left: 20px">Não</label>
+                                            <input type="radio" name="option-escolas" value="0" onclick="verifica_escola()"
+                                                    {% if operacao_info.escolas_perto == False %}checked{% endif %}>  
                                     </div>
                                 </div>
                             </div>
-                      </div>
-
+                        </div>
+                    
+                            <div class="input-wrapper">
+                                <div class="form-control" id="comunicacao_escola" name="comunicacao_escola">
+                                    <div class="{% if operacao_info.escolas_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left; word-wrap: break-word;">
+                                        <label for="data">Houve comunicação prévia às autoridades de educação?</label>
+                                        <div class="form-control-input-radios">
+                                            <label> Sim</label>
+                                            <input type="radio" name="option-comunicao-escola" value="1"
+                                                {% if operacao_info.comunicacao_escola %}checked{% endif %}>
+                                            <label style="margin-left: 20px">Não</label>
+                                            <input type="radio" name="option-comunicao-escola" value="0"
+                                                {% if operacao_info.comunicacao_escola == False %}checked{% endif %}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
                         <div class="input-wrapper">
                             <div class="form-control" id="utilizacao_escola" name="utilizacao_escola">
                                 <div class="{% if operacao_info.escolas_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left; word-wrap: break-word;">
@@ -137,13 +138,10 @@
                                 </div>
                             </div>
                         </div>
-                      </div>
-
-                    <div class="divide">
-                    <!-- <div class="input-type-checked grupo" style="margin-bottom: 30px; margin-top: 30px; width: 100%"> -->
+                    
                         <div class="input-wrapper">
                             <div class="form-control" id="saude_perto" name="saude_perto">
-                                <div style="margin-left: 20px; text-align: left;">
+                                <div style="margin: 40px 0px 0px 20px; text-align: left;">
                                     <label for="data">Unidades de saúde nas proximidades?</label>
                                     <div class="form-control-input-radios">
                                         <label> Sim</label>
@@ -152,10 +150,11 @@
                                         <label style="margin-left: 20px">Não</label>
                                         <input type="radio" name="option-saude" value="0" onclick="verifica_saude()"
                                                {% if operacao_info.saude_perto == False %}checked{% endif %}>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                       
+
                         <div class="input-wrapper">
                             <div class="form-control" id="comunicacao_saude" name="comunicacao_saude">
                                 <div class="{% if operacao_info.saude_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left;">
@@ -170,7 +169,8 @@
                                     </div>
                                 </div>
                             </div>
-                      
+                        </div>
+                    
                         <div class="input-wrapper">
                             <div class="form-control" id="utilizacao_saude" name="utilizacao_saude">
                                 <div class="{% if operacao_info.saude_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left;">
@@ -186,8 +186,7 @@
                                 </div>
                             </div>
                         </div>   
-                      </div>
-                    </div>
+                    </div>  
 
                     <div class="box-form-group">
                         <div class="">
@@ -219,6 +218,7 @@
 {% endblock content %}
 
 {% block extra_js %}
+
     <script>
 
         //toggleOrdemOperacoesField();
@@ -254,7 +254,6 @@
             }
 
         }
-        
 
         function verifica_escola() {
           const comunicacao_escola = document.getElementById("comunicacao_escola");
@@ -303,6 +302,9 @@
      
             }
           };
+        
+
+        
 
     </script>
 {% endblock extra_js %}
