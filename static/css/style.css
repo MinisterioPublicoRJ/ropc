@@ -212,9 +212,9 @@ progress[value]{
 .form-control-input-radios{
   display: flex;
 }
-.hide{
+/* .hide{
   display: none;
-}
+} */
 .input-type-checked-results-one{
   display: flex;
   margin-top: 30px;
