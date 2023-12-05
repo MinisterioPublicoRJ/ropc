@@ -439,20 +439,30 @@ class Operacao(models.Model):
         default=0,
         blank=True
     )
-    comunicou_escolas_saude = models.BooleanField(
-        "Comunicou a equipamentos de saúde e escolas?",
-        null=True,
-        blank=True,
-    )
     escolas_perto = models.BooleanField(
         "Escolas nas proximidades?",
-        null=True,
-        blank=True,
+        default=False
     )
-    hospitais_perto = models.BooleanField(
-        "Hospitais nas proximidades?",
-        null=True,
-        blank=True,
+    comunicacao_escola = models.BooleanField(
+        "Houve comunicação prévia às autoridades de educação?",
+        default=False
+    )
+    utilizacao_escola = models.BooleanField(
+        "Houve utilização de equipamento educacional para baseamento de recursos operacionais?",
+        default=False
+    )
+    saude_perto = models.BooleanField(
+        "Unidades de saúde nas proximidades?",
+        default=False
+    )
+    comunicacao_saude = models.BooleanField(
+        "Houve comunicação prévia às autoridades de saúde?",
+        default=False
+    )
+    utilizacao_saude = models.BooleanField(
+        "Houve utilização de equipamento de saúde para baseamento de recursos operacionais?",
+        
+        default=False
     )
     descricao_analise_risco = models.TextField(
         "Análise de riscos e medidas de controles de danos colaterais das operações e de disparos de confrontos",

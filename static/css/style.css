@@ -212,9 +212,13 @@ progress[value]{
 .form-control-input-radios{
   display: flex;
 }
+.hide{
+  display: none;
+}
 .input-type-checked-results-one{
   display: flex;
   margin-top: 30px;
+  justify-content:space-between;
 }
 .input-type-checked-results-one input{
   width: 111px;
@@ -271,8 +275,8 @@ progress[value]{
   width: 14px;
   height: 14px;
   margin-left: 2px;
-}
 
+}
 .btns-forms{
   display: flex;
   align-items: center;
@@ -427,7 +431,15 @@ ul.pagination strong {
   border-bottom-right-radius: 5px;
   border-color: #FDBC2D ;
 }
-
+.proximity-group {
+  letter-spacing: 0.5px;
+  max-width: 100%;
+  flex-direction: column;
+}
+.divide {
+  max-width: 80%;
+  margin: 0px 0px;
+}
 .sr-only {
   display: none;
 }
@@ -476,6 +488,8 @@ ul.pagination strong {
   display: flex;
   flex: 1;
   flex-direction: column;
+  max-width: 80%;
+  margin: 0px 0px;
 }
 
 @media(max-width: 1080px){
@@ -488,3 +502,6 @@ ul.pagination strong {
     font-size: 87.5%;
   }
 }
+
+
+

@@ -101,6 +101,16 @@ DATABASES = {
     GEO_DATABASE_NAME: dj_database_url.parse(GEO_DATABASE_URL),
 }
 
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'mydatabase.db', # This is where you put the name of the db file. 
+#                  # If one doesn't exist, it will be created at migration time.
+#     },
+#     GEO_DATABASE_NAME: dj_database_url.parse(GEO_DATABASE_URL)
+# }
+
 DATABASE_ROUTERS = ["conf.db_router.DBRouter"]
 
 
