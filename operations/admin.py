@@ -7,6 +7,8 @@ class CustomOperacaoAdmin(admin.ModelAdmin):
     exclude = ("secao_atual", "coordenadas_geo",)
     list_display = (
         "data",
+        "nome_operacao",
+
         "hora_inicio",
         "hora_termino",
         #"municipio",
