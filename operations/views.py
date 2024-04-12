@@ -21,6 +21,12 @@ from operations.serializers import (
 )
 
 
+from django.http import FileResponse
+from django.contrib import messages
+from .forms import RelatorioForm
+from .helpers import gera_planilha_excel
+
+
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
     2: "operations:form-general-info-page-one",
@@ -343,3 +349,42 @@ class PanelListView(LoginRequiredMixin, TemplateView):
         # context["tableau_view_url"] = get_view_url
         context["tableau_trunc_url"] = trunc_url
         return context
+
+
+
+
+class ReportView(LoginRequiredMixin, TemplateView):
+    template_name = "operations/form_template_report.html"
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = RelatorioForm()
+        return context
+
+    def get_data(self, columns, result):
+        return [tuple([str(getattr(row, col)) for col in columns]) for row in result]
+
+
+    def post(self, request, *args, **kwargs):
+        form = RelatorioForm(request.POST)
+   
+        if form.is_valid():
+            date_start = form.cleaned_data['date_start']
+            date_end = form.cleaned_data['date_end']
+            full_operations = True if form.cleaned_data['full_operations'] == '1' else False
+
+            result = Operacao.objects.get_operations_by_date(date_start, date_end, full_operations)
+            columns = result.query.get_columns()
+            
+            if not result:
+                messages.error(request, 'Nenhum resultado encontrado, insira outra data')
+                return redirect('.')
+            
+            data = self.get_data(columns, result)
+            excel_buffer = gera_planilha_excel(data, columns, "Operações")
+   
+            return FileResponse(excel_buffer, filename=f"Operações a partir {date_start}.xlsx", as_attachment=True)
+
+            
+    

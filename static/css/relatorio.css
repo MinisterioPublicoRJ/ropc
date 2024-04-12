@@ -1,0 +1,89 @@
+@keyframes fadeInUp {
+    from {
+        opacity: 1;
+       
+    }
+    to {
+        opacity: 0;
+        display: none;
+    }
+  }
+  
+  .messages {
+    background-color: #FDBC2D;
+    padding: 20px;
+    /* margin: 0px auto; */
+    width: fit-content;
+    color: #111111;
+    text-align: center;
+    border-radius: 6px;  
+    position: absolute;
+    top: 80%;
+    animation-name: fadeInUp;
+    animation-duration: 3s; 
+    animation-delay: 1s;
+    animation-fill-mode: both; 
+    
+    
+  }
+  .form-relatorio form{
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    
+  }
+  .form-relatorio div{
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+  }
+  .form-relatorio label{
+    font-size: 16px;
+  }
+  
+  .form-relatorio input[type="radio"] {
+    height: 15px;
+  }
+  form input {
+    text-align: center;
+    border: none;
+    border-radius: 9px;
+    box-sizing: border-box;
+    color: #AEAEAE;
+    font-weight: 400;
+    width: 300px;
+    height: 45px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 0 18px 0 18px;
+    background: #333333 0% 0% no-repeat padding-box;
+    opacity: 1;
+}
+  .bloco-radio {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+  
+    justify-content: center;
+    align-content: center;
+  
+  } 
+  
+  
+  .bloco-radio label{
+    width: fit-content;
+    margin: 15px;
+    
+  
+  }
+  
+  .bloco-radio input {
+    width: 20px;
+  
+  
+  }

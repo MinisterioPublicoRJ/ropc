@@ -266,6 +266,96 @@ class InformacaoManager(models.Manager):
             obj = None
 
         return obj
+    
+    def get_operations_by_date(self, date_start, date_end, full):
+        return self.raw(f"""SELECT op.id,
+                op.identificador,
+                op.criado_em AS data_criacao,
+                op.data AS data_operacao,
+                op.unidade_responsavel,
+                op.tipo_operacao,
+                op.objetivo_estrategico_operacao,
+                op.houve_confronto_daf,
+                op.houve_resultados_operacao,
+                op.numero_armas_apreendidas,
+                op.numero_fuzis_apreendidos,
+                op.numero_adolescentes_apreendidos,
+                op.numero_policiais_feridos,
+                op.numero_mortes_policiais,
+                op.numero_civis_feridos,
+                op.numero_veiculos_recuperados,
+                op.usuario_id,
+                op.secao_atual,
+                op.numero_aeronaves,
+                op.numero_veiculos_blindados,
+                op.descricao_analise_risco,
+                op.justificativa_excepcionalidade_operacao,
+                op.observacoes_gerais,
+                op.completo,
+                op.situacao,
+                op.registro_anterior,
+                op.hora_inicio,
+                op.hora_termino,
+                op.houve_disparados_aeronave,
+                op.houve_registros_imagem,
+                op.local_preservado,
+                op.matricula_id_delegado_operacao,
+                op.natureza_operacao,
+                op.nome_delegado_operacao,
+                op.nome_operacao,
+                op.numero_agentes_mobilizados,
+                op.numero_carregadores_apreendidos,
+                op.numero_equipes_medicas,
+                op.numero_explosivos_apreendidos,
+                op.numero_inquerito_mae,
+                op.numero_municoes_apreendidas,
+                op.numero_presos_elencados,
+                op.numero_presos_flagrante,
+                op.numero_viaturas_mobilizadas,
+                op.pericia_aeronave,
+                op.pericia_iml,
+                op.pericia_local,
+                op.pericia_outras,
+                op.pericia_veiculo_blindado,
+                op.pericia_viaturas,
+                op.comunicacao_escola,
+                op.comunicacao_saude,
+                COALESCE(op.comunicacao_escola, false) OR COALESCE(op.comunicacao_saude, false) AS comunicou_escolas_saude,
+                op.escolas_perto,
+                op.saude_perto,
+                op.numero_civis_mortos,
+                op.numero_presos_outros_mandados,
+                op.numero_tjrj,
+                op.apoio_recebido,
+                op.operacao_integrada,
+                op.droga_cannabis,
+                op.droga_cocaina,
+                op.droga_haxixe,
+                op.droga_outros,
+                op.droga_sinteticos,
+                op.justificativa_uso_aeronave,
+                op.numero_ambulancia,
+                op.utilizacao_escola,
+                op.utilizacao_saude,
+                olo.id AS id_olo,
+                olo.operacao_id,
+                olo.localidadeoperacao_id,
+                ol.id AS id_ol,
+                ol.localidade,
+                ol.municipio,
+                ol.bairro,
+                ol.endereco_referencia
+            FROM operacao op
+                JOIN operacao_localidade_operacao olo ON op.id = olo.operacao_id
+                JOIN operations_localidadeoperacao ol ON olo.localidadeoperacao_id = ol.id
+                where 
+                    op.data >= '{date_start}' and
+                    op.data <= '{date_end}' and 
+                    op.completo = {full}
+                order by op.criado_em asc 
+                """)
+
+        
 
 
 class LocalidadeOperacao(models.Model):
