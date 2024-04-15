@@ -130,6 +130,7 @@ var firstTarget = document.getElementById("first-li");
 var secondTarget = document.getElementById("second-li");
 var thirdTarget = document.getElementById("third-li");
 var fourthTarget = document.getElementById("fourth-li");
+var fifthTarget = document.getElementById("fifth-li");
 
 
 // Mudar cor e imagem da primeira li
@@ -176,3 +177,14 @@ var mouseLeaveFunctionFourthdLi = function () {
   document.getElementById("target-image-fourth-li").setAttribute("src",  `${STATIC_PREFIX}img/chart.png`);
 };
 fourthTarget.onmouseleave = mouseLeaveFunctionFourthdLi;
+
+// Mudar cor e imagem da quinta li
+var mouseOverFunctionFifthLi = function () {
+  document.getElementById("target-image-fifth-li").setAttribute("src", `${STATIC_PREFIX}img/excel-amarelo.png`);
+};
+fifthTarget.onmouseover = mouseOverFunctionFifthLi;
+
+var mouseLeaveFunctionFifthLi = function () {
+  document.getElementById("target-image-fifth-li").setAttribute("src",  `${STATIC_PREFIX}img/excel.png`);
+};
+fifthTarget.onmouseleave = mouseLeaveFunctionFifthLi;

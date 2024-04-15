@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    <title>ROPC</title>
+{% endblock title %}
+{% block content %}
+
+    <div >
+        
+        <div class="main-page-form">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+
+            {% endif %}
+            <div class="form-relatorio">
+
+      
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div>
+                        <label>Preencha a data início das operações:</label>
+                        <input type="date"name="date_start" required="true">
+                    </div>
+                    
+                    <div>
+                        <label>Preencha a data fim das operações:</label>
+                        <input id = "date_end" type="date"name="date_end" required="true">
+                    </div>
+                    
+                    <div class="bloco-radio">
+                        <label>Somente operações totalmente preenchidas?</label>
+                        
+                        <label> Sim
+                            <input type="radio" name="full_operations" value="1" checked="True">
+                        </label>
+            
+                        <label >Não                      
+                            <input type="radio" name="full_operations" value="0">    
+                        </label>            
+                    </div>           
+                                                   
+             
+
+                    <div class="btns-forms">
+                        <button type="submit" class="btn-next">Enviar</button>
+                    </div> 
+                 </form>
+       
+            </div>
+        </div>
+       
+        <div class="logo">
+            <img src="{% static "img/logo-MP.png" %}" alt="logo_MP">
+        </div>
+    </div>
+
+
+{% endblock content %}
+{% block extra_js %}
+<script>
+    var today = new Date()
+    var formatted_date = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+    document.getElementById('date_end').value = formatted_date;
+</script>
+{% endblock extra_js %}
+
+
