@@ -19,6 +19,8 @@ from django.urls import include, path
 
 from accounts.views import SignUpView
 from operations import views as operations_views
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 API_VERSION = "v1"
@@ -45,4 +47,4 @@ urlpatterns += [
          auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
     path("conta/nova-senha/pronto", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
     path("conta/cadastro", SignUpView.as_view(), name="signup"),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
