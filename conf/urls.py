@@ -47,4 +47,4 @@ urlpatterns += [
          auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
     path("conta/nova-senha/pronto", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
     path("conta/cadastro", SignUpView.as_view(), name="signup"),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] 
