@@ -573,6 +573,16 @@ class Operacao(models.Model):
         null=True,
         blank=True,
     )
+    houve_entrada_forcada = models.BooleanField(
+        "Houve entrada forçada em domicílio em período noturno?",
+        null=True,
+        blank=True,
+    )
+    justificativa_entrada_forcada = models.TextField(
+        "Justificativa da entrada forçada em domicílio em período noturno",
+        null=True,
+        blank=True
+    )
     numero_presos_elencados = models.PositiveIntegerField(
         "Número de presos elencados nos mandados de prisão",
         default=0,

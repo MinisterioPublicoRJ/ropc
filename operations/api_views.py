@@ -229,6 +229,8 @@ class ResultInfoOneViewSet(AllowPUTAsCreateMixin, ModelViewSet):
 
         processed_data['houve_confronto_daf'] = data['houve_confronto_daf']
         processed_data['houve_resultados_operacao'] = data['houve_resultados_operacao']
+        processed_data['houve_entrada_forcada'] = data['houve_entrada_forcada']
+        processed_data['justificativa_entrada_forcada'] = data['justificativa_entrada_forcada']
         processed_data['numero_presos_elencados'] = data['numero_presos_elencados']
         processed_data['numero_presos_outros_mandados'] = data['numero_presos_outros_mandados']
         processed_data['numero_presos_flagrante'] = data['numero_presos_flagrante']
