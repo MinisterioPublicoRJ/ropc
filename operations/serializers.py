@@ -235,6 +235,8 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     registro_ocorrencia = ROApensadoSerializer(many=True)
     houve_confronto_daf = serializers.BooleanField(required=True)
     houve_resultados_operacao = serializers.BooleanField(required=True)
+    houve_entrada_forcada = serializers.BooleanField(required=True)
+    justificativa_entrada_forcada = serializers.CharField(required=False)
     # houve_ocorrencia_operacao = serializers.BooleanField(required=True)
     numero_presos_elencados = serializers.IntegerField(required=True, min_value=0)
     numero_presos_flagrante = serializers.IntegerField(required=True, min_value=0)
@@ -274,9 +276,25 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
         # if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == None:
         if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
             errs["justificativa_uso_aeronave"] = "Havendo uso de aeronave, deve-se justifica-la."
+        if attrs["houve_entrada_forcada"] == True and attrs["justificativa_entrada_forcada"] == "Não houve entrada forçada em domicílio em período noturno":
+            errs["justificativa_entrada_forcada"] = "Havendo entrada forçada em domicílio em período noturno, deve-se justifica-la."
+ 
         if errs:
             raise serializers.ValidationError(errs)
         return attrs
+    
+        if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
+            errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
+        if not attrs["escolas_perto"]:
+          attrs["comunicacao_escola"] = False
+          attrs["utilizacao_escola"] = False
+        if not attrs["saude_perto"]:
+          attrs["comunicacao_saude"] = False
+          attrs["utilizacao_saude"] = False
+        if errs:
+            raise serializers.ValidationError(errs)
+        return attrs
+
         # Verifica se já existem dados de ocorrência
         # ser = InfoOcorrenciaOneSerializer(instance=self.instance)
         # has_occurence_data = any(ser.data.values())
