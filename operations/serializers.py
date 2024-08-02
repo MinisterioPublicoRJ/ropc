@@ -197,9 +197,16 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
     escolas_perto = serializers.BooleanField(required=True)
     comunicacao_escola = serializers.BooleanField(required=True)
     utilizacao_escola = serializers.BooleanField(required=True)
+    orgao_autoridade_comunicacao_escola = serializers.CharField(required=False)
+    canal_comunicacao_escola = serializers.CharField(required=False)
+    justificativa_omissao_comunicacao_escola = serializers.CharField(required=False)
+
     saude_perto = serializers.BooleanField(required=True)
     comunicacao_saude = serializers.BooleanField(required=True)
     utilizacao_saude = serializers.BooleanField(required=True)
+    orgao_autoridade_comunicacao_saude = serializers.CharField(required=False)
+    canal_comunicacao_saude = serializers.CharField(required=False)
+    justificativa_omissao_comunicacao_saude = serializers.CharField(required=False)
    
     descricao_analise_risco = serializers.CharField(required=True)
 
@@ -209,12 +216,34 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
         # if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == None:
         if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
             errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
+
+        if attrs["escolas_perto"] and attrs["comunicacao_escola"] and attrs["orgao_autoridade_comunicacao_escola"] == "Não houve comunicação":
+            errs["orgao_autoridade_comunicacao_escola"] = "Havendo comunicação, informe os órgãos ou autoridades alertados."
+        
+        if attrs["escolas_perto"] and attrs["comunicacao_escola"] and attrs["canal_comunicacao_escola"] == "Não houve comunicação":
+            errs["canal_comunicacao_escola"] = "Havendo comunicação, informe os canais de comunicação."
+        
+        if attrs["escolas_perto"] and not attrs["comunicacao_escola"] and attrs["justificativa_omissao_comunicacao_escola"] == "Houve comunicação":
+            errs["justificativa_omissao_comunicacao_escola"] = "Não havendo comunicação, informe os motivos."
+        
+        if attrs["saude_perto"] and attrs["comunicacao_saude"] and attrs["orgao_autoridade_comunicacao_saude"] == "Não houve comunicação":
+            errs["orgao_autoridade_comunicacao_saude"] = "Havendo comunicação, informe os órgãos ou autoridades alertados."
+        
+        if attrs["saude_perto"] and attrs["comunicacao_saude"] and attrs["canal_comunicacao_saude"] == "Não houve comunicação":
+            errs["canal_comunicacao_saude"] = "Havendo comunicação, informe os canais de comunicação."
+        
+        if attrs["saude_perto"] and not attrs["comunicacao_saude"] and attrs["justificativa_omissao_comunicacao_saude"] == "Houve comunicação":
+            errs["justificativa_omissao_comunicacao_saude"] = "Não havendo comunicação, informe os motivos."
+
         if not attrs["escolas_perto"]:
-          attrs["comunicacao_escola"] = False
-          attrs["utilizacao_escola"] = False
+            attrs["comunicacao_escola"] = False
+            attrs["utilizacao_escola"] = False
+     
+
         if not attrs["saude_perto"]:
-          attrs["comunicacao_saude"] = False
-          attrs["utilizacao_saude"] = False
+            attrs["comunicacao_saude"] = False
+            attrs["utilizacao_saude"] = False
+  
         if errs:
             raise serializers.ValidationError(errs)
         return attrs
@@ -282,18 +311,7 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
         if errs:
             raise serializers.ValidationError(errs)
         return attrs
-    
-        if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
-            errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
-        if not attrs["escolas_perto"]:
-          attrs["comunicacao_escola"] = False
-          attrs["utilizacao_escola"] = False
-        if not attrs["saude_perto"]:
-          attrs["comunicacao_saude"] = False
-          attrs["utilizacao_saude"] = False
-        if errs:
-            raise serializers.ValidationError(errs)
-        return attrs
+
 
         # Verifica se já existem dados de ocorrência
         # ser = InfoOcorrenciaOneSerializer(instance=self.instance)
