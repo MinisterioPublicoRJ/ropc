@@ -537,6 +537,22 @@ class Operacao(models.Model):
         "Houve comunicação prévia às autoridades de educação?",
         default=False
     )
+    justificativa_omissao_comunicacao_escola = models.TextField(
+        "Justificativa para omissão da comunicação às autoridades de educação",
+        null=True,
+        blank=True
+    )
+    orgao_autoridade_comunicacao_escola = models.TextField(
+        "Quais os órgãos ou autoridades foram alertados?",
+        null=True,
+        blank=True
+    )
+    canal_comunicacao_escola = models.TextField(
+        "Preencha o canal de comunicação utilizado. Especificando o e-mail, telefone ou aplicativo de mensageria utilizado",
+        null=True,
+        blank=True
+    )
+
     utilizacao_escola = models.BooleanField(
         "Houve utilização de equipamento educacional para baseamento de recursos operacionais?",
         default=False
@@ -548,6 +564,21 @@ class Operacao(models.Model):
     comunicacao_saude = models.BooleanField(
         "Houve comunicação prévia às autoridades de saúde?",
         default=False
+    )
+    justificativa_omissao_comunicacao_saude = models.TextField(
+        "Justificativa para omissão da comunicação às autoridades de saúde",
+        null=True,
+        blank=True
+    )
+    orgao_autoridade_comunicacao_saude = models.TextField(
+        "Quais os órgãos ou autoridades foram alertados?",
+        null=True,
+        blank=True
+    )
+    canal_comunicacao_saude = models.TextField(
+        "Preencha o canal de comunicação utilizado. Especificando o e-mail, telefone ou aplicativo de mensageria utilizado",
+        null=True,
+        blank=True
     )
     utilizacao_saude = models.BooleanField(
         "Houve utilização de equipamento de saúde para baseamento de recursos operacionais?",
