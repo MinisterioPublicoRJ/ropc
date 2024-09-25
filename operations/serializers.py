@@ -196,14 +196,12 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
   
     escolas_perto = serializers.BooleanField(required=True)
     comunicacao_escola = serializers.BooleanField(required=True)
-    utilizacao_escola = serializers.BooleanField(required=True)
     orgao_autoridade_comunicacao_escola = serializers.CharField(required=False)
     canal_comunicacao_escola = serializers.CharField(required=False)
     justificativa_omissao_comunicacao_escola = serializers.CharField(required=False)
 
     saude_perto = serializers.BooleanField(required=True)
     comunicacao_saude = serializers.BooleanField(required=True)
-    utilizacao_saude = serializers.BooleanField(required=True)
     orgao_autoridade_comunicacao_saude = serializers.CharField(required=False)
     canal_comunicacao_saude = serializers.CharField(required=False)
     justificativa_omissao_comunicacao_saude = serializers.CharField(required=False)
@@ -237,12 +235,10 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
 
         if not attrs["escolas_perto"]:
             attrs["comunicacao_escola"] = False
-            attrs["utilizacao_escola"] = False
      
 
         if not attrs["saude_perto"]:
             attrs["comunicacao_saude"] = False
-            attrs["utilizacao_saude"] = False
   
         if errs:
             raise serializers.ValidationError(errs)

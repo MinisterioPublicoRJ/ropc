@@ -21,11 +21,6 @@ from operations.serializers import (
 )
 
 
-from django.http import FileResponse
-from django.contrib import messages
-from .forms import RelatorioForm
-from .helpers import gera_planilha_excel
-
 
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
@@ -326,65 +321,7 @@ class InitialPageListView(LoginRequiredMixin, TemplateView):
     template_name = "operations/initial_page_template.html"
 
 
-class PanelListView(LoginRequiredMixin, TemplateView):
-    template_name = "operations/panel_template.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        host = settings.TABLEAU_HOST
-        target_site = settings.TABLEAU_TARGET_SITE
-        username = settings.TABLEAU_USERNAME
-        view = settings.TABLEAU_VIEW
-        workbook = settings.TABLEAU_WORKBOOK
-
-        ticket_url = f'{host}trusted?username={username}&&target_site={target_site}'
-        stream = os.popen(f'curl -X POST {ticket_url}')
-        tableau_ticket = stream.read()
-
-        # get_view_url = f'{host}trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}?:embed=yes'
-        trunc_url = f'trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}'
-
-        context["tableau_host"] = host
-        # context["tableau_view_url"] = get_view_url
-        context["tableau_trunc_url"] = trunc_url
-        return context
-
-
-
-
-class ReportView(LoginRequiredMixin, TemplateView):
-    template_name = "operations/form_template_report.html"
-    
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = RelatorioForm()
-        return context
-
-    def get_data(self, columns, result):
-        return [tuple([str(getattr(row, col)) for col in columns]) for row in result]
-
-
-    def post(self, request, *args, **kwargs):
-        form = RelatorioForm(request.POST)
-   
-        if form.is_valid():
-            date_start = form.cleaned_data['date_start']
-            date_end = form.cleaned_data['date_end']
-            full_operations = True if form.cleaned_data['full_operations'] == '1' else False
-
-            result = Operacao.objects.get_operations_by_date(date_start, date_end, full_operations)
-            columns = result.query.get_columns()
-            
-            if not result:
-                messages.error(request, 'Nenhum resultado encontrado, insira outra data')
-                return redirect('.')
-            
-            data = self.get_data(columns, result)
-            excel_buffer = gera_planilha_excel(data, columns, "Operações")
-   
-            return FileResponse(excel_buffer, filename=f"Operações a partir {date_start}.xlsx", as_attachment=True)
 
             
     

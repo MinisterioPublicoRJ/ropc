@@ -122,22 +122,7 @@
                                 </div>
                             </div>
                         
-                        <div class="input-wrapper">
-                            <div class="form-control" id="utilizacao_escola" name="utilizacao_escola">
-                                <div class="{% if operacao_info.escolas_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left; word-wrap: break-word;">
-                                    <label for="data">Houve utilização de equipamento educacional para baseamento de recursos operacionais?</label>
-                                    <div class="form-control-input-radios">
-                                        <label> Sim</label>
-                                        <input type="radio" name="option-utilizacao-escola" value="1"
-                                               {% if operacao_info.utilizacao_escola %}checked{% endif %}>
-                                        <label style="margin-left: 20px">Não</label>
-                                        <input type="radio" name="option-utilizacao-escola" value="0"
-                                               {% if operacao_info.utilizacao_escola == False %}checked{% endif %}>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        
                         <div class="box-form-group"  id="orgao_autoridade_comunicacao_escola_to_js">
                             <div class="{% if operacao_info.comunicacao_escola %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left; word-wrap: break-word;">
                                 <label>Quais os órgãos ou autoridades foram alertados?</label>
@@ -205,22 +190,6 @@
                                 </div>
                             </div>
                         </div>
-                    
-                        <div class="input-wrapper">
-                            <div class="form-control" id="utilizacao_saude" name="utilizacao_saude">
-                                <div class="{% if operacao_info.saude_perto %}{% else %}hide{% endif %}" style="margin-left: 20px; text-align: left;">
-                                    <label for="data">Houve utilização de equipamento de saúde para baseamento de recursos operacionais?</label>
-                                    <div class="form-control-input-radios">
-                                        <label> Sim</label>
-                                        <input type="radio" name="option-utilizacao-saude" value="1"
-                                               {% if operacao_info.utilizacao_saude %}checked{% endif %}>
-                                        <label style="margin-left: 20px">Não</label>
-                                        <input type="radio" name="option-utilizacao-saude" value="0"
-                                               {% if operacao_info.utilizacao_saude == False %}checked{% endif %}>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>   
                     </div>  
 
 
@@ -307,13 +276,11 @@
             "numero_equipes_medicas": "#numero_equipes_medicas",
             "escolas_perto": "#escolas_perto",
             "comunicacao_escola":"#comunicacao_escola",
-            "utilizacao_escola": "#utilizacao_escola",
             "orgao_autoridade_comunicacao_escola":"#orgao_autoridade_comunicacao_escola",
             "canal_comunicacao_escola":"#canal_comunicacao_escola",
             "justificativa_omissao_comunicacao_escola":"#justificativa_omissao_comunicacao_escola",
             "saude_perto": "#saude_perto",
             "comunicacao_saude":"#comunicacao_saude",
-            "utilizacao_saude": "#utilizacao_saude",
             "orgao_autoridade_comunicacao_saude":"#orgao_autoridade_comunicacao_saude",
             "canal_comunicacao_saude":"#canal_comunicacao_saude",
             "justificativa_omissao_comunicacao_saude":"#justificativa_omissao_comunicacao_saude",
@@ -340,11 +307,6 @@
             const segundo_radio_escola = document.getElementsByName("option-escolas")[1].checked;
             comunicacao_escola_classe = comunicacao_escola.firstElementChild;
             
-            const utilizacao_escola = document.getElementById("utilizacao_escola");
-            const primeiro_radio_utilizacao_escola = document.getElementsByName("option-utilizacao-escola")[0].checked;
-            const segundo_radio_utilizacao_escola = document.getElementsByName("option-utilizacao-escola")[1].checked;
-            utilizacao_escola_classe = utilizacao_escola.firstElementChild;
-            
             const orgao_autoridade_comunicacao_escola_to_js = document.getElementById("orgao_autoridade_comunicacao_escola_to_js");
             const canal_comunicacao_escola_to_js = document.getElementById("canal_comunicacao_escola_to_js");
             const justificativa_omissao_comunicacao_escola_to_js = document.getElementById("justificativa_omissao_comunicacao_escola_to_js");
@@ -356,11 +318,9 @@
 
             if (primeiro_radio_escola) {
                 comunicacao_escola_classe.classList.remove('hide')
-                utilizacao_escola_classe.classList.remove('hide')
             }
             if  (segundo_radio_escola ) {
                 comunicacao_escola_classe.classList.add('hide')
-                utilizacao_escola_classe.classList.add('hide')
             }
         
             if  (primeiro_radio_canal_comunicacao_escola) {
@@ -392,10 +352,6 @@
             const segundo_radio_saude = document.getElementsByName("option-saude")[1].checked;
             comunicacao_saude_classe = comunicacao_saude.firstElementChild;
             
-            const utilizacao_saude = document.getElementById("utilizacao_saude");
-            const primeiro_radio_utilizacao_saude = document.getElementsByName("option-utilizacao-saude")[0].checked;
-            const segundo_radio_utilizacao_saude = document.getElementsByName("option-utilizacao-saude")[1].checked;
-            utilizacao_saude_classe = utilizacao_saude.firstElementChild;
 
             const orgao_autoridade_comunicacao_saude_to_js = document.getElementById("orgao_autoridade_comunicacao_saude_to_js");
             const canal_comunicacao_saude_to_js = document.getElementById("canal_comunicacao_saude_to_js");
@@ -408,11 +364,9 @@
         
             if (primeiro_radio_saude) {
                 comunicacao_saude_classe.classList.remove('hide')
-                utilizacao_saude_classe.classList.remove('hide')
             }
             if  (segundo_radio_saude ) {
                 comunicacao_saude_classe.classList.add('hide')
-                utilizacao_saude_classe.classList.add('hide')
             }
         
             if  (primeiro_radio_canal_comunicacao_saude) {
