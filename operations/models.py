@@ -335,8 +335,6 @@ class InformacaoManager(models.Manager):
                 op.droga_sinteticos,
                 op.justificativa_uso_aeronave,
                 op.numero_ambulancia,
-                op.utilizacao_escola,
-                op.utilizacao_saude,
                 olo.id AS id_olo,
                 olo.operacao_id,
                 olo.localidadeoperacao_id,
@@ -552,11 +550,6 @@ class Operacao(models.Model):
         null=True,
         blank=True
     )
-
-    utilizacao_escola = models.BooleanField(
-        "Houve utilização de equipamento educacional para baseamento de recursos operacionais?",
-        default=False
-    )
     saude_perto = models.BooleanField(
         "Unidades de saúde nas proximidades?",
         default=False
@@ -579,11 +572,6 @@ class Operacao(models.Model):
         "Preencha o canal de comunicação utilizado. Especificando o e-mail, telefone ou aplicativo de mensageria utilizado",
         null=True,
         blank=True
-    )
-    utilizacao_saude = models.BooleanField(
-        "Houve utilização de equipamento de saúde para baseamento de recursos operacionais?",
-        
-        default=False
     )
     descricao_analise_risco = models.TextField(
         "Análise de riscos e medidas de controles de danos colaterais das operações e de disparos de confrontos",
