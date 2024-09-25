@@ -221,7 +221,7 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
         if attrs["escolas_perto"] and attrs["comunicacao_escola"] and attrs["canal_comunicacao_escola"] == "Não houve comunicação":
             errs["canal_comunicacao_escola"] = "Havendo comunicação, informe os canais de comunicação."
         
-        if attrs["escolas_perto"] and not attrs["comunicacao_escola"] and attrs["justificativa_omissao_comunicacao_escola"] == "Houve comunicação":
+        if attrs["escolas_perto"] and not attrs["comunicacao_escola"] and attrs["justificativa_omissao_comunicacao_escola"] == "Não houve comunicação":
             errs["justificativa_omissao_comunicacao_escola"] = "Não havendo comunicação, informe os motivos."
         
         if attrs["saude_perto"] and attrs["comunicacao_saude"] and attrs["orgao_autoridade_comunicacao_saude"] == "Não houve comunicação":
@@ -230,16 +230,39 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
         if attrs["saude_perto"] and attrs["comunicacao_saude"] and attrs["canal_comunicacao_saude"] == "Não houve comunicação":
             errs["canal_comunicacao_saude"] = "Havendo comunicação, informe os canais de comunicação."
         
-        if attrs["saude_perto"] and not attrs["comunicacao_saude"] and attrs["justificativa_omissao_comunicacao_saude"] == "Houve comunicação":
+        if attrs["saude_perto"] and not attrs["comunicacao_saude"] and attrs["justificativa_omissao_comunicacao_saude"] == "Não houve comunicação":
             errs["justificativa_omissao_comunicacao_saude"] = "Não havendo comunicação, informe os motivos."
+
+
 
         if not attrs["escolas_perto"]:
             attrs["comunicacao_escola"] = False
-     
+            attrs["orgao_autoridade_comunicacao_escola"] = "Não houve comunicação"
+            attrs["canal_comunicacao_escola"] = "Não houve comunicação"
+            attrs["justificativa_omissao_comunicacao_escola"] = "Não houve comunicação"
+
+        if not attrs["comunicacao_escola"]:
+            attrs["orgao_autoridade_comunicacao_escola"] = "Não houve comunicação"
+            attrs["canal_comunicacao_escola"] = "Não houve comunicação"
+
+        if attrs["comunicacao_escola"]:
+            attrs["justificativa_omissao_comunicacao_escola"] = "Houve comunicação"
+         
 
         if not attrs["saude_perto"]:
             attrs["comunicacao_saude"] = False
+            attrs["orgao_autoridade_comunicacao_saude"] = "Não houve comunicação"
+            attrs["canal_comunicacao_saude"] = "Não houve comunicação"
+            attrs["justificativa_omissao_comunicacao_saude"] = "Não houve comunicação"
+
+        if not attrs["comunicacao_saude"]:
+            attrs["orgao_autoridade_comunicacao_saude"] = "Não houve comunicação"
+            attrs["canal_comunicacao_saude"] = "Não houve comunicação"
   
+        if attrs["comunicacao_saude"]:
+            attrs["justificativa_omissao_comunicacao_saude"] = "Houve comunicação"
+         
+        
         if errs:
             raise serializers.ValidationError(errs)
         return attrs
