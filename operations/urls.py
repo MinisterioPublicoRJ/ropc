@@ -61,5 +61,4 @@ urlpatterns = [
         name="form-complete"
     ),
     path("lista/", views.OperationListView.as_view(), name="operations-list"),
-    path("painel/", views.PanelListView.as_view(), name="operations-panel"),
 ]

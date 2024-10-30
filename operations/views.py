@@ -21,6 +21,7 @@ from operations.serializers import (
 )
 
 
+
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
     2: "operations:form-general-info-page-one",
@@ -320,26 +321,7 @@ class InitialPageListView(LoginRequiredMixin, TemplateView):
     template_name = "operations/initial_page_template.html"
 
 
-class PanelListView(LoginRequiredMixin, TemplateView):
-    template_name = "operations/panel_template.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
 
-        host = settings.TABLEAU_HOST
-        target_site = settings.TABLEAU_TARGET_SITE
-        username = settings.TABLEAU_USERNAME
-        view = settings.TABLEAU_VIEW
-        workbook = settings.TABLEAU_WORKBOOK
-
-        ticket_url = f'{host}trusted?username={username}&&target_site={target_site}'
-        stream = os.popen(f'curl -X POST {ticket_url}')
-        tableau_ticket = stream.read()
-
-        # get_view_url = f'{host}trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}?:embed=yes'
-        trunc_url = f'trusted/{tableau_ticket}/t/{target_site}/views/{workbook}/{view}'
-
-        context["tableau_host"] = host
-        # context["tableau_view_url"] = get_view_url
-        context["tableau_trunc_url"] = trunc_url
-        return context
+            
+    

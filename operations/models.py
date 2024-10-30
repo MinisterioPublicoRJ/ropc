@@ -266,6 +266,94 @@ class InformacaoManager(models.Manager):
             obj = None
 
         return obj
+    
+    def get_operations_by_date(self, date_start, date_end, full):
+        return self.raw(f"""SELECT op.id,
+                op.identificador,
+                op.criado_em AS data_criacao,
+                op.data AS data_operacao,
+                op.unidade_responsavel,
+                op.tipo_operacao,
+                op.objetivo_estrategico_operacao,
+                op.houve_confronto_daf,
+                op.houve_resultados_operacao,
+                op.numero_armas_apreendidas,
+                op.numero_fuzis_apreendidos,
+                op.numero_adolescentes_apreendidos,
+                op.numero_policiais_feridos,
+                op.numero_mortes_policiais,
+                op.numero_civis_feridos,
+                op.numero_veiculos_recuperados,
+                op.usuario_id,
+                op.secao_atual,
+                op.numero_aeronaves,
+                op.numero_veiculos_blindados,
+                op.descricao_analise_risco,
+                op.justificativa_excepcionalidade_operacao,
+                op.observacoes_gerais,
+                op.completo,
+                op.situacao,
+                op.registro_anterior,
+                op.hora_inicio,
+                op.hora_termino,
+                op.houve_disparados_aeronave,
+                op.houve_registros_imagem,
+                op.local_preservado,
+                op.matricula_id_delegado_operacao,
+                op.natureza_operacao,
+                op.nome_delegado_operacao,
+                op.nome_operacao,
+                op.numero_agentes_mobilizados,
+                op.numero_carregadores_apreendidos,
+                op.numero_equipes_medicas,
+                op.numero_explosivos_apreendidos,
+                op.numero_inquerito_mae,
+                op.numero_municoes_apreendidas,
+                op.numero_presos_elencados,
+                op.numero_presos_flagrante,
+                op.numero_viaturas_mobilizadas,
+                op.pericia_aeronave,
+                op.pericia_iml,
+                op.pericia_local,
+                op.pericia_outras,
+                op.pericia_veiculo_blindado,
+                op.pericia_viaturas,
+                op.comunicacao_escola,
+                op.comunicacao_saude,
+                COALESCE(op.comunicacao_escola, false) OR COALESCE(op.comunicacao_saude, false) AS comunicou_escolas_saude,
+                op.escolas_perto,
+                op.saude_perto,
+                op.numero_civis_mortos,
+                op.numero_presos_outros_mandados,
+                op.numero_tjrj,
+                op.apoio_recebido,
+                op.operacao_integrada,
+                op.droga_cannabis,
+                op.droga_cocaina,
+                op.droga_haxixe,
+                op.droga_outros,
+                op.droga_sinteticos,
+                op.justificativa_uso_aeronave,
+                op.numero_ambulancia,
+                olo.id AS id_olo,
+                olo.operacao_id,
+                olo.localidadeoperacao_id,
+                ol.id AS id_ol,
+                ol.localidade,
+                ol.municipio,
+                ol.bairro,
+                ol.endereco_referencia
+            FROM operacao op
+                JOIN operacao_localidade_operacao olo ON op.id = olo.operacao_id
+                JOIN operations_localidadeoperacao ol ON olo.localidadeoperacao_id = ol.id
+                where 
+                    op.data >= '{date_start}' and
+                    op.data <= '{date_end}' and 
+                    op.completo = {full}
+                order by op.criado_em asc 
+                """)
+
+        
 
 
 class LocalidadeOperacao(models.Model):
@@ -447,9 +535,20 @@ class Operacao(models.Model):
         "Houve comunicação prévia às autoridades de educação?",
         default=False
     )
-    utilizacao_escola = models.BooleanField(
-        "Houve utilização de equipamento educacional para baseamento de recursos operacionais?",
-        default=False
+    justificativa_omissao_comunicacao_escola = models.TextField(
+        "Justificativa para omissão da comunicação às autoridades de educação",
+        null=True,
+        blank=True
+    )
+    orgao_autoridade_comunicacao_escola = models.TextField(
+        "Quais os órgãos ou autoridades foram alertados?",
+        null=True,
+        blank=True
+    )
+    canal_comunicacao_escola = models.TextField(
+        "Preencha o canal de comunicação utilizado. Especificando o e-mail, telefone ou aplicativo de mensageria utilizado",
+        null=True,
+        blank=True
     )
     saude_perto = models.BooleanField(
         "Unidades de saúde nas proximidades?",
@@ -459,10 +558,20 @@ class Operacao(models.Model):
         "Houve comunicação prévia às autoridades de saúde?",
         default=False
     )
-    utilizacao_saude = models.BooleanField(
-        "Houve utilização de equipamento de saúde para baseamento de recursos operacionais?",
-        
-        default=False
+    justificativa_omissao_comunicacao_saude = models.TextField(
+        "Justificativa para omissão da comunicação às autoridades de saúde",
+        null=True,
+        blank=True
+    )
+    orgao_autoridade_comunicacao_saude = models.TextField(
+        "Quais os órgãos ou autoridades foram alertados?",
+        null=True,
+        blank=True
+    )
+    canal_comunicacao_saude = models.TextField(
+        "Preencha o canal de comunicação utilizado. Especificando o e-mail, telefone ou aplicativo de mensageria utilizado",
+        null=True,
+        blank=True
     )
     descricao_analise_risco = models.TextField(
         "Análise de riscos e medidas de controles de danos colaterais das operações e de disparos de confrontos",
@@ -482,6 +591,16 @@ class Operacao(models.Model):
         "Houve resultados na operação?",
         null=True,
         blank=True,
+    )
+    houve_entrada_forcada = models.BooleanField(
+        "Houve entrada forçada em domicílio em período noturno?",
+        null=True,
+        blank=True,
+    )
+    justificativa_entrada_forcada = models.TextField(
+        "Justificativa da entrada forçada em domicílio em período noturno",
+        null=True,
+        blank=True
     )
     numero_presos_elencados = models.PositiveIntegerField(
         "Número de presos elencados nos mandados de prisão",

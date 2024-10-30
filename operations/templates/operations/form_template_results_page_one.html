@@ -67,6 +67,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-control" id="houve_entrada_forcada" name="houve_entrada_forcada">
+                            <div style="text-align: left; margin-left: 40px;">
+                                <label for="data">Houve entrada forçada em domicílio em período noturno?</label>
+                                <div class="form-control-input-radios">
+                                    <label> Sim</label>
+                                    <input type="radio" name="option-entrada" value="1" onclick="verifica_escola()"
+                                           {% if operacao_info.houve_entrada_forcada %}checked{% endif %}>
+                                    <label style="margin-left: 20px">Não</label>
+                                    <input type="radio" name="option-entrada" value="0" onclick="verifica_escola()"
+                                           {% if operacao_info.houve_entrada_forcada == False %}checked{% endif %}>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="box-form-group" id="justificativa">
+                        <div class="{% if operacao_info.houve_entrada_forcada %}{% else %}hide{% endif %}">
+                            <label for="name">Justificativa da entrada forçada em domicílio em período noturno:</label>
+                            <textarea style="width: 100vh; height: 200px;" type="text"
+                                id="justificativa_entrada_forcada"
+                                value="{{ operacao_info.justificativa_entrada_forcada|default:'Não houve entrada forçada em domicílio em período noturno' }}"
+                                name="Justificativa_entrada">
+                                    {{ operacao_info.justificativa_entrada_forcada|default:'Não houve entrada forçada em domicílio em período noturno' }}
+                            </textarea>
+                        </div>
                     </div>
 
                     <div class="box-form-group">
@@ -190,6 +215,8 @@
             "registro_ocorrencia": "#registro_ocorrencia",
             "houve_confronto_daf": "#houve_confronto_daf",
             "houve_resultados_operacao": "#houve_resultados_operacao",
+            "houve_entrada_forcada": "#houve_entrada_forcada",
+            "justificativa_entrada_forcada": "#justificativa_entrada_forcada",
             "numero_presos_elencados": "#numero_presos_elencados",
             "numero_presos_outros_mandados": "#numero_presos_outros_mandados",
             "numero_presos_flagrante": "#numero_presos_flagrante",
@@ -210,5 +237,29 @@
             );
         });
 
+        function verifica_escola() {
+          const justificativa = document.getElementById("justificativa");
+          const primeiro_radio_justificativa = document.getElementsByName("option-entrada")[0].checked;
+          const segundo_radio_justificativa = document.getElementsByName("option-entrada")[1].checked;
+          justificativa_classe = justificativa.firstElementChild;
+   
+
+          if (primeiro_radio_justificativa) {
+            console.log('abre')
+            justificativa_classe.classList.remove('hide')
+    
+           
+          } else if  (segundo_radio_justificativa) {
+            console.log('fecha');
+            justificativa_classe.classList.add('hide')
+   
+          }
+        };
+
     </script>
+    <style> 
+        .hide{
+            display: none;
+        }
+    </style>
 {% endblock extra_js %}
