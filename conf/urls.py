@@ -19,8 +19,6 @@ from django.urls import include, path
 
 from accounts.views import SignUpView
 from operations import views as operations_views
-from django.conf.urls.static import static
-from django.conf import settings
 
 
 API_VERSION = "v1"
