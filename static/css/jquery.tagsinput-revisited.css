@@ -49,6 +49,7 @@
 	display: block;
 	/* max-width: 100px; */
 	width: 128px;
+	height: 50px;
 	/* word-wrap: break-word; */
 	color: #121212;
 	padding: 5px 30px 5px 5px;
