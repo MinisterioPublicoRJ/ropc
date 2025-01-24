@@ -38,6 +38,7 @@
                             <input type="text" value="{{ operacao_info.registro_ocorrencia|default:'' }}"
                                    name="registro_ocorrencia"
                                    id="registro_ocorrencia" class="form-control">
+                            <span style="min-height: 50px; min-width: 128px;" class="tag"></span>
                         </div>
                     <div class="input-type-checked">
                         <div class="form-control" id="houve_confronto_daf" name="houve_confronto_daf">
@@ -235,10 +236,6 @@
             $('#registro_ocorrencia').tagsInput(
                 {placeholder: 'Adicionar Registro de Ocorrência'}
             );
-            $('.tag').css({
-                'min-height': '50px',
-                'min-width': '128px',
-            });
         });
 
         function verifica_escola() {
