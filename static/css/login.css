@@ -10,16 +10,10 @@
     margin-top: 30px ;
     margin-bottom: 40px;
 }
-ul {
+ul{
     color: #ffff;
     list-style: none;
 }
-/* .form-errors {
-    color: #ffff;
-    list-style: none;
-    font-weight: normal;
-    font-size: small;
-} */
 .wrapper-login-main{
     height: 65px;
     width: 100%;

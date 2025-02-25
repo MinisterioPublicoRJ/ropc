@@ -15,24 +15,24 @@
   <div class="">
     <img src="{% static "img/logo-civil.png" %}" alt="logo_civil">
   </div>
-  <div class="tela-login">
+  <div class="tela-login" style="height: 100%; padding-bottom: 60px">
     <img src="{% static "img/logo.png" %}" alt="logo_painel">
-    <form method="POST" class="tela-login" action="{% url 'signup' %}">
+    <form method="POST" class="tela-login" action="{% url 'signup' %}" style="margin-top: 0px; justify-content: flex-start;">
       <h3>Cadastro</h3>
       {% csrf_token %}
       <input placeholder="Usuário" type="text" name="username" autocapitalize="none" autocomplete="username"
         maxlength="150" required="" id="id_username">
-      <div class="form-errors">{{ form.username.errors }}</div>
+      <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.username.errors }}</span>
       <input placeholder="Email" type="email" name="email" autocomplete="current-password" required="" id="">
       <select name="instituicao" id="id_instituicao">
         <option value="PM">Polícia Militar</option>
         <option value="MPRJ">MPRJ</option>
       </select>
       <input placeholder="Senha" type="password" name="password1" autocomplete="current-password" required="" id="">
-      <div class="form-errors">{{ form.password1.errors }}</div>
+      <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.password1.errors }}</span>
       <input placeholder="Confirmação de senha" type="password" name="password2" autocomplete="current-password"
         required="" id="">
-      <div class="form-errors">{{ form.password2.errors }}</div>
+      <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.password2.errors }}</span>
       <button type="submit">Enviar</button>
     </form>
   </div>
