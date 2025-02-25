@@ -12,9 +12,9 @@
   <div class="">
     <img src="{% static "img/logo-civil.png" %}" alt="logo_civil">
   </div>
-  <div class="tela-login">
+  <div class="tela-login" style="padding-bottom: 60px;">
     <img src="{% static "img/logo.png" %}" alt="logo_painel">
-    <form method="POST" class="tela-login">
+    <form method="POST" class="tela-login" style="margin-top: 0px; justify-content: flex-start;">
       <h3>Login</h3>
       {% csrf_token %}
       <input placeholder="Login PCERJ" type="text" name="username" autocapitalize="none" autocomplete="username"
@@ -23,7 +23,7 @@
         id="id_password">
       <button type="submit">Entrar</button>
       {% if form.non_field_errors %}
-      <ul class='form-errors'>
+      <ul style="color: #fff; list-style: none; font-weight: normal; font-size: small; margin-top: 40px;">
         {% for error in form.non_field_errors %}
         <li>{{ error }}</li>
         {% endfor %}
