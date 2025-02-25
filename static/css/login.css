@@ -10,9 +10,11 @@
     margin-top: 30px ;
     margin-bottom: 40px;
 }
-ul{
+.form-errors {
     color: #ffff;
     list-style: none;
+    font-weight: normal;
+    font-size: small;
 }
 .wrapper-login-main{
     height: 65px;
@@ -27,19 +29,20 @@ ul{
 }
 .tela-login {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     flex-direction: column;
     background-color: #1A1A1A;
     width: 530px;
-    height: 480px;
+    height: 100%;
     margin: 0 auto;
     border-radius: 9px;
     opacity: 1;
-    margin-top: 30px;
+    /* margin-top: 30px; */
     font-size: 1.5625rem;
     color: #707070;
     font-weight: bold;
+    padding-bottom: 60px;
 }
 .tela-login img {
     width: 260px;
@@ -72,4 +75,23 @@ form button {
     color: #707070;
     font-weight: bold;
 }
+.msg {
+    font-size: medium;
+}
 
+.msg:hover {
+    color: #F7CF32;
+    cursor: pointer;
+}
+
+.msg:link {
+    color: #F7CF32;
+}
+
+.msg:visited {
+    color: #F7CF32;
+}
+
+.msg:active {
+    color: #F7CF32;
+}

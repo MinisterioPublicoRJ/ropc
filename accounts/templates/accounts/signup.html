@@ -1,34 +1,42 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}<title>Cadastro</title>{% endblock title %}
 
 {% block sidenavebar %}
 {% endblock sidenavebar %}
 
 {% block content %}
-<form method="POST">
+<form method="POST" style="display: none;">
 </form>
+
 <div class="tela-login-main">
+  <div class="wrapper-login-main"></div>
+  <div class="">
+    <img src="{% static "img/logo-civil.png" %}" alt="logo_civil">
+  </div>
   <div class="tela-login">
-      <form method="POST" class="tela-login" action="{% url 'signup' %}">
+    <img src="{% static "img/logo.png" %}" alt="logo_painel">
+    <form method="POST" class="tela-login" action="{% url 'signup' %}">
       <h3>Cadastro</h3>
       {% csrf_token %}
       <input placeholder="Usuário" type="text" name="username" autocapitalize="none" autocomplete="username"
         maxlength="150" required="" id="id_username">
-        {{ form.username.errors }}
-      <input placeholder="Email" type="email" name="email" autocomplete="current-password" required=""
-        id="">
+      <div class="form-errors">{{ form.username.errors }}</div>
+      <input placeholder="Email" type="email" name="email" autocomplete="current-password" required="" id="">
       <select name="instituicao" id="id_instituicao">
-            <option value="PM">Polícia Militar</option>
-            <option value="MPRJ">MPRJ</option>
+        <option value="PM">Polícia Militar</option>
+        <option value="MPRJ">MPRJ</option>
       </select>
-      <input placeholder="Senha" type="password" name="password1" autocomplete="current-password" required=""
-        id="">
-        {{ form.password1.errors }}
+      <input placeholder="Senha" type="password" name="password1" autocomplete="current-password" required="" id="">
+      <div class="form-errors">{{ form.password1.errors }}</div>
       <input placeholder="Confirmação de senha" type="password" name="password2" autocomplete="current-password"
         required="" id="">
-        {{ form.password2.errors }}
+      <div class="form-errors">{{ form.password2.errors }}</div>
       <button type="submit">Enviar</button>
     </form>
+    <a class="msg" href="{% url 'login' %}">Quero fazer login</a>
   </div>
+  <img src="{% static "img/logo-MP.png" %}" alt="logo_MP">
 </div>
 {% endblock content %}
