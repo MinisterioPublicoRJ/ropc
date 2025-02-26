@@ -22,7 +22,8 @@
       <div style="position: relative; display: inline-block;">
         <input placeholder="Senha" type="password" name="password" autocomplete="current-password" required=""
           id="id_password" style="padding-right: 30px;">
-        <button type="button" onclick="togglePassword()" id="toggle-password" style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
+        <button type="button" onclick="togglePassword()" id="toggle-password"
+          style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
           <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
         </button>
       </div>
@@ -41,18 +42,36 @@
 
 <script>
   function togglePassword() {
-      var passwordInput = document.getElementById("id_password");
-      var eyeIcon = document.getElementById("eye-icon");
-      
-      if (passwordInput.type === "password") {
-          passwordInput.type = "text";
-          eyeIcon.classList.remove("fa-eye");
-          eyeIcon.classList.add("fa-eye-slash");
-      } else {
-          passwordInput.type = "password";
-          eyeIcon.classList.remove("fa-eye-slash");
-          eyeIcon.classList.add("fa-eye");
-      }
+    var passwordInput = document.getElementById("id_password");
+    var eyeIcon = document.getElementById("eye-icon");
+
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      eyeIcon.classList.remove("fa-eye");
+      eyeIcon.classList.add("fa-eye-slash");
+    } else {
+      passwordInput.type = "password";
+      eyeIcon.classList.remove("fa-eye-slash");
+      eyeIcon.classList.add("fa-eye");
+    }
   }
+
+  function updateEyeColor() {
+    var inputs = ["id_password1", "id_password2"];
+    inputs.forEach(function (inputId) {
+      var input = document.getElementById(inputId);
+      var icon = document.getElementById("eye-icon" + inputId.slice(-1));
+      var bgColor = window.getComputedStyle(input).backgroundColor;
+
+      if (bgColor === "rgb(0, 0, 0)") { // Preto
+        icon.style.color = "white";
+      } else { // Branco ou outro
+        icon.style.color = "black";
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", updateEyeColor);
+  window.addEventListener("load", updateEyeColor);
 </script>
 {% endblock content %}
