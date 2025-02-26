@@ -18,7 +18,8 @@
   </div>
   <div class="tela-login" style="height: 100%; padding-bottom: 60px">
     <img src="{% static "img/logo.png" %}" alt="logo_painel">
-    <form method="POST" class="tela-login" action="{% url 'signup' %}" style="margin-top: 0px; justify-content: flex-start;">
+    <form method="POST" class="tela-login" action="{% url 'signup' %}"
+      style="margin-top: 0px; justify-content: flex-start;">
       <h3>Cadastro</h3>
       {% csrf_token %}
       <input placeholder="Usuário" type="text" name="username" autocapitalize="none" autocomplete="username"
@@ -30,19 +31,22 @@
         <option value="MPRJ">MPRJ</option>
       </select>
       <div style="position: relative; display: inline-block;">
-        <input placeholder="Senha" type="password" name="password1" autocomplete="current-password" required="" id="id_password1" style="padding-right: 30px;">
-        <button type="button" onclick="togglePassword('id_password1', 'eye-icon1')" id="toggle-password" style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
+        <input placeholder="Senha" type="password" name="password1" autocomplete="current-password" required=""
+          id="id_password1" style="padding-right: 30px;">
+        <button type="button" onclick="togglePassword('id_password1', 'eye-icon1')" id="toggle-password"
+          style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
           <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
         </button>
       </div>
       <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.password1.errors }}</span>
-        <div style="position: relative; display: inline-block;">
-          <input placeholder="Confirmação de senha" type="password" name="password2" autocomplete="current-password" required=""
-            id="id_password2" style="padding-right: 30px;">
-          <button type="button" onclick="togglePassword('id_password2', 'eye-icon2')" id="toggle-password" style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
-            <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
-          </button>
-        </div>
+      <div style="position: relative; display: inline-block;">
+        <input placeholder="Confirmação de senha" type="password" name="password2" autocomplete="current-password"
+          required="" id="id_password2" style="padding-right: 30px;">
+        <button type="button" onclick="togglePassword('id_password2', 'eye-icon2')" id="toggle-password"
+          style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
+          <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
+        </button>
+      </div>
 
       <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.password2.errors }}</span>
       <button type="submit">Enviar</button>
@@ -52,18 +56,36 @@
 </div>
 <script>
   function togglePassword(inputId, iconId) {
-      var passwordInput = document.getElementById(inputId);
-      var eyeIcon = document.getElementById(iconId);
-      
-      if (passwordInput.type === "password") {
-          passwordInput.type = "text";
-          eyeIcon.classList.remove("fa-eye");
-          eyeIcon.classList.add("fa-eye-slash");
-      } else {
-          passwordInput.type = "password";
-          eyeIcon.classList.remove("fa-eye-slash");
-          eyeIcon.classList.add("fa-eye");
-      }
+    var passwordInput = document.getElementById(inputId);
+    var eyeIcon = document.getElementById(iconId);
+
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      eyeIcon.classList.remove("fa-eye");
+      eyeIcon.classList.add("fa-eye-slash");
+    } else {
+      passwordInput.type = "password";
+      eyeIcon.classList.remove("fa-eye-slash");
+      eyeIcon.classList.add("fa-eye");
+    }
   }
+
+  function updateEyeColor() {
+    var inputs = ["id_password1", "id_password2"];
+    inputs.forEach(function (inputId) {
+      var input = document.getElementById(inputId);
+      var icon = document.getElementById("eye-icon" + inputId.slice(-1));
+      var bgColor = window.getComputedStyle(input).backgroundColor;
+
+      if (bgColor === "rgb(0, 0, 0)") { // Preto
+        icon.style.color = "white";
+      } else { // Branco ou outro
+        icon.style.color = "black";
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", updateEyeColor);
+  window.addEventListener("load", updateEyeColor);
 </script>
 {% endblock content %}
