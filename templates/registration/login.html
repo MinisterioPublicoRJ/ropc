@@ -19,8 +19,13 @@
       {% csrf_token %}
       <input placeholder="Login PCERJ" type="text" name="username" autocapitalize="none" autocomplete="username"
         maxlength="150" required="" id="id_username">
-      <input placeholder="Senha" type="password" name="password" autocomplete="current-password" required=""
-        id="id_password">
+      <div style="position: relative; display: inline-block;">
+        <input placeholder="Senha" type="password" name="password" autocomplete="current-password" required=""
+          id="id_password" style="padding-right: 30px;">
+        <button type="button" onclick="togglePassword()" id="toggle-password" style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
+          <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
+        </button>
+      </div>
       <button type="submit">Entrar</button>
       {% if form.non_field_errors %}
       <ul style="color: #fff; list-style: none; font-weight: normal; font-size: small; margin-top: 40px;">
@@ -33,4 +38,21 @@
   </div>
   <img src="{% static "img/logo-MP.png" %}" alt="logo_MP">
 </div>
+
+<script>
+  function togglePassword() {
+      var passwordInput = document.getElementById("id_password");
+      var eyeIcon = document.getElementById("eye-icon");
+      
+      if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          eyeIcon.classList.remove("fa-eye");
+          eyeIcon.classList.add("fa-eye-slash");
+      } else {
+          passwordInput.type = "password";
+          eyeIcon.classList.remove("fa-eye-slash");
+          eyeIcon.classList.add("fa-eye");
+      }
+  }
+</script>
 {% endblock content %}
