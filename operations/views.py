@@ -1,13 +1,18 @@
+from io import BytesIO
 import uuid
 import os
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse
 
-from django.http import FileResponse
+import logging
+logger = logging.getLogger(__name__)
+from uuid import UUID
+from django.http import FileResponse, HttpResponse
 from reportlab.pdfgen import canvas
 from django.shortcuts import render
 
@@ -325,26 +330,49 @@ class InitialPageListView(LoginRequiredMixin, TemplateView):
     template_name = "operations/initial_page_template.html"
 
 
-def generate_pdf(request):
-    response = FileResponse(generate_pdf_file(), 
-                            as_attachment=True, 
-                            filename='book_catalog.pdf')
-    return response
- 
- 
-def generate_pdf_file():
-    from io import BytesIO
- 
+def generate_pdf(request, identificador):
+    try:
+        identificador = UUID(str(identificador))  
+        logger.info(f"UUID recebido na view (convertido): {identificador} ({type(identificador)})")
+
+        buffer = generate_pdf_file(identificador)
+        if not buffer:
+            return HttpResponse("Erro ao gerar o PDF. Operação não encontrada.", status=404)
+
+        return FileResponse(buffer, as_attachment=True, filename='book_catalog.pdf')
+
+    except ValueError as e:
+        logger.error(f"UUID inválido recebido: {identificador}. Erro: {e}")
+        return HttpResponse("UUID inválido.", status=400)
+
+    except Exception as e:
+        logger.error(f"Erro ao gerar PDF: {e}")
+        return HttpResponse(f"Erro interno do servidor: {e}", status=500)
+
+
+def generate_pdf_file(operacaoUUID):
+    try:
+        operacaoUUID = UUID(str(operacaoUUID))  
+        operacaoEncontrada = Operacao.objects.get(identificador=operacaoUUID)
+    except (Operacao.DoesNotExist, ValueError) as e:
+        print(f"Erro ao buscar operação: {e}")  
+        return None  
+
     buffer = BytesIO()
     p = canvas.Canvas(buffer)
- 
-    p.drawString(100, 750, "Book Catalog")
- 
+
+    atributos = {campo.name: getattr(operacaoEncontrada, campo.name) for campo in Operacao._meta.fields}
+
+    y = 750  
+
+    p.drawString(100, y, "Detalhes da Operação:")
+    y -= 20
+
+    for chave, valor in atributos.items():
+        p.drawString(100, y, f"{chave}: {valor}")
+        y -= 20 
+
     p.showPage()
     p.save()
- 
     buffer.seek(0)
     return buffer
-
-            
-    
