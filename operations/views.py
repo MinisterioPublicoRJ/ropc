@@ -7,6 +7,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse
 
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from django.shortcuts import render
+
 from coredata.models import Bairro, Municipio
 from operations.models import Operacao, UNIDADES_POLICIA, ORGAOS_EXTERNOS
 from operations.serializers import (
@@ -321,7 +325,26 @@ class InitialPageListView(LoginRequiredMixin, TemplateView):
     template_name = "operations/initial_page_template.html"
 
 
-
+def generate_pdf(request):
+    response = FileResponse(generate_pdf_file(), 
+                            as_attachment=True, 
+                            filename='book_catalog.pdf')
+    return response
+ 
+ 
+def generate_pdf_file():
+    from io import BytesIO
+ 
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+ 
+    p.drawString(100, 750, "Book Catalog")
+ 
+    p.showPage()
+    p.save()
+ 
+    buffer.seek(0)
+    return buffer
 
             
     
