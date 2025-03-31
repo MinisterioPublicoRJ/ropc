@@ -15,7 +15,7 @@ from django.urls import reverse
 from uuid import UUID
 from django.http import FileResponse, HttpResponse
 from reportlab.pdfgen import canvas
-from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from django.shortcuts import render
 from coredata.models import Bairro, Municipio
 from operations.models import Operacao, UNIDADES_POLICIA, ORGAOS_EXTERNOS
@@ -364,20 +364,20 @@ def generate_pdf_file(operacaoUUID):
     img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
     p.drawImage(img_header, 0, 760, width=600, height=88)
     
-    p.setFont("Helvetica-Bold", 12)
-    canvas.drawRightString(0, 672, f"{'Emitido em: '}+{datetime.datetime.now()}")
-
-
-    p.drawString(100, 750, "Detalhes da Operação:")
-    y = 700  # Inicializa a posição vertical
-
     p.setFont("Helvetica", 12)
-
+    p.drawString(400, 740, f"Emitido em: {datetime.datetime.now()}")
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(25, 720, "Visualizar operação")
+    
+    y = 690  # Inicializa a posição vertical
     pagina = 1
     # for atributos in lista_atributos:  # Percorre todas as operações encontradas
     for chave, valor in atributos.items():
         
-        p.drawString(100, y, f"{chave}: {valor}")
+        p.setFont("Helvetica-Bold", 12)
+        p.drawString(25, y, f"{chave}")
+        p.setFont("Helvetica", 12)
+        p.drawString(25 + stringWidth(chave, "Helvetica-Bold", 12), y, f": {valor}")
         y -= 20  # Reduz o espaço vertical para próxima linha
 
         # Se a margem inferior for atingida, cria uma nova página

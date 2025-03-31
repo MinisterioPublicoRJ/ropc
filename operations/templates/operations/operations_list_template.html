@@ -11,6 +11,8 @@
             <table>
                 <tr>
                     <th>Operação</th>
+                    <th></th>
+                    <th></th>
                     <th>Data</th>
                     <th>Responsável/Delegacia</th>
                     <th>Local</th>
@@ -20,6 +22,8 @@
                 {% for info_operacao in object_list %}
                 <tr class="tr-lista-operacao" onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}');">
                     <td>{{ info_operacao.nome_operacao|default:'' }}</td>
+                    <td style="padding: 4px 8px; background: #292929; height: 24px !important;">Ver detalhes</td>
+                    <td>icon</td>
                     <td>{{ info_operacao.data|date:"d/m/Y" }}</td>
                     <td>
                         {{ info_operacao.nome_delegado_operacao|default:'' }}
@@ -60,7 +64,7 @@
         {% else %}
        <li class="disabled"><strong>&raquo;</strong></li>
        {% endif %}
-      </ul>
+      </ul>h
 {% endif %}
 </div>
 
