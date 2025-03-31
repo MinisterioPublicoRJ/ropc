@@ -372,15 +372,23 @@ def generate_pdf_file(operacaoUUID):
     buffer = BytesIO()
     p = canvas.Canvas(buffer)
     
+    # header
     img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
     p.drawImage(img_header, 0, 760, width=600, height=88)
     
+    # emitido em
     p.setFont("Helvetica", 12)
-    p.drawString(400, 740, f"Emitido em: {datetime.datetime.now()}")
+    p.drawString(400, 740, "Emitido em: ")
+    hora = datetime.datetime.now()
+    hora_formatada = hora.strftime("%d/%m/%Y %H:%M")
+    p.drawString(400 + stringWidth("Emitido em: ", "Helvetica", 12), 740, hora_formatada)
+
+    # visualizar operacao
     p.setFont("Helvetica-Bold", 14)
     p.drawString(25, 720, "Visualizar operação")
     
-    y = 690  # Inicializa a posição vertical
+    # atributos do documento
+    y = 690 
     pagina = 1
     # for atributos in lista_atributos:  # Percorre todas as operações encontradas
     for chave, valor in atributos.items():
