@@ -29,6 +29,7 @@ from operations.serializers import (
     InfoResultadosThreeSerializer
 )
 
+from pathlib import Path
 
 
 URL_SECTION_MAPPER = {
@@ -350,10 +351,27 @@ def generate_pdf(request, identificador):
         return HttpResponse(f"Erro interno do servidor: {e}", status=500)
 
 
-def generate_pdf_file(operacaoUUID):
+
+def format_and_exclud(atributos):
+    for chave, valor in atributos.items():
+        print(valor, type(valor))
+    
+ 
+    return atributos
+
+def generate_pdf_file(operacaoUUID): 
+    base_dir = Path(f"{settings.BASE_DIR}/query")  # Define o diretório base
+    file_name = "query.sql"  # Nome do arquivo
+
+    query = (base_dir / file_name).read_text()  # Lê a query do arquivo
+
     try:
         operacaoUUID = UUID(str(operacaoUUID))  
-        operacaoEncontrada = Operacao.objects.get(identificador=operacaoUUID)
+        operacoes = Operacao.objects.raw(query, [operacaoUUID])
+        atributos = operacoes[0].__dict__.copy()
+        atributos.pop("_state", None)
+        format_and_exclud(atributos)
+        
     except (Operacao.DoesNotExist, ValueError) as e:
         print(f"Erro ao buscar operação: {e}")  
         return None  
@@ -361,18 +379,40 @@ def generate_pdf_file(operacaoUUID):
     buffer = BytesIO()
     p = canvas.Canvas(buffer)
 
-    atributos = {campo.name: getattr(operacaoEncontrada, campo.name) for campo in Operacao._meta.fields}
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(100, 750, "Detalhes da Operação:")
+    y = 700  # Inicializa a posição vertical
 
-    y = 750  
+    p.setFont("Helvetica", 12)
 
-    p.drawString(100, y, "Detalhes da Operação:")
-    y -= 20
-
+    pagina = 1
+    # for atributos in lista_atributos:  # Percorre todas as operações encontradas
     for chave, valor in atributos.items():
+        
         p.drawString(100, y, f"{chave}: {valor}")
-        y -= 20 
+        y -= 20  # Reduz o espaço vertical para próxima linha
+
+        # Se a margem inferior for atingida, cria uma nova página
+        if y < 50:
+            p.setFont("Helvetica-Bold", 12)
+            p.drawString(260, 20, f"Página {pagina}")
+            p.showPage()
+            y = 750  # Reseta para o topo da nova página
+
+            pagina += 1
+
+        if chave == "Cartuchos Apreendidos":
+            break
+        y -= 10  # Adiciona um espaço extra entre cada operação
 
     p.showPage()
     p.save()
     buffer.seek(0)
     return buffer
+
+
+
+
+
+
+

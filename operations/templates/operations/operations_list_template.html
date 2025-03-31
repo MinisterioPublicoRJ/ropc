@@ -23,7 +23,7 @@
                             {% else %}
                             🔴
                             {% endif %}
-                            <p><a href="{% url 'operations:generate_pdf' info_operacao.identificador %}">Download Book Catalog (PDF)</a></p>
+                            <p><a href="{% url 'operations:generate_pdf' info_operacao.identificador %}">Exportar</a></p>
                         </td>
                         <td>{{ info_operacao.nome_operacao|default:'' }}</td>
                         <td>{{ info_operacao.data }}</td>
