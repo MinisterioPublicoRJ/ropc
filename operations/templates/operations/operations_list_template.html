@@ -22,7 +22,7 @@
                 {% for info_operacao in object_list %}
                 <tr class="tr-lista-operacao" onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}');">
                     <td>{{ info_operacao.nome_operacao|default:'' }}</td>
-                    <td style="padding: 4px 8px; background: #292929; height: 24px !important;">Ver detalhes</td>
+                    <td><span style="padding: 4px 8px; background: #292929; height: 24px !important;">Ver detalhes</span></td>
                     <td>icon</td>
                     <td>{{ info_operacao.data|date:"d/m/Y" }}</td>
                     <td>

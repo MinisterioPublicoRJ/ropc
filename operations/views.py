@@ -1,14 +1,11 @@
 import datetime
-import uuid
 import os
 import logging
-import requests
+import uuid
 
 from io import BytesIO
-from PIL import Image
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse
@@ -16,7 +13,6 @@ from uuid import UUID
 from django.http import FileResponse, HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.pdfmetrics import stringWidth
-from django.shortcuts import render
 from coredata.models import Bairro, Municipio
 from operations.models import Operacao, UNIDADES_POLICIA, ORGAOS_EXTERNOS
 from pathlib import Path
