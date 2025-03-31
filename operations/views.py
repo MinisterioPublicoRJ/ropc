@@ -1,21 +1,23 @@
-import datetime
 import os
 import logging
 import uuid
 
-from io import BytesIO
+from datetime import date, datetime, time
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse
-from uuid import UUID
-from django.http import FileResponse, HttpResponse
-from reportlab.pdfgen import canvas
+from io import BytesIO
+from pathlib import Path
+from reportlab.lib.colors import HexColor
 from reportlab.pdfbase.pdfmetrics import stringWidth
+from reportlab.pdfgen import canvas
+from uuid import UUID
+
 from coredata.models import Bairro, Municipio
 from operations.models import Operacao, UNIDADES_POLICIA, ORGAOS_EXTERNOS
-from pathlib import Path
 from operations.serializers import (
     OperationRegisterInfoSerializer,
     InfoGeralOperacaoOneSerializer,
@@ -351,66 +353,96 @@ def format_and_exclud(atributos):
 
 
 
-def generate_pdf_file(operacaoUUID): 
-    base_dir = Path(f"{settings.BASE_DIR}/query")  # Define o diretório base
-    file_name = "query.sql"  # Nome do arquivo
+def formatar_data_ou_hora(valor):
+    if isinstance(valor, datetime): 
+        return valor.strftime("%d/%m/%Y %H:%M")  
+    elif isinstance(valor, date):  
+        return valor.strftime("%d/%m/%Y") 
+    elif isinstance(valor, time): 
+        return valor.strftime("%H:%M")
+    return valor
 
-    query = (base_dir / file_name).read_text()  # Lê a query do arquivo
+
+
+def generate_pdf_file(operacaoUUID): 
+    base_dir = Path(f"{settings.BASE_DIR}/query")
+    file_name = "query.sql"
+    query = (base_dir / file_name).read_text()
 
     try:
         operacaoUUID = UUID(str(operacaoUUID))  
         operacoes = Operacao.objects.raw(query, [operacaoUUID])
         atributos = operacoes[0].__dict__.copy()
         atributos.pop("_state", None)
-        # format_and_exclud(atributos)
         
     except (Operacao.DoesNotExist, ValueError) as e:
         print(f"Erro ao buscar operação: {e}")  
         return None  
 
-    ## Inicia escrita no pdf
+    ## Inicia escrita no PDF
     buffer = BytesIO()
     p = canvas.Canvas(buffer)
     
-    # header
+    # Header
     img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
     p.drawImage(img_header, 0, 760, width=600, height=88)
     
-    # emitido em
+    # Emitido em
     p.setFont("Helvetica", 12)
+    p.setFillColor(HexColor("#353535"))
     p.drawString(400, 740, "Emitido em: ")
-    hora = datetime.datetime.now()
-    hora_formatada = hora.strftime("%d/%m/%Y %H:%M")
-    p.drawString(400 + stringWidth("Emitido em: ", "Helvetica", 12), 740, hora_formatada)
+    hora = formatar_data_ou_hora(datetime.now())
+    p.drawString(400 + stringWidth("Emitido em: ", "Helvetica", 12), 740, hora)
 
-    # visualizar operacao
+    # Visualizar operação
     p.setFont("Helvetica-Bold", 14)
-    p.drawString(25, 720, "Visualizar operação")
+    p.drawString(25, 710, "Visualizar operação")
+
+    # Linha horizontal
+    p.setStrokeColor(HexColor("#F7CF32"))
+    p.setLineWidth(2)
+    p.line(25, 680, 575, 680)
     
-    # atributos do documento
-    y = 690 
+    # Atributos do documento
+    y = 650 
     pagina = 1
-    # for atributos in lista_atributos:  # Percorre todas as operações encontradas
+    chaves_ignoradas = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
+
     for chave, valor in atributos.items():
-        
+        if chave in chaves_ignoradas:
+            continue
+
+        # Tratamento dos valores
+        if valor is None or ((valor == "") or (valor == " ")):
+            valor_exibido = "não preenchido"
+        elif isinstance(valor, bool):
+            valor_exibido = "sim" if valor else "não"
+        else:
+            valor_exibido = formatar_data_ou_hora(valor)
+
+        # Renderiza o texto no PDF
         p.setFont("Helvetica-Bold", 12)
         p.drawString(25, y, f"{chave}")
         p.setFont("Helvetica", 12)
-        p.drawString(25 + stringWidth(chave, "Helvetica-Bold", 12), y, f": {valor}")
-        y -= 20  # Reduz o espaço vertical para próxima linha
+        p.drawString(25 + stringWidth(chave, "Helvetica-Bold", 12), y, f": {valor_exibido}")
+        y -= 20 
 
         # Se a margem inferior for atingida, cria uma nova página
-        if y < 50:
-            p.setFont("Helvetica-Bold", 12)
-            p.drawString(260, 20, f"Página {pagina}")
-            p.showPage()
-            y = 750  # Reseta para o topo da nova página
+        if y < 100:
+            p.drawString(530, 20, f"Página {pagina}")
 
+            # Linha horizontal
+            p.setStrokeColor(HexColor("#F7CF32"))
+            p.setLineWidth(5)
+            p.line(0, 6, 600, 6)
+
+            p.showPage()
+            y = 750  
             pagina += 1
 
         if chave == "Cartuchos Apreendidos":
             break
-        y -= 10  # Adiciona um espaço extra entre cada operação
+        y -= 10
 
     p.showPage()
     p.save()
