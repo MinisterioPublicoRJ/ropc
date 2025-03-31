@@ -1,23 +1,25 @@
-from io import BytesIO
+import datetime
 import uuid
 import os
+import logging
+import requests
 
+from io import BytesIO
+from PIL import Image
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse
-
-import logging
-logger = logging.getLogger(__name__)
 from uuid import UUID
 from django.http import FileResponse, HttpResponse
 from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
 from django.shortcuts import render
-
 from coredata.models import Bairro, Municipio
 from operations.models import Operacao, UNIDADES_POLICIA, ORGAOS_EXTERNOS
+from pathlib import Path
 from operations.serializers import (
     OperationRegisterInfoSerializer,
     InfoGeralOperacaoOneSerializer,
@@ -29,8 +31,7 @@ from operations.serializers import (
     InfoResultadosThreeSerializer
 )
 
-from pathlib import Path
-
+logger = logging.getLogger(__name__)
 
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
@@ -331,33 +332,13 @@ class InitialPageListView(LoginRequiredMixin, TemplateView):
     template_name = "operations/initial_page_template.html"
 
 
-def generate_pdf(request, identificador):
-    try:
-        identificador = UUID(str(identificador))  
-        logger.info(f"UUID recebido na view (convertido): {identificador} ({type(identificador)})")
-
-        buffer = generate_pdf_file(identificador)
-        if not buffer:
-            return HttpResponse("Erro ao gerar o PDF. Operação não encontrada.", status=404)
-
-        return FileResponse(buffer, as_attachment=True, filename='book_catalog.pdf')
-
-    except ValueError as e:
-        logger.error(f"UUID inválido recebido: {identificador}. Erro: {e}")
-        return HttpResponse("UUID inválido.", status=400)
-
-    except Exception as e:
-        logger.error(f"Erro ao gerar PDF: {e}")
-        return HttpResponse(f"Erro interno do servidor: {e}", status=500)
-
-
-
 def format_and_exclud(atributos):
     for chave, valor in atributos.items():
         print(valor, type(valor))
-    
  
     return atributos
+
+
 
 def generate_pdf_file(operacaoUUID): 
     base_dir = Path(f"{settings.BASE_DIR}/query")  # Define o diretório base
@@ -370,16 +351,23 @@ def generate_pdf_file(operacaoUUID):
         operacoes = Operacao.objects.raw(query, [operacaoUUID])
         atributos = operacoes[0].__dict__.copy()
         atributos.pop("_state", None)
-        format_and_exclud(atributos)
+        # format_and_exclud(atributos)
         
     except (Operacao.DoesNotExist, ValueError) as e:
         print(f"Erro ao buscar operação: {e}")  
         return None  
 
+    ## Inicia escrita no pdf
     buffer = BytesIO()
     p = canvas.Canvas(buffer)
-
+    
+    img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
+    p.drawImage(img_header, 0, 760, width=600, height=88)
+    
     p.setFont("Helvetica-Bold", 12)
+    canvas.drawRightString(0, 672, f"{'Emitido em: '}+{datetime.datetime.now()}")
+
+
     p.drawString(100, 750, "Detalhes da Operação:")
     y = 700  # Inicializa a posição vertical
 
@@ -412,7 +400,21 @@ def generate_pdf_file(operacaoUUID):
 
 
 
+def generate_pdf(request, identificador):
+    try:
+        identificador = UUID(str(identificador))  
+        logger.info(f"UUID recebido na view (convertido): {identificador} ({type(identificador)})")
 
+        buffer = generate_pdf_file(identificador)
+        if not buffer:
+            return HttpResponse("Erro ao gerar o PDF. Operação não encontrada.", status=404)
 
+        return FileResponse(buffer, as_attachment=True, filename='operacao.pdf')
 
+    except ValueError as e:
+        logger.error(f"UUID inválido recebido: {identificador}. Erro: {e}")
+        return HttpResponse("UUID inválido.", status=400)
 
+    except Exception as e:
+        logger.error(f"Erro ao gerar PDF: {e}")
+        return HttpResponse(f"Erro interno do servidor: {e}", status=500)
