@@ -156,6 +156,8 @@ def generate_pdf_file(operacaoUUID):
         shown_value = ("não preenchido" if value is None or value == "" or value == " " else
                         "sim" if isinstance(value, bool) and value else
                         "não" if isinstance(value, bool) else
+                        "programada" if value == "Pr" else
+                        "emergencial" if value == "Em" else
                         date_or_time_formatter(value))
         
         complete_txt = f"{key}: {shown_value}"
