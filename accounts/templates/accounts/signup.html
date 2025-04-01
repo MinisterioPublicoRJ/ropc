@@ -19,37 +19,33 @@
   <div class="tela-login" style="height: 100%; padding-bottom: 60px">
     <img src="{% static "img/logo.png" %}" alt="logo_painel">
     <form method="POST" class="tela-login" action="{% url 'signup' %}"
-      style="margin-top: 0px; justify-content: flex-start;">
+      style="margin-top: 0px; justify-content: flex-start; width: fit-content">
       <h3>Cadastro</h3>
       {% csrf_token %}
-      <input placeholder="Usuário" type="text" name="username" autocapitalize="none" autocomplete="username"
-        maxlength="150" required="" id="id_username">
+      <input placeholder="Usuário" type="text" name="username" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" style="background-color: white">
       <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.username.errors }}</span>
-      <input placeholder="Email" type="email" name="email" autocomplete="current-password" required="" id="">
-      <select name="instituicao" id="id_instituicao">
+      <input placeholder="Email" type="email" name="email" autocomplete="current-password" required="" id="" style="background-color: white">
+      <select name="instituicao" id="id_instituicao" style="background-color: white">
         <option value="PM">Polícia Militar</option>
         <option value="MPRJ">MPRJ</option>
       </select>
       <div style="position: relative; display: inline-block;">
-        <input placeholder="Senha" type="password" name="password1" autocomplete="current-password" required=""
-          id="id_password1" style="padding-right: 30px;">
-        <button type="button" onclick="togglePassword('id_password1', 'eye-icon1')" id="toggle-password"
-          style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
-          <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
+        <input placeholder="Senha" type="password" name="password1" autocomplete="current-password" required id="id_password1" style="padding-right: 30px; background-color: white">
+        <button type="button" onclick="togglePassword('id_password1', 'eye-icon1')" id="toggle-password" style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
+          <i id="eye-icon" class="fas fa-eye" style="color: #292929;"></i>
         </button>
       </div>
       <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.password1.errors }}</span>
       <div style="position: relative; display: inline-block;">
-        <input placeholder="Confirmação de senha" type="password" name="password2" autocomplete="current-password"
-          required="" id="id_password2" style="padding-right: 30px;">
+        <input placeholder="Confirmação de senha" type="password" name="password2" autocomplete="current-password" required id="id_password2" style="padding-right: 30px; background-color: white">
         <button type="button" onclick="togglePassword('id_password2', 'eye-icon2')" id="toggle-password"
           style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
-          <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
+          <i id="eye-icon" class="fas fa-eye" style="color: #292929;"></i>
         </button>
       </div>
 
       <span style="font-size: small; font-weight: normal; text-align: start;">{{ form.password2.errors }}</span>
-      <button type="submit">Enviar</button>
+      <button type="submit" style="width: 100%; border: none">Enviar</button>
     </form>
   </div>
   <img src="{% static "img/logo-MP.png" %}" alt="logo_MP">

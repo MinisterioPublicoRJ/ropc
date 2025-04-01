@@ -14,20 +14,20 @@
   </div>
   <div class="tela-login" style="padding-bottom: 60px;">
     <img src="{% static "img/logo.png" %}" alt="logo_painel">
-    <form method="POST" class="tela-login" style="margin-top: 0px; justify-content: flex-start;">
+    <form method="POST" class="tela-login" style="margin-top: 0px; justify-content: flex-start; width: fit-content">
       <h3>Login</h3>
       {% csrf_token %}
       <input placeholder="Login PCERJ" type="text" name="username" autocapitalize="none" autocomplete="username"
-        maxlength="150" required="" id="id_username">
+        maxlength="150" required id="id_username" style="background-color: white">
       <div style="position: relative; display: inline-block;">
-        <input placeholder="Senha" type="password" name="password" autocomplete="current-password" required=""
-          id="id_password" style="padding-right: 30px;">
+        <input placeholder="Senha" type="password" name="password" autocomplete="current-password" required
+          id="id_password" style="padding-right: 30px; background-color: white">
         <button type="button" onclick="togglePassword()" id="toggle-password"
           style="position: absolute; right: 10px; cursor: pointer; border: none; background: none; width: auto;">
-          <i id="eye-icon" class="fas fa-eye" style="color: white;"></i>
+          <i id="eye-icon" class="fas fa-eye" style="color: #292929;"></i>
         </button>
       </div>
-      <button type="submit">Entrar</button>
+      <button type="submit" style="width: 100%; border: none">Entrar</button>
       {% if form.non_field_errors %}
       <ul style="color: #fff; list-style: none; font-weight: normal; font-size: small; margin-top: 40px;">
         {% for error in form.non_field_errors %}
@@ -55,23 +55,5 @@
       eyeIcon.classList.add("fa-eye");
     }
   }
-
-  function updateEyeColor() {
-    var inputs = ["id_password1", "id_password2"];
-    inputs.forEach(function (inputId) {
-      var input = document.getElementById(inputId);
-      var icon = document.getElementById("eye-icon" + inputId.slice(-1));
-      var bgColor = window.getComputedStyle(input).backgroundColor;
-
-      if (bgColor === "rgb(0, 0, 0)") { // Preto
-        icon.style.color = "white";
-      } else { // Branco ou outro
-        icon.style.color = "black";
-      }
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", updateEyeColor);
-  window.addEventListener("load", updateEyeColor);
 </script>
 {% endblock content %}
