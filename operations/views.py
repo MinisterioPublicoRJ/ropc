@@ -12,6 +12,7 @@ from django.urls import reverse
 from io import BytesIO
 from pathlib import Path
 from reportlab.lib.colors import HexColor
+from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from uuid import UUID
@@ -353,7 +354,7 @@ def format_and_exclud(atributos):
 
 
 
-def formatar_data_ou_hora(valor):
+def date_or_time_formatter(valor):
     if isinstance(valor, datetime): 
         return valor.strftime("%d/%m/%Y %H:%M")  
     elif isinstance(valor, date):  
@@ -363,87 +364,168 @@ def formatar_data_ou_hora(valor):
     return valor
 
 
+def pdf_header_include(p, width):
+    """Inclui o cabeçalho conforme especificado"""
+    # Altura total do header: 88 (imagem) + 10 + texto + 10 + 20 = 128 pixels
+    img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
+    p.drawImage(img_header, 0, heightTotal - 88, width=width, height=88)  # Imagem no topo
+    
+    # Texto "Emitido em"
+    p.setFont("Helvetica", 12)
+    p.setFillColor(HexColor("#353535"))
+    texto_emitido = "Emitido em: " + date_or_time_formatter(datetime.now())
+    p.drawString(
+        width - stringWidth(texto_emitido, "Helvetica", 12) - 30,  # 30 pixels de margem direita
+        heightTotal - 88 - 10 - 12 - 10 - 20,  # Posicionamento vertical
+        texto_emitido
+    )
+    
+    # Retorna a altura disponível após o header (128 pixels consumidos)
+    return heightTotal - 128
 
-def generate_pdf_file(operacaoUUID): 
-    base_dir = Path(f"{settings.BASE_DIR}/query")
-    file_name = "query.sql"
-    query = (base_dir / file_name).read_text()
+def break_text(text, max_width, font_name="Helvetica", font_size=12):
+    """Quebra texto em linhas respeitando o max_width, incluindo quebra de palavras longas"""
+    lines = []
+    current_line = []
+    current_width = 0
+    
+    for word in text.split():
+        word_width = stringWidth(word + ' ', font_name, font_size)
+        
+        # Se a palavra for maior que a largura máxima, quebra a palavra
+        if stringWidth(word, font_name, font_size) > max_width:
+            # Processa cada caractere da palavra
+            temp_word = ''
+            for char in word:
+                char_width = stringWidth(char, font_name, font_size)
+                if current_width + char_width <= max_width:
+                    temp_word += char
+                    current_width += char_width
+                else:
+                    if temp_word:
+                        current_line.append(temp_word)
+                        lines.append(' '.join(current_line))
+                    current_line = []
+                    current_width = 0
+                    temp_word = char
+                    current_width += char_width
+            if temp_word:
+                current_line.append(temp_word)
+        else:
+            if current_width + word_width <= max_width:
+                current_line.append(word)
+                current_width += word_width
+            else:
+                lines.append(' '.join(current_line))
+                current_line = [word]
+                current_width = word_width
+    
+    if current_line:
+        lines.append(' '.join(current_line))
+    
+    return lines
 
+def generate_pdf_file(operacaoUUID):
+    # Configurações de dimensão conforme especificado
+    global widthTotal, heightTotal
+    widthTotal, heightTotal = 595, 841  # Tamanho A4 em pontos (1pt = 1/72 inch)
+    
+    # Área de conteúdo principal (375 pixels de largura, centralizado)
+    content_width = 375
+    content_margin_left = (widthTotal - content_width) / 2
+    
     try:
+        # Obtenção dos dados (mantido igual)
+        base_dir = Path(f"{settings.BASE_DIR}/query")
+        query = (base_dir / "query.sql").read_text()
         operacaoUUID = UUID(str(operacaoUUID))  
         operacoes = Operacao.objects.raw(query, [operacaoUUID])
         atributos = operacoes[0].__dict__.copy()
         atributos.pop("_state", None)
-        
     except (Operacao.DoesNotExist, ValueError) as e:
         print(f"Erro ao buscar operação: {e}")  
         return None  
 
-    ## Inicia escrita no PDF
     buffer = BytesIO()
-    p = canvas.Canvas(buffer)
+    p = canvas.Canvas(buffer, pagesize=(widthTotal, heightTotal))
     
-    # Header
-    img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
-    p.drawImage(img_header, 0, 760, width=600, height=88)
+    # Variáveis de controle de página
+    pagina = 1
+    altura_disponivel = pdf_header_include(p, widthTotal)
     
-    # Emitido em
-    p.setFont("Helvetica", 12)
-    p.setFillColor(HexColor("#353535"))
-    p.drawString(400, 740, "Emitido em: ")
-    hora = formatar_data_ou_hora(datetime.now())
-    p.drawString(400 + stringWidth("Emitido em: ", "Helvetica", 12), 740, hora)
-
-    # Visualizar operação
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(25, 710, "Visualizar operação")
-
-    # Linha horizontal
+    # Margem inferior reservada para o footer (5 linha + 10 espaço + texto + 20 = ~35 pixels)
+    footer_height = 35
+    altura_minima = footer_height
+    
+    # Título principal
+    p.setFont("Helvetica-Bold", 16)
+    titulo = "Visualizar operação"
+    p.drawString(content_margin_left, altura_disponivel - 20, titulo)
+    altura_disponivel -= 40  # Título + espaço
+    
+    # Linha divisória amarela
     p.setStrokeColor(HexColor("#F7CF32"))
     p.setLineWidth(2)
-    p.line(25, 680, 575, 680)
+    p.line(content_margin_left, altura_disponivel, content_margin_left + content_width, altura_disponivel)
+    altura_disponivel -= 30  # Linha + espaço
     
-    # Atributos do documento
-    y = 650 
-    pagina = 1
+    # Lista de atributos a ignorar
     chaves_ignoradas = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
-
+    
+    # Configurações de texto
+    p.setFont("Helvetica", 12)
+    line_height = 14  # Altura de cada linha de texto
+    espacamento_entre_itens = 10  # Espaço entre diferentes atributos
+    
     for chave, valor in atributos.items():
         if chave in chaves_ignoradas:
             continue
-
+        
         # Tratamento dos valores
-        if valor is None or ((valor == "") or (valor == " ")):
+        if valor is None or valor == "" or valor == " ":
             valor_exibido = "não preenchido"
         elif isinstance(valor, bool):
             valor_exibido = "sim" if valor else "não"
         else:
-            valor_exibido = formatar_data_ou_hora(valor)
-
-        # Renderiza o texto no PDF
-        p.setFont("Helvetica-Bold", 12)
-        p.drawString(25, y, f"{chave}")
-        p.setFont("Helvetica", 12)
-        p.drawString(25 + stringWidth(chave, "Helvetica-Bold", 12), y, f": {valor_exibido}")
-        y -= 20 
-
-        # Se a margem inferior for atingida, cria uma nova página
-        if y < 100:
-            p.drawString(530, 20, f"Página {pagina}")
-
-            # Linha horizontal
-            p.setStrokeColor(HexColor("#F7CF32"))
-            p.setLineWidth(5)
-            p.line(0, 6, 600, 6)
-
-            p.showPage()
-            y = 750  
-            pagina += 1
-
+            valor_exibido = date_or_time_formatter(valor)
+        
+        texto_completo = f"{chave}: {valor_exibido}"
+        
+        # Quebra o texto em linhas
+        linhas = break_text(texto_completo, content_width, "Helvetica", 12)
+        
+        # Desenha cada linha
+        for linha in linhas:
+            # Verifica se precisa de nova página
+            if altura_disponivel < altura_minima + line_height:
+                p.showPage()
+                pagina += 1
+                altura_disponivel = pdf_header_include(p, widthTotal)
+                p.setFont("Helvetica", 12)  # Restaura fonte
+            
+            p.drawString(content_margin_left, altura_disponivel, linha)
+            altura_disponivel -= line_height
+        
+        # Adiciona espaçamento entre itens
+        altura_disponivel -= espacamento_entre_itens
+        
+        # Critério de parada (se necessário)
         if chave == "Cartuchos Apreendidos":
             break
-        y -= 10
-
+    
+    # Footer (5px linha + 10 espaço + texto + 20 espaço)
+    p.setStrokeColor(HexColor("#F7CF32"))
+    p.setLineWidth(5)
+    p.line(0, footer_height - 25, widthTotal, footer_height - 25)  # Linha amarela
+    
+    p.setFont("Helvetica", 10)
+    texto_pagina = f"Página {pagina}"
+    p.drawString(
+        widthTotal - stringWidth(texto_pagina, "Helvetica", 10) - 30,  # 30px margem direita
+        10,  # 10px acima da margem inferior
+        texto_pagina
+    )
+    
     p.showPage()
     p.save()
     buffer.seek(0)
