@@ -360,6 +360,8 @@ def generate_pdf(request, identificador):
 
 def generate_excel(request):
     try:
+        ignored_columns = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
+        
         query_sql = load_query() 
         
         with connection.cursor() as cursor:
@@ -368,6 +370,8 @@ def generate_excel(request):
             data = cursor.fetchall()
         
         df = pd.DataFrame(data, columns=columns)
+        
+        df = df.drop(columns=ignored_columns, errors='ignore')
         
         for col in df.columns:
             if pd.api.types.is_datetime64_any_dtype(df[col]):
@@ -388,4 +392,4 @@ def generate_excel(request):
     except FileNotFoundError:
         return HttpResponse("Arquivo query.sql não encontrado", status=404)
     except Exception as e:
-        return HttpResponse(f"Erro ao exportar dados: {str(e)}", status=500)
+        return HttpResponse(f"Erro ao exportar dados: {str(e)}", status=500)  
