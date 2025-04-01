@@ -27,20 +27,20 @@ def date_or_time_formatter(data):
 
 def include_header(p, width):
     img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
-    p.drawImage(img_header, 0, heightTotal - 88, width=width, height=88)
+    p.drawImage(img_header, 0, heightTotal - 84, width=width, height=84)
     
     p.setFont("Helvetica", 12)
     p.setFillColor(HexColor("#353535"))
     total_text = "Emitido em: " + date_or_time_formatter(datetime.now())
-    
-    totaltext_y = heightTotal - 88 - 40 
+     
+    totaltext_y = heightTotal - 84 - 11 - 12
     p.drawString(
         width - stringWidth(total_text, "Helvetica", 12) - 30,
         totaltext_y, 
         total_text
     )
     
-    protected_area = 30 
+    protected_area = 32 
 
     return totaltext_y - protected_area
 
@@ -144,33 +144,33 @@ def generate_pdf_file(operacaoUUID):
     available_height = include_header(p, widthTotal)
     
     footer_height = 35
-    min_height = footer_height
     
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(margin_left, available_height, "Visualizar operação")
-    available_height -= 30 
-
-    line_height = 14
-
     p.setFont("Helvetica-Bold", 14)
-    name_lines = break_text(operation_name, content_width, font_size=14, is_bold=True)
+    p.setFillColor(HexColor("#505050"))
+    p.drawString(margin_left, available_height, "Visualizar operação")
+    available_height -= 26 
+
+    p.setFont("Helvetica-Bold", 10)
+    p.setFillColor(HexColor("#9F9F9F"))
+    name_lines = break_text(operation_name, content_width, font_size=10, is_bold=True)
     for line in name_lines:
-        if available_height < min_height + line_height:
+        if available_height < footer_height + 10:
             include_footer(p, widthTotal, pg_number)
             p.showPage()
             pg_number += 1
             available_height = include_header(p, widthTotal)
-            p.setFont("Helvetica-Bold", 14)
+            p.setFont("Helvetica-Bold", 10)
         
         p.drawString(margin_left, available_height, line)
-        available_height -= line_height
+        available_height -= 10
     
+    line_height = 12
     p.setStrokeColor(HexColor("#F7CF32"))
-    p.setLineWidth(2)
-    p.line(margin_left, available_height, margin_left + content_width, available_height)
+    p.setLineWidth(1)
+    p.line(margin_left, available_height - 5, margin_left + content_width, available_height - 5)
     available_height -= 30
     
-    space_betw_items = 10
+    space_betw_items = 12
     
     ignored_keys = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo", "Nome da operação"]
     special_keys = [
@@ -179,6 +179,7 @@ def generate_pdf_file(operacaoUUID):
         "Análise de riscos e medidas de controle"
     ]
     
+    p.setFillColor(HexColor("#505050"))
     for key, value in attributes.items():
         if key in ignored_keys:
             continue
@@ -191,7 +192,7 @@ def generate_pdf_file(operacaoUUID):
                       str(date_or_time_formatter(value)) if isinstance(value, (date, datetime)) else
                       str(value))
         
-        if available_height < min_height + line_height:
+        if available_height < footer_height + line_height:
             include_footer(p, widthTotal, pg_number)
             p.showPage()
             pg_number += 1
@@ -202,7 +203,7 @@ def generate_pdf_file(operacaoUUID):
             key_lines = break_text(key + ":", content_width, is_bold=True)
             
             for line in key_lines:
-                if available_height < min_height + line_height:
+                if available_height < footer_height + line_height:
                     include_footer(p, widthTotal, pg_number)
                     p.showPage()
                     pg_number += 1
@@ -216,7 +217,7 @@ def generate_pdf_file(operacaoUUID):
             value_lines = break_text(shown_value, content_width)
             
             for line in value_lines:
-                if available_height < min_height + line_height:
+                if available_height < footer_height + line_height:
                     include_footer(p, widthTotal, pg_number)
                     p.showPage()
                     pg_number += 1
@@ -240,7 +241,7 @@ def generate_pdf_file(operacaoUUID):
                 
                 for line in value_lines[1:]:
                     available_height -= line_height
-                    if available_height < min_height + line_height:
+                    if available_height < footer_height + line_height:
                         include_footer(p, widthTotal, pg_number)
                         p.showPage()
                         pg_number += 1
