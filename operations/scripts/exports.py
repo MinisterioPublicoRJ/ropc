@@ -65,18 +65,32 @@ def include_footer(p, width, n):
 
 
 
-def break_text(text, max_width, font_name="Helvetica", font_size=12):
+def load_query(where_condition=None):
+    query_path = os.path.join(settings.BASE_DIR, 'query', 'query.sql')
+    
+    with open(query_path, 'r', encoding='utf-8') as file:
+        query_sql = file.read()
+    
+    if where_condition:
+        return query_sql.replace('/* WHERE_CONDITION */', f'WHERE {where_condition}')
+    return query_sql.replace('/* WHERE_CONDITION */', '')
+
+
+
+def break_text(text, max_width, font_size=12, is_bold=False):
+    text = str(text) if not isinstance(text, str) else text
+    font = "Helvetica-Bold" if is_bold else "Helvetica"
     lines = []
     current_line = []
     current_width = 0
     
     for word in text.split():
-        word_width = stringWidth(word + ' ', font_name, font_size)
+        word_width = stringWidth(word + ' ', font, font_size)
         
-        if stringWidth(word, font_name, font_size) > max_width:
+        if stringWidth(word, font, font_size) > max_width:
             temp_word = ''
             for char in word:
-                char_width = stringWidth(char, font_name, font_size)
+                char_width = stringWidth(char, font, font_size)
                 if current_width + char_width <= max_width:
                     temp_word += char
                     current_width += char_width
@@ -103,21 +117,6 @@ def break_text(text, max_width, font_name="Helvetica", font_size=12):
         lines.append(' '.join(current_line))
     
     return lines
-
-
-
-
-def load_query(where_condition=None):
-    query_path = os.path.join(settings.BASE_DIR, 'query', 'query.sql')
-    
-    with open(query_path, 'r', encoding='utf-8') as file:
-        query_sql = file.read()
-    
-    if where_condition:
-        return query_sql.replace('/* WHERE_CONDITION */', f'WHERE {where_condition}')
-    return query_sql.replace('/* WHERE_CONDITION */', '')
-
-
 
 def generate_pdf_file(operacaoUUID):
     global widthTotal, heightTotal
@@ -157,36 +156,87 @@ def generate_pdf_file(operacaoUUID):
     p.line(margin_left, available_height, margin_left + content_width, available_height)
     available_height -= 30
     
-    p.setFont("Helvetica", 12)
     line_height = 14
     space_betw_items = 10
     
     ignored_keys = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
+    special_keys = [
+        "Justificativa da excepcionalidade da operação",
+        "Objetivo estratégico da operação", 
+        "Análise de riscos e medidas de controle"
+    ]
     
     for key, value in attributes.items():
         if key in ignored_keys:
             continue
         
-        # Tratamento dos valores
         shown_value = ("não preenchido" if value is None or value == "" or value == " " else
-                        "sim" if isinstance(value, bool) and value else
-                        "não" if isinstance(value, bool) else
-                        "programada" if value == "Pr" else
-                        "emergencial" if value == "Em" else
-                        date_or_time_formatter(value))
+                      "sim" if isinstance(value, bool) and value else
+                      "não" if isinstance(value, bool) else
+                      "programada" if value == "Pr" else
+                      "emergencial" if value == "Em" else
+                      str(date_or_time_formatter(value)) if isinstance(value, (date, datetime)) else
+                      str(value))
         
-        complete_txt = f"{key}: {shown_value}"
-        lines = break_text(complete_txt, content_width, "Helvetica", 12)
+        if available_height < min_height + line_height:
+            include_footer(p, widthTotal, pg_number)
+            p.showPage()
+            pg_number += 1
+            available_height = include_header(p, widthTotal)
         
-        for line in lines:
-            if available_height < min_height + line_height:
-                include_footer(p, widthTotal, pg_number)
-                p.showPage()
-                pg_number += 1
-                available_height = include_header(p, widthTotal)
-                p.setFont("Helvetica", 12)
+        if key in special_keys:
+            p.setFont("Helvetica-Bold", 12)
+            key_lines = break_text(key + ":", content_width, is_bold=True)
             
-            p.drawString(margin_left, available_height, line)
+            for line in key_lines:
+                if available_height < min_height + line_height:
+                    include_footer(p, widthTotal, pg_number)
+                    p.showPage()
+                    pg_number += 1
+                    available_height = include_header(p, widthTotal)
+                    p.setFont("Helvetica-Bold", 12)
+                
+                p.drawString(margin_left, available_height, line)
+                available_height -= line_height
+            
+            # VALUE em linha separada
+            p.setFont("Helvetica", 12)
+            value_lines = break_text(shown_value, content_width)
+            
+            for line in value_lines:
+                if available_height < min_height + line_height:
+                    include_footer(p, widthTotal, pg_number)
+                    p.showPage()
+                    pg_number += 1
+                    available_height = include_header(p, widthTotal)
+                    p.setFont("Helvetica", 12)
+                
+                p.drawString(margin_left, available_height, line)
+                available_height -= line_height
+        else:
+            complete_text = f"{key}: {shown_value}"
+            p.setFont("Helvetica-Bold", 12)
+            key_part = f"{key}: "
+            key_width = stringWidth(key_part, "Helvetica-Bold", 12)
+            
+            p.drawString(margin_left, available_height, key_part)
+            
+            p.setFont("Helvetica", 12)
+            value_lines = break_text(shown_value, content_width - key_width, font_size=12)
+            
+            if value_lines:
+                p.drawString(margin_left + key_width, available_height, value_lines[0])
+                
+                for line in value_lines[1:]:
+                    available_height -= line_height
+                    if available_height < min_height + line_height:
+                        include_footer(p, widthTotal, pg_number)
+                        p.showPage()
+                        pg_number += 1
+                        available_height = include_header(p, widthTotal)
+                        p.setFont("Helvetica", 12)
+                    p.drawString(margin_left, available_height, line)
+            
             available_height -= line_height
         
         available_height -= space_betw_items
@@ -198,5 +248,3 @@ def generate_pdf_file(operacaoUUID):
     p.save()
     buffer.seek(0)
     return buffer
-
-
