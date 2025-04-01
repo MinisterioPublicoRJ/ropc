@@ -364,27 +364,54 @@ def date_or_time_formatter(valor):
     return valor
 
 
-def pdf_header_include(p, width):
-    """Inclui o cabeçalho conforme especificado"""
-    # Altura total do header: 88 (imagem) + 10 + texto + 10 + 20 = 128 pixels
+
+def include_header(p, width, is_first_page=False):
+    """Inclui o cabeçalho com espaçamento adequado"""
     img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
-    p.drawImage(img_header, 0, heightTotal - 88, width=width, height=88)  # Imagem no topo
+    p.drawImage(img_header, 0, heightTotal - 88, width=width, height=88)
     
-    # Texto "Emitido em"
     p.setFont("Helvetica", 12)
     p.setFillColor(HexColor("#353535"))
     texto_emitido = "Emitido em: " + date_or_time_formatter(datetime.now())
+    
+    # Posição do texto "Emitido em:" mais para baixo
+    emitido_em_y = heightTotal - 88 - 40  # Aumentado de 30 para 40 pixels
     p.drawString(
-        width - stringWidth(texto_emitido, "Helvetica", 12) - 30,  # 30 pixels de margem direita
-        heightTotal - 88 - 10 - 12 - 10 - 20,  # Posicionamento vertical
+        width - stringWidth(texto_emitido, "Helvetica", 12) - 30,
+        emitido_em_y, 
         texto_emitido
     )
     
-    # Retorna a altura disponível após o header (128 pixels consumidos)
-    return heightTotal - 128
+    # Área protegida abaixo do texto "Emitido em:"
+    protected_area = 20  # Espaço adicional de proteção
+    
+    # Altura disponível após o header
+    if is_first_page:
+        return emitido_em_y - protected_area - 80  # Espaço para título e linha
+    else:
+        return emitido_em_y - protected_area
+
+
+
+def include_footer(p, width, n):
+    # Corrigindo a concatenação de string com inteiro
+    texto_pagina = f"Página {n}"  # Usando f-string para formatar corretamente
+    
+    p.setStrokeColor(HexColor("#F7CF32"))
+    p.setLineWidth(10)
+    p.line(0, 0, width, 0)  # Linha amarela no footer
+    
+    p.setFont("Helvetica", 10)
+    p.drawString(
+        width - stringWidth(texto_pagina, "Helvetica", 10) - 30,  # Margem direita de 30px
+        15,  # Posição vertical ajustada
+        texto_pagina
+    )
+
+
 
 def break_text(text, max_width, font_name="Helvetica", font_size=12):
-    """Quebra texto em linhas respeitando o max_width, incluindo quebra de palavras longas"""
+    """Quebra texto considerando a largura máxima com margens"""
     lines = []
     current_line = []
     current_width = 0
@@ -425,17 +452,17 @@ def break_text(text, max_width, font_name="Helvetica", font_size=12):
     
     return lines
 
+
+
 def generate_pdf_file(operacaoUUID):
-    # Configurações de dimensão conforme especificado
     global widthTotal, heightTotal
-    widthTotal, heightTotal = 595, 841  # Tamanho A4 em pontos (1pt = 1/72 inch)
+    widthTotal, heightTotal = 595, 841
     
-    # Área de conteúdo principal (375 pixels de largura, centralizado)
-    content_width = 375
-    content_margin_left = (widthTotal - content_width) / 2
+    # Configurações de margem e conteúdo
+    margin_left = (widthTotal - 535) / 2  # Centraliza os 535px de conteúdo
+    content_width = 535  # Largura fixa do conteúdo
     
     try:
-        # Obtenção dos dados (mantido igual)
         base_dir = Path(f"{settings.BASE_DIR}/query")
         query = (base_dir / "query.sql").read_text()
         operacaoUUID = UUID(str(operacaoUUID))  
@@ -449,84 +476,62 @@ def generate_pdf_file(operacaoUUID):
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=(widthTotal, heightTotal))
     
-    # Variáveis de controle de página
     pagina = 1
-    altura_disponivel = pdf_header_include(p, widthTotal)
+    altura_disponivel = include_header(p, widthTotal, is_first_page=True)
     
-    # Margem inferior reservada para o footer (5 linha + 10 espaço + texto + 20 = ~35 pixels)
+    # Configurações de footer
     footer_height = 35
     altura_minima = footer_height
     
-    # Título principal
+    # Elementos exclusivos da primeira página
     p.setFont("Helvetica-Bold", 16)
     titulo = "Visualizar operação"
-    p.drawString(content_margin_left, altura_disponivel - 20, titulo)
-    altura_disponivel -= 40  # Título + espaço
+    p.drawString(margin_left, altura_disponivel, titulo)
+    altura_disponivel -= 30 
     
-    # Linha divisória amarela
     p.setStrokeColor(HexColor("#F7CF32"))
     p.setLineWidth(2)
-    p.line(content_margin_left, altura_disponivel, content_margin_left + content_width, altura_disponivel)
-    altura_disponivel -= 30  # Linha + espaço
-    
-    # Lista de atributos a ignorar
-    chaves_ignoradas = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
+    p.line(margin_left, altura_disponivel, margin_left + content_width, altura_disponivel)
+    altura_disponivel -= 30
     
     # Configurações de texto
     p.setFont("Helvetica", 12)
-    line_height = 14  # Altura de cada linha de texto
-    espacamento_entre_itens = 10  # Espaço entre diferentes atributos
+    line_height = 14
+    espacamento_entre_itens = 10
+    
+    # Lista de atributos a ignorar
+    chaves_ignoradas = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
     
     for chave, valor in atributos.items():
         if chave in chaves_ignoradas:
             continue
         
         # Tratamento dos valores
-        if valor is None or valor == "" or valor == " ":
-            valor_exibido = "não preenchido"
-        elif isinstance(valor, bool):
-            valor_exibido = "sim" if valor else "não"
-        else:
-            valor_exibido = date_or_time_formatter(valor)
+        valor_exibido = ("não preenchido" if valor is None or valor == "" or valor == " " else
+                        "sim" if isinstance(valor, bool) and valor else
+                        "não" if isinstance(valor, bool) else
+                        date_or_time_formatter(valor))
         
         texto_completo = f"{chave}: {valor_exibido}"
-        
-        # Quebra o texto em linhas
         linhas = break_text(texto_completo, content_width, "Helvetica", 12)
         
-        # Desenha cada linha
         for linha in linhas:
-            # Verifica se precisa de nova página
             if altura_disponivel < altura_minima + line_height:
+                include_footer(p, widthTotal, pagina)
                 p.showPage()
                 pagina += 1
-                altura_disponivel = pdf_header_include(p, widthTotal)
-                p.setFont("Helvetica", 12)  # Restaura fonte
+                altura_disponivel = include_header(p, widthTotal)
+                p.setFont("Helvetica", 12)
             
-            p.drawString(content_margin_left, altura_disponivel, linha)
+            p.drawString(margin_left, altura_disponivel, linha)
             altura_disponivel -= line_height
         
-        # Adiciona espaçamento entre itens
         altura_disponivel -= espacamento_entre_itens
         
-        # Critério de parada (se necessário)
         if chave == "Cartuchos Apreendidos":
             break
     
-    # Footer (5px linha + 10 espaço + texto + 20 espaço)
-    p.setStrokeColor(HexColor("#F7CF32"))
-    p.setLineWidth(5)
-    p.line(0, footer_height - 25, widthTotal, footer_height - 25)  # Linha amarela
-    
-    p.setFont("Helvetica", 10)
-    texto_pagina = f"Página {pagina}"
-    p.drawString(
-        widthTotal - stringWidth(texto_pagina, "Helvetica", 10) - 30,  # 30px margem direita
-        10,  # 10px acima da margem inferior
-        texto_pagina
-    )
-    
-    p.showPage()
+    include_footer(p, widthTotal, pagina)
     p.save()
     buffer.seek(0)
     return buffer
