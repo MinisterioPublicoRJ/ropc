@@ -20,7 +20,7 @@ from operations.serializers import (
     InfoResultadosTwoSerializer,
     InfoResultadosThreeSerializer
 )
-from .scripts.exports import generate_pdf_file
+from .scripts.exports import generate_pdf_file, generate_excel_file
 
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
@@ -348,6 +348,18 @@ def generate_pdf(request, identificador):
 
     except ValueError as e:
         return HttpResponse("UUID inválido.", status=400)
+
+    except Exception as e:
+        return HttpResponse(f"Erro interno do servidor: {e}", status=500)
+
+
+
+def generate_excel(request):
+    try:
+
+        buffer = generate_excel_file()
+
+        return FileResponse(buffer, as_attachment=True, filename='operacao.pdf')
 
     except Exception as e:
         return HttpResponse(f"Erro interno do servidor: {e}", status=500)

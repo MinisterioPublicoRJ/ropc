@@ -183,3 +183,8 @@ def generate_pdf_file(operacaoUUID):
     p.save()
     buffer.seek(0)
     return buffer
+
+
+
+def generate_excel_file():
+    return

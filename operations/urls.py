@@ -72,4 +72,9 @@ urlpatterns = [
         views.generate_pdf,
         name="generate_pdf"
     ),
+    path(
+        "gerar-excel/",
+        views.generate_excel,
+        name="generate_excel"
+    )
 ]
