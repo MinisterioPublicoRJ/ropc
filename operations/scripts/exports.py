@@ -2,6 +2,7 @@ import os
 from uuid import UUID
 
 from django.conf import settings
+from django.template import Template, Context
 from datetime import date, datetime, time
 from io import BytesIO
 from pathlib import Path
@@ -105,6 +106,19 @@ def break_text(text, max_width, font_name="Helvetica", font_size=12):
 
 
 
+
+def load_query(where_condition=None):
+    query_path = os.path.join(settings.BASE_DIR, 'query', 'query.sql')
+    
+    with open(query_path, 'r', encoding='utf-8') as file:
+        query_sql = file.read()
+    
+    if where_condition:
+        return query_sql.replace('/* WHERE_CONDITION */', f'WHERE {where_condition}')
+    return query_sql.replace('/* WHERE_CONDITION */', '')
+
+
+
 def generate_pdf_file(operacaoUUID):
     global widthTotal, heightTotal
     widthTotal, heightTotal = 595, 841
@@ -113,12 +127,13 @@ def generate_pdf_file(operacaoUUID):
     content_width = 535 
     
     try:
-        base_dir = Path(f"{settings.BASE_DIR}/query")
-        query = (base_dir / "query.sql").read_text()
         operacaoUUID = UUID(str(operacaoUUID))  
-        operacoes = Operacao.objects.raw(query, [operacaoUUID])
+        where_condition = "op.identificador = %s"
+        query_sql = load_query(where_condition)
+        operacoes = Operacao.objects.raw(query_sql, [str(operacaoUUID)])        
         attributes = operacoes[0].__dict__.copy()
         attributes.pop("_state", None)
+        
     except (Operacao.DoesNotExist, ValueError) as e:
         print(f"Erro ao buscar operação: {e}")  
         return None  
@@ -185,6 +200,3 @@ def generate_pdf_file(operacaoUUID):
     return buffer
 
 
-
-def generate_excel_file():
-    return

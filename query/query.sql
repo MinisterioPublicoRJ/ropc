@@ -132,4 +132,4 @@ LEFT JOIN operations_roapensado ro ON orc.roapensado_id = ro.id
 -- Join para CartuchosCalibresApreendidos
 LEFT JOIN operacao_cartuchos_calibres oc ON op.id = oc.operacao_id
 LEFT JOIN operations_cartuchocalibresapreendidos cc ON oc.cartuchocalibresapreendidos_id = cc.id
-WHERE op.identificador = %s;
+/* WHERE_CONDITION */

@@ -1,11 +1,14 @@
+import pandas as pd
 import uuid
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import connection
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, TemplateView
 from django.urls import reverse
+from io import BytesIO
 from uuid import UUID
 
 from coredata.models import Bairro, Municipio
@@ -20,7 +23,7 @@ from operations.serializers import (
     InfoResultadosTwoSerializer,
     InfoResultadosThreeSerializer
 )
-from .scripts.exports import generate_pdf_file, generate_excel_file
+from .scripts.exports import generate_pdf_file, load_query
 
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
@@ -354,12 +357,35 @@ def generate_pdf(request, identificador):
 
 
 
+
 def generate_excel(request):
     try:
-
-        buffer = generate_excel_file()
-
-        return FileResponse(buffer, as_attachment=True, filename='operacao.pdf')
-
+        query_sql = load_query() 
+        
+        with connection.cursor() as cursor:
+            cursor.execute(query_sql)
+            columns = [col[0] for col in cursor.description]
+            data = cursor.fetchall()
+        
+        df = pd.DataFrame(data, columns=columns)
+        
+        for col in df.columns:
+            if pd.api.types.is_datetime64_any_dtype(df[col]):
+                df[col] = df[col].dt.tz_localize(None)
+        
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Dados')
+        
+        output.seek(0)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename="exportacao_dados.xlsx"'
+        return response
+    
+    except FileNotFoundError:
+        return HttpResponse("Arquivo query.sql não encontrado", status=404)
     except Exception as e:
-        return HttpResponse(f"Erro interno do servidor: {e}", status=500)
+        return HttpResponse(f"Erro ao exportar dados: {str(e)}", status=500)
