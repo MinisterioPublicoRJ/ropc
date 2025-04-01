@@ -25,7 +25,7 @@ def date_or_time_formatter(data):
 
 
 
-def include_header(p, width, is_first_page=False):
+def include_header(p, width):
     img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
     p.drawImage(img_header, 0, heightTotal - 88, width=width, height=88)
     
@@ -40,12 +40,9 @@ def include_header(p, width, is_first_page=False):
         total_text
     )
     
-    protected_area = 20 
-    
-    if is_first_page:
-        return totaltext_y - protected_area - 80
-    else:
-        return totaltext_y - protected_area
+    protected_area = 30 
+
+    return totaltext_y - protected_area
 
 
 
@@ -118,6 +115,8 @@ def break_text(text, max_width, font_size=12, is_bold=False):
     
     return lines
 
+
+
 def generate_pdf_file(operacaoUUID):
     global widthTotal, heightTotal
     widthTotal, heightTotal = 595, 841
@@ -131,6 +130,7 @@ def generate_pdf_file(operacaoUUID):
         query_sql = load_query(where_condition)
         operacoes = Operacao.objects.raw(query_sql, [str(operacaoUUID)])        
         attributes = operacoes[0].__dict__.copy()
+        operation_name = attributes.get("Nome da operação", "Nome não disponível")
         attributes.pop("_state", None)
         
     except (Operacao.DoesNotExist, ValueError) as e:
@@ -141,25 +141,38 @@ def generate_pdf_file(operacaoUUID):
     p = canvas.Canvas(buffer, pagesize=(widthTotal, heightTotal))
     
     pg_number = 1
-    available_height = include_header(p, widthTotal, is_first_page=True)
+    available_height = include_header(p, widthTotal)
     
     footer_height = 35
     min_height = footer_height
     
     p.setFont("Helvetica-Bold", 16)
-    titulo = "Visualizar operação"
-    p.drawString(margin_left, available_height, titulo)
+    p.drawString(margin_left, available_height, "Visualizar operação")
     available_height -= 30 
+
+    line_height = 14
+
+    p.setFont("Helvetica-Bold", 14)
+    name_lines = break_text(operation_name, content_width, font_size=14, is_bold=True)
+    for line in name_lines:
+        if available_height < min_height + line_height:
+            include_footer(p, widthTotal, pg_number)
+            p.showPage()
+            pg_number += 1
+            available_height = include_header(p, widthTotal)
+            p.setFont("Helvetica-Bold", 14)
+        
+        p.drawString(margin_left, available_height, line)
+        available_height -= line_height
     
     p.setStrokeColor(HexColor("#F7CF32"))
     p.setLineWidth(2)
     p.line(margin_left, available_height, margin_left + content_width, available_height)
     available_height -= 30
     
-    line_height = 14
     space_betw_items = 10
     
-    ignored_keys = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
+    ignored_keys = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo", "Nome da operação"]
     special_keys = [
         "Justificativa da excepcionalidade da operação",
         "Objetivo estratégico da operação", 
@@ -199,7 +212,6 @@ def generate_pdf_file(operacaoUUID):
                 p.drawString(margin_left, available_height, line)
                 available_height -= line_height
             
-            # VALUE em linha separada
             p.setFont("Helvetica", 12)
             value_lines = break_text(shown_value, content_width)
             
@@ -214,7 +226,6 @@ def generate_pdf_file(operacaoUUID):
                 p.drawString(margin_left, available_height, line)
                 available_height -= line_height
         else:
-            complete_text = f"{key}: {shown_value}"
             p.setFont("Helvetica-Bold", 12)
             key_part = f"{key}: "
             key_width = stringWidth(key_part, "Helvetica-Bold", 12)
@@ -248,3 +259,5 @@ def generate_pdf_file(operacaoUUID):
     p.save()
     buffer.seek(0)
     return buffer
+
+
