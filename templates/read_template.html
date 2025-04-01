@@ -1,0 +1,28 @@
+<style>
+    input:disabled, 
+    select:disabled, 
+    textarea:disabled {
+        cursor: not-allowed;
+        opacity: 0.6; 
+    }
+</style>
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Captura os parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        // Tenta selecionar o tipo
+        const type = urlParams.get("type");
+        
+
+        // Se o tipo é igual a "read", desabilita todos os campos do formulário
+        // (input, select, textarea)
+        if (type === "read") {
+            document.querySelectorAll("input, select, textarea").forEach(element => {
+                element.disabled = true;
+            });
+        }
+    });
+</script>
+{% endblock extra_js %}
