@@ -68,9 +68,13 @@ urlpatterns = [
         views.OperationListView.as_view(), 
         name="operations-list"),
     path(
-        "generate-pdf/<uuid:identificador>/",
+        "gerar-pdf/<uuid:identificador>/",
         views.generate_pdf,
         name="generate_pdf"
     ),
-
+    path(
+        "gerar-excel/",
+        views.generate_excel,
+        name="generate_excel"
+    )
 ]
