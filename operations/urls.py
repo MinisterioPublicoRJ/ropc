@@ -4,7 +4,10 @@ from operations import views
 
 app_name = "operations"
 urlpatterns = [
-    path("cadastro/", views.OperationReportView.as_view(), name="form"),
+    path(
+        "cadastro/",
+        views.OperationReportView.as_view(),
+        name="form"),
     path(
         "cadastro/<uuid:form_uuid>",
         views.UpdateOperationReportView.as_view(),
@@ -60,5 +63,14 @@ urlpatterns = [
         views.FormCompleteView.as_view(),
         name="form-complete"
     ),
-    path("lista/", views.OperationListView.as_view(), name="operations-list"),
+    path(
+        "lista/", 
+        views.OperationListView.as_view(), 
+        name="operations-list"),
+    path(
+        "generate-pdf/<uuid:identificador>/",
+        views.generate_pdf,
+        name="generate_pdf"
+    ),
+
 ]
