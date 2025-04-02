@@ -4,51 +4,70 @@
 {% block title %}<title>ROPC</title>{% endblock title %}
 
 {% block content %}
+<style>
+    button {
+        transition: background-color 0.2s;
+    }
+   button:hover {
+        background-color:#E5A324;
+    }
+    input::placeholder {
+        text-align: left;
+        color: #FEBC2E; 
+        font-size: 1rem; 
+        line-height: 100%;
+    }
+</style>
 <div class="main-initial-page">
-        <div class="table-list"  style="max-width: fit-content">
-            <h2>Últimas operações cadastradas</h2>
-            <p style="margin-left: 30px">Aqui é onde se encontram as informações referentes às operações cadastradas e onde você pode editá-las.</p>
-            <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; ">
-                <form style="" method="get" action="">
-                    <input type="text" name="q" placeholder="Buscar operação..." value="{{ request.GET.q }}">
-                    <button type="submit">Buscar</button>
+        <div class="table-list"  style="margin:2rem;">
+            
+                <h2 sty>Últimas operações cadastradas</h2>
+                <p style="margin-left: 30px">Aqui é onde se encontram as informações referentes às operações cadastradas e onde você pode editá-las.</p>
+            
+            <div style="padding: 0 1.25rem; display: flex; flex-direction: row; justify-content: space-between; align-items: center; background:#121212; height: 64px;">
+                <form style="display: flex; justify-content: center; width: 500px; height: max-content; margin: auto 0; gap: .5rem;" method="get" action="">
+                    <input  style="text-align: left;  font-size: 1rem; color: #FEBC2E; width: 37.5rem; border-radius: 8px;" type="text" name="q" placeholder="Pesquisar na lista" value="{{ request.GET.q }}">
+                    <button  style="width: 9.375rem; border-radius: 8px; font-size: 1rem; letter-spacing: 1px;" type="submit">Buscar</button>
                 </form>
-                <div>
+                <a style="color: #FEBC2E; width: 224px; height: 40px; border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;">
                     Download de operações
-                </div>
-            </div>
-            <table>
+                </a>
+        
+        </div>
+         
+            <table style="width: 100%; margin: 0 auto">
                 <tr>
-                    <th style="padding: 0 1.25rem; font-size: 1.375rem; text-align: left;" >Operação</th>
+                    <th style="padding: 1rem 1.25rem; font-size: 1.375rem; text-align: left;" >Operação</th>
                     <th></th>
                     <th></th>
-                    <th style="padding: 0 1.25rem; font-size: 1.375rem; text-align: left;">Data</th>
-                    <th style="padding: 0 1.25rem; font-size: 1.375rem; text-align: left;">Responsável/Delegacia</th>
-                    <th style="padding: 0 1.25rem; font-size: 1.375rem; text-align: left;">Local</th>
-                    <th style="padding: 0 1.25rem; font-size: 1.375rem; text-align: left;">Status</th>
+                    <th style="padding: 1rem 1.25rem; font-size: 1.375rem; text-align: left;">Data</th>
+                    <th style="padding: 1rem 1.25rem; font-size: 1.375rem; text-align: left;">Responsável/Delegacia</th>
+                    <th style="padding: 1rem 1.25rem; font-size: 1.375rem; text-align: left;">Local</th>
+                    <th style="padding: 1rem 1.25rem; font-size: 1.375rem; text-align: left;">Status</th>
                     <!-- <th>PDF</th> -->
                 </tr>
             
                 {% for info_operacao in object_list %}
                 <tr class="tr-lista-operacao" style="cursor: default;">
-                    <td style="font-size: 1.375rem; text-align: left; padding: 0 1.25rem;">{{ info_operacao.nome_operacao|default:'' }}</td>
+                    <td style="font-size: 1.375rem; text-align: left; padding: 1rem 1.25rem;">{{ info_operacao.nome_operacao|default:'' }}</td>
                     
-                    <td ><span style="padding: 4px 8px;margin-right: 8px; font-size:0.75rem; white-space: nowrap; min-width: fit-content; min-height:  fit-content; background: #292929; cursor: pointer; border-radius: 8px;" 
-                        onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}');">
+                    <td>
+                        <span style="padding: 4px 8px;margin-right: 8px; font-size:0.75rem; white-space: nowrap; min-width: fit-content; min-height:  fit-content; background: #292929; cursor: pointer; border-radius: 8px;" 
+                        onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}?type=read');">
                         Ver detalhes
                         </span>
                     </td>
                     <td><span style="padding: 4px 8px; font-size:0.75rem; white-space: nowrap; min-width: fit-content; min-height:  fit-content; background: #292929; cursor: pointer; border-radius: 8px;" 
                         onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}');">Editar</span></td>
-                    <td style="font-size: 1.375rem; text-align: left; padding: 0 1.25rem;">{{ info_operacao.data|date:"d/m/Y" }}</td>
-                    <td style="font-size: 1.375rem; text-align: left; padding: 0 1.25rem;">
+                    <td style="font-size: 1.375rem; text-align: left; padding: 1rem 1.25rem;">{{ info_operacao.data|date:"d/m/Y" }}</td>
+                    <td style="font-size: 1.375rem; text-align: left; padding: 1rem 1.25rem;">
                         {{ info_operacao.nome_delegado_operacao|default:'' }}
                         {% if info_operacao.unidade_responsavel %}
                         - {{ info_operacao.unidade_responsavel|default:'' }}
                         {% endif %}
                     </td>
-                    <td style="font-size: 1.375rem; text-align: left; padding: 0 1.25rem;">{{ info_operacao.localidade_operacao.all.0.municipio }} - {{ info_operacao.localidade_operacao.all.0.bairro }}</td>
-                    <td style="font-size: 1.375rem; text-align: left; padding: 0 1.25rem;"> {% if info_operacao.completo %}
+                    <td style="font-size: 1.375rem; text-align: left; padding: 1rem 1.25rem;">{{ info_operacao.localidade_operacao.all.0.municipio }} - {{ info_operacao.localidade_operacao.all.0.bairro }}</td>
+                    <td style="font-size: 1.375rem; text-align: left; padding: 1rem 1.25rem;"> {% if info_operacao.completo %}
                         <span style="color: #88DF41">Completo</span>
                         {% else %}
                         <span style="color: #DF6141">Incompleto</span>
@@ -59,13 +78,16 @@
                 {% endfor %}
                 
             </table>
+    
         </div>
-       
+        
 
 {% if page_obj.has_other_pages %}
+    {% with search_query=query_params.q %}
+
         <ul class="pagination" style="display:flex; flex-direction:row; gap:8px; align-items: center; justify-content: center;">
         {% if page_obj.has_previous %}
-        <li ><a style="border-radius: 8px;" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        <li ><a style="border-radius: 8px;" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">&laquo;</a></li>
         {% else %}
         <li class="disabled"><strong>&laquo;</strong></li>
         {% endif %}
@@ -73,15 +95,16 @@
         {% if page_obj.number == i %}
         <li class="active"><strong>{{ i }} <strong class="sr-only"></strong></strong></li>
         {% else %}
-        <li><a style="border-radius: 8px;" href="?page={{ i }}">{{ i }}</a></li>
+        <li><a style="border-radius: 8px;" href="?page={{ i }}&q={{ search_query }}">{{ i }}</a></li>
         {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
-        <li><a style="border-radius: 8px;" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        <li><a style="border-radius: 8px;" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}">&raquo;</a></li>
         {% else %}
        <li class="disabled"><strong>&raquo;</strong></li>
        {% endif %}
-      </ul>h
+      </ul>
+    {% endwith %}
 {% endif %}
 </div>
 

@@ -316,22 +316,19 @@ class OperationListView(LoginRequiredMixin, ListView):
     template_name = "operations/operations_list_template.html"
     paginate_by = settings.OPERATIONS_PER_PAGE
 
-    # def get_queryset(self):
-    #     return Operacao.objects.order_by("-criado_em")
     model = Operacao
 
     def get_queryset(self):
         query = self.request.GET.get("q", "")
         queryset = Operacao.objects.order_by("-criado_em")
         if query:
-            queryset = queryset.filter(nome_operacao__icontains=query)  # Ajuste o campo conforme o modelo
+            queryset = queryset.filter(nome_operacao__icontains=query)  
         return queryset
 
-    def render_to_response(self, context, **response_kwargs):
-        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':  # Verifica se é uma requisição AJAX
-            resultados = [{"id": op.id, "nome_operacao": op.nome_operacao} for op in self.get_queryset()]
-            return JsonResponse(resultados, safe=False)
-        return super().render_to_response(context, **response_kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query_params"] = self.request.GET  
+        return context
 
 
 class InitialPageListView(LoginRequiredMixin, TemplateView):
