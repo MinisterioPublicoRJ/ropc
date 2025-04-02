@@ -180,6 +180,7 @@ def generate_pdf_file(operacaoUUID):
     ]
     
     p.setFillColor(HexColor("#505050"))
+    
     for key, value in attributes.items():
         if key in ignored_keys:
             continue
@@ -197,6 +198,7 @@ def generate_pdf_file(operacaoUUID):
             p.showPage()
             pg_number += 1
             available_height = include_header(p, widthTotal)
+            p.setFillColor(HexColor("#505050"))
         
         if key in special_keys:
             p.setFont("Helvetica-Bold", 12)
@@ -209,6 +211,7 @@ def generate_pdf_file(operacaoUUID):
                     pg_number += 1
                     available_height = include_header(p, widthTotal)
                     p.setFont("Helvetica-Bold", 12)
+                    p.setFillColor(HexColor("#505050"))
                 
                 p.drawString(margin_left, available_height, line)
                 available_height -= line_height
@@ -223,6 +226,7 @@ def generate_pdf_file(operacaoUUID):
                     pg_number += 1
                     available_height = include_header(p, widthTotal)
                     p.setFont("Helvetica", 12)
+                    p.setFillColor(HexColor("#505050"))
                 
                 p.drawString(margin_left, available_height, line)
                 available_height -= line_height
@@ -247,6 +251,7 @@ def generate_pdf_file(operacaoUUID):
                         pg_number += 1
                         available_height = include_header(p, widthTotal)
                         p.setFont("Helvetica", 12)
+                        p.setFillColor(HexColor("#505050"))
                     p.drawString(margin_left, available_height, line)
             
             available_height -= line_height
