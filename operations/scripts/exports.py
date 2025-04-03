@@ -13,6 +13,23 @@ from reportlab.pdfgen import canvas
 from operations.models import Operacao
 
 
+from openpyxl import Workbook
+from io import BytesIO
+
+def gera_planilha_excel(rows, header, sheet_title):
+    workbook = Workbook()
+    sheet = workbook[workbook.sheetnames[0]]
+    sheet.title = sheet_title
+    # Escreve cabeçalho
+    sheet.append(header)
+    for row in rows:
+        sheet.append(row)
+
+    buffer_ = BytesIO()
+    workbook.save(buffer_)
+    buffer_.seek(0)
+    return buffer_
+
 
 def date_or_time_formatter(data):
     if isinstance(data, datetime): 
@@ -22,7 +39,6 @@ def date_or_time_formatter(data):
     elif isinstance(data, time): 
         return data.strftime("%H:%M")
     return data
-
 
 
 def include_header(p, width):
@@ -45,7 +61,6 @@ def include_header(p, width):
     return totaltext_y - protected_area
 
 
-
 def include_footer(p, width, n):
     pg_number = f"Página {n}" 
     
@@ -61,9 +76,8 @@ def include_footer(p, width, n):
     )
 
 
-
 def load_query(where_condition=None):
-    query_path = os.path.join(settings.BASE_DIR, 'query', 'query.sql')
+    query_path = os.path.join(settings.BASE_DIR, 'query', 'operacoes.sql')
     
     with open(query_path, 'r', encoding='utf-8') as file:
         query_sql = file.read()
@@ -71,7 +85,6 @@ def load_query(where_condition=None):
     if where_condition:
         return query_sql.replace('/* WHERE_CONDITION */', f'WHERE {where_condition}')
     return query_sql.replace('/* WHERE_CONDITION */', '')
-
 
 
 def break_text(text, max_width, font_size=12, is_bold=False):
@@ -114,7 +127,6 @@ def break_text(text, max_width, font_size=12, is_bold=False):
         lines.append(' '.join(current_line))
     
     return lines
-
 
 
 def generate_pdf_file(operacaoUUID):
