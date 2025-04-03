@@ -17,23 +17,48 @@
         font-size: 1rem; 
         line-height: 100%;
     }
+    #meuBotao {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .loading::after {
+            content: "⏳ Carregando...";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
 </style>
 <div class="main-initial-page">
         <div class="table-list"  style="margin:2rem;">
-            
+        
                 <h2 sty>Últimas operações cadastradas</h2>
                 <p style="margin-left: 30px">Aqui é onde se encontram as informações referentes às operações cadastradas e onde você pode editá-las.</p>
             
-            <div style="padding: 0 1.25rem; display: flex; flex-direction: row; justify-content: space-between; align-items: center; background:#121212; height: 64px;">
-                <form style="display: flex; justify-content: center; width: 500px; height: max-content; margin: auto 0; gap: .5rem;" method="get" action="">
-                    <input  style="text-align: left;  font-size: 1rem; color: #FEBC2E; width: 37.5rem; border-radius: 8px;" type="text" name="q" placeholder="Pesquisar na lista" value="{{ request.GET.q }}">
-                    <button  style="width: 9.375rem; border-radius: 8px; font-size: 1rem; letter-spacing: 1px;" type="submit">Buscar</button>
-                </form>
-                <a style="color: #FEBC2E; width: 224px; height: 40px; border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;">
-                    Download de operações
-                </a>
-        
-        </div>
+                <div style="padding: 0 1.25rem; display: flex; 
+                    flex-direction: row; justify-content: space-between; align-items: center; background:#121212;">
+                    <form style="display: flex;
+                    justify-content: center; width: 500px; height: max-content; margin: auto 0; gap: .5rem;" method="get" action="">
+                        <input  style="text-align: left;  font-size: 1rem; color: #FEBC2E; width: 37.5rem; border-radius: 8px;" type="text" name="q" placeholder="Pesquisar na lista" value="{{ request.GET.q }}">
+                        <button  style="width: 9.375rem; border-radius: 8px; font-size: 1rem; letter-spacing: 1px;" type="submit">Buscar</button>
+                    </form>
+                    <a id="meuBotao" style="color: #FEBC2E; width: 224px; height: 1.5rem; border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;"
+                        href="{% url 'operations:generate_excel' %}" onclick="carregar()">
+                        Download de operações
+                    </a>
+                </div>
+       
          
             <table style="width: 100%; margin: 0 auto">
                 <tr>
@@ -53,7 +78,7 @@
                     
                     <td>
                         <span style="padding: 4px 8px;margin-right: 8px; font-size:0.75rem; white-space: nowrap; min-width: fit-content; min-height:  fit-content; background: #292929; cursor: pointer; border-radius: 8px;" 
-                        onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}?type=read');">
+                        onclick="openOperacao('{% url 'operations:operation-detail' info_operacao.identificador %}');">
                         Ver detalhes
                         </span>
                     </td>
@@ -73,7 +98,7 @@
                         <span style="color: #DF6141">Incompleto</span>
                         {% endif %}
                     </td>
-                    <!-- <td><a href="{% url 'operations:generate_pdf' info_operacao.identificador %}">Exportar</a></td> -->
+          
                 </tr>
                 {% endfor %}
                 
@@ -115,6 +140,18 @@
 function openOperacao(url){
     let win = window.open(url, '_blank');
     win.focus();
+}
+
+function carregar() {
+    let botao = document.getElementById("meuBotao");
+    botao.classList.add("loading");
+    botao.textContent = ""; 
+
+    // Delay para impedir multiplos cliques
+    setTimeout(() => {
+        botao.classList.remove("loading");
+        botao.textContent = "Download de operações"; 
+    }, 2000); 
 }
 </script>
 
