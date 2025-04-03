@@ -5,8 +5,9 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import connection
 from django.http import FileResponse, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, TemplateView
+from django.views import View
 from django.urls import reverse
 from io import BytesIO
 from uuid import UUID
@@ -23,7 +24,10 @@ from operations.serializers import (
     InfoResultadosTwoSerializer,
     InfoResultadosThreeSerializer
 )
-from .scripts.exports import generate_pdf_file, load_query
+from .scripts.exports import gera_planilha_excel, generate_pdf_file
+from collections import defaultdict
+from datetime import datetime 
+
 
 URL_SECTION_MAPPER = {
     1: "operations:form-update",
@@ -323,6 +327,7 @@ class OperationListView(LoginRequiredMixin, ListView):
         queryset = Operacao.objects.order_by("-criado_em")
         if query:
             queryset = queryset.filter(nome_operacao__icontains=query)  
+     
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -330,6 +335,80 @@ class OperationListView(LoginRequiredMixin, ListView):
         context["query_params"] = self.request.GET  
         return context
 
+class GenereteReportView(LoginRequiredMixin, View):
+    def get_data(self, columns, result):
+        return [tuple([str(getattr(row, col)) for col in columns]) for row in result]
+
+
+    def get(self, request):
+        result = Operacao.objects.get_operations_report()
+        
+        columns = result.query.get_columns()
+        print(columns)               
+        data = self.get_data(columns, result)
+        excel_buffer = gera_planilha_excel(data, columns, "Operações")
+
+        date_now =datetime.now().strftime("%d_%m_%Y %H:%M:%S")
+        return FileResponse(excel_buffer, filename=f"Operações ROPC até {date_now}.xlsx", as_attachment=True)
+
+
+class OperationDetailView(LoginRequiredMixin, View):
+    template_name = "operations/operation_detail.html"
+    lookup_url_kwarg = "form_uuid"
+
+    def get_data(self, columns, result):
+        return [(col,str(getattr(result[0], col))) for col in columns]
+
+    def get(self, request, *args, **kwargs):
+        form_uuid = self.kwargs.get(self.lookup_url_kwarg)  # Obtém o UUID da URL
+        
+        # Obtém o conjunto de dados a partir do método customizado
+        result = Operacao.objects.get_operations_report(form_uuid)
+  
+        columns = result.query.get_columns()
+        data = self.get_data(columns, result)
+        nome_operacao = data[4][1]
+        identificador = data[0][1]
+   
+        columns_with_big_text = [
+                                "Justificativa da excepcionalidade da operação", 
+                                "Objetivo estratégico da operação",
+                                "Análise de riscos e medidas de controle",
+                                "Endereço de referência", 
+                                "Observações gerais"
+                                ]
+        
+        columns_end_section =   [
+                                "Número do procedimento (TJRJ)", 
+                                "Localidade", 
+                                "Justificativa da excepcionalidade da operação", 
+                                "Unidades Apoiadoras",
+                                "Análise de riscos e medidas de controle", 
+                                "Número de veículos recuperados?"
+                                ]
+        
+        ignored_keys = [
+                        "identificador"
+                        "id",
+                        "Criado em",
+                        "Seção Atual",
+                        "Dado registrado fora do sistema",
+                        "Cadastro Completo",
+                        "Nome da operação"
+                        ]
+                        
+        context = {
+            "detail": data, 
+            "datetime_now": datetime.now(),
+            "columns_with_big_text": columns_with_big_text,
+            "columns_end_section": columns_end_section,
+            "ignored_keys": ignored_keys,
+            "nome_operacao": nome_operacao,
+            "identificador": identificador
+        }
+
+       
+        return render(request, self.template_name, context)
 
 class InitialPageListView(LoginRequiredMixin, TemplateView):
     template_name = "operations/initial_page_template.html"
@@ -354,39 +433,3 @@ def generate_pdf(request, identificador):
 
 
 
-
-def generate_excel(request):
-    try:
-        ignored_columns = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo"]
-        
-        query_sql = load_query() 
-        
-        with connection.cursor() as cursor:
-            cursor.execute(query_sql)
-            columns = [col[0] for col in cursor.description]
-            data = cursor.fetchall()
-        
-        df = pd.DataFrame(data, columns=columns)
-        
-        df = df.drop(columns=ignored_columns, errors='ignore')
-        
-        for col in df.columns:
-            if pd.api.types.is_datetime64_any_dtype(df[col]):
-                df[col] = df[col].dt.tz_localize(None)
-        
-        output = BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='Dados')
-        
-        output.seek(0)
-        response = HttpResponse(
-            output.getvalue(),
-            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-        response['Content-Disposition'] = 'attachment; filename="exportacao_dados.xlsx"'
-        return response
-    
-    except FileNotFoundError:
-        return HttpResponse("Arquivo query.sql não encontrado", status=404)
-    except Exception as e:
-        return HttpResponse(f"Erro ao exportar dados: {str(e)}", status=500)  
