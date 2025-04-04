@@ -415,6 +415,8 @@ class InitialPageListView(LoginRequiredMixin, TemplateView):
 
 
 def generate_pdf(request, identificador):
+    #result = Operacao.objects.get_operations_report(form_uuid) TODO fazer query aqui
+
     try:
         identificador = UUID(str(identificador))
 

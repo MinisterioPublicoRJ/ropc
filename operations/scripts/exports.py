@@ -97,7 +97,7 @@ def break_text(text, max_width, font_size=12, is_bold=False):
     for word in text.split():
         word_width = stringWidth(word + ' ', font, font_size)
         
-        if stringWidth(word, font, font_size) > max_width:
+        if stringWidth(word, font, font_size) > max_width: #TODO dar uma olhada para refatorar (talvez transformar em mais de uma função)
             temp_word = ''
             for char in word:
                 char_width = stringWidth(char, font, font_size)
@@ -129,7 +129,7 @@ def break_text(text, max_width, font_size=12, is_bold=False):
     return lines
 
 
-def generate_pdf_file(operacaoUUID):
+def generate_pdf_file(operacaoUUID): #TODO dar uma olhada para refatorar (talvez transformar em mais de uma função)
     global widthTotal, heightTotal
     widthTotal, heightTotal = 595, 841
     
