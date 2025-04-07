@@ -1,20 +1,19 @@
 import os
 from uuid import UUID
-
 from django.conf import settings
-from django.template import Template, Context
 from datetime import date, datetime, time
 from io import BytesIO
-from pathlib import Path
+from openpyxl import Workbook
 from reportlab.lib.colors import HexColor
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
-
 from operations.models import Operacao
 
-
-from openpyxl import Workbook
-from io import BytesIO
+# Constantes de layout
+FOOTER_HEIGHT = 35
+LINE_HEIGHT = 12
+SECTION_SPACING = 12
+HEADER_HEIGHT = 84
 
 def gera_planilha_excel(rows, header, sheet_title):
     workbook = Workbook()
@@ -32,250 +31,218 @@ def gera_planilha_excel(rows, header, sheet_title):
 
 
 def date_or_time_formatter(data):
-    if isinstance(data, datetime): 
-        return data.strftime("%d/%m/%Y %H:%M")  
-    elif isinstance(data, date):  
-        return data.strftime("%d/%m/%Y") 
-    elif isinstance(data, time): 
+    if isinstance(data, datetime):
+        return data.strftime("%d/%m/%Y %H:%M")
+    elif isinstance(data, date):
+        return data.strftime("%d/%m/%Y")
+    elif isinstance(data, time):
         return data.strftime("%H:%M")
     return data
 
 
-def include_header(p, width):
-    img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
-    p.drawImage(img_header, 0, heightTotal - 84, width=width, height=84)
-    
-    p.setFont("Helvetica", 12)
-    p.setFillColor(HexColor("#353535"))
-    total_text = "Emitido em: " + date_or_time_formatter(datetime.now())
-     
-    totaltext_y = heightTotal - 84 - 11 - 12
-    p.drawString(
-        width - stringWidth(total_text, "Helvetica", 12) - 30,
-        totaltext_y, 
-        total_text
-    )
-    
-    protected_area = 32 
-
-    return totaltext_y - protected_area
-
-
-def include_footer(p, width, n):
-    pg_number = f"Página {n}" 
-    
-    p.setStrokeColor(HexColor("#F7CF32"))
-    p.setLineWidth(10)
-    p.line(0, 0, width, 0)  
-    
-    p.setFont("Helvetica", 10)
-    p.drawString(
-        width - stringWidth(pg_number, "Helvetica", 10) - 30, 
-        15, 
-        pg_number
-    )
-
-
-def load_query(where_condition=None):
-    query_path = os.path.join(settings.BASE_DIR, 'query', 'operacoes.sql')
-    
-    with open(query_path, 'r', encoding='utf-8') as file:
-        query_sql = file.read()
-    
-    if where_condition:
-        return query_sql.replace('/* WHERE_CONDITION */', f'WHERE {where_condition}')
-    return query_sql.replace('/* WHERE_CONDITION */', '')
+def format_value_for_display(value):
+    if value is None or str(value).strip() == "":
+        return "não preenchido"
+    if isinstance(value, bool):
+        return "sim" if value else "não"
+    if value == "Pr":
+        return "programada"
+    if value == "Em":
+        return "emergencial"
+    if isinstance(value, (date, datetime)):
+        return date_or_time_formatter(value)
+    return str(value)
 
 
 def break_text(text, max_width, font_size=12, is_bold=False):
-    text = str(text) if not isinstance(text, str) else text
+    text = str(text)
     font = "Helvetica-Bold" if is_bold else "Helvetica"
-    lines = []
-    current_line = []
-    current_width = 0
-    
-    for word in text.split():
+    words = text.split()
+    lines, current_line, current_width = [], [], 0
+
+    for word in words:
         word_width = stringWidth(word + ' ', font, font_size)
-        
-        if stringWidth(word, font, font_size) > max_width: #TODO dar uma olhada para refatorar (talvez transformar em mais de uma função)
-            temp_word = ''
+
+        if stringWidth(word, font, font_size) > max_width:
             for char in word:
                 char_width = stringWidth(char, font, font_size)
                 if current_width + char_width <= max_width:
-                    temp_word += char
+                    current_line.append(char)
                     current_width += char_width
                 else:
-                    if temp_word:
-                        current_line.append(temp_word)
-                        lines.append(' '.join(current_line))
-                    current_line = []
-                    current_width = 0
-                    temp_word = char
-                    current_width += char_width
-            if temp_word:
-                current_line.append(temp_word)
+                    lines.append(''.join(current_line))
+                    current_line, current_width = [char], char_width
+            if current_line:
+                lines.append(''.join(current_line))
+                current_line, current_width = [], 0
+        elif current_width + word_width <= max_width:
+            current_line.append(word)
+            current_width += word_width
         else:
-            if current_width + word_width <= max_width:
-                current_line.append(word)
-                current_width += word_width
-            else:
-                lines.append(' '.join(current_line))
-                current_line = [word]
-                current_width = word_width
-    
+            lines.append(' '.join(current_line))
+            current_line, current_width = [word], word_width
+
     if current_line:
         lines.append(' '.join(current_line))
-    
+
     return lines
 
 
-def generate_pdf_file(operacaoUUID): #TODO dar uma olhada para refatorar (talvez transformar em mais de uma função)
-    global widthTotal, heightTotal
-    widthTotal, heightTotal = 595, 841
-    
-    margin_left = (widthTotal - 535) / 2 
-    content_width = 535 
-    
-    try:
-        operacaoUUID = UUID(str(operacaoUUID))  
-        where_condition = "op.identificador = %s"
-        query_sql = load_query(where_condition)
-        operacoes = Operacao.objects.raw(query_sql, [str(operacaoUUID)])        
-        attributes = operacoes[0].__dict__.copy()
-        operation_name = attributes.get("Nome da operação", "Nome não disponível")
-        attributes.pop("_state", None)
-        
-    except (Operacao.DoesNotExist, ValueError) as e:
-        print(f"Erro ao buscar operação: {e}")  
-        return None  
+def set_style(p, font="Helvetica", size=12, color="#505050"):
+    p.setFont(font, size)
+    p.setFillColor(HexColor(color))
 
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=(widthTotal, heightTotal))
-    
-    pg_number = 1
-    available_height = include_header(p, widthTotal)
-    
-    footer_height = 35
-    
-    p.setFont("Helvetica-Bold", 14)
-    p.setFillColor(HexColor("#505050"))
+
+def include_header(p, width):
+    img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
+    p.drawImage(img_header, 0, height_total - HEADER_HEIGHT, width=width, height=HEADER_HEIGHT)
+
+    set_style(p, size=12, color="#353535")
+    emitido_em = f"Emitido em: {date_or_time_formatter(datetime.now())}"
+    y = height_total - HEADER_HEIGHT - 11 - 12
+    p.drawString(width - stringWidth(emitido_em, "Helvetica", 12) - 30, y, emitido_em)
+
+    return y - 32
+
+
+def include_footer(p, width, page_number):
+    p.setStrokeColor(HexColor("#F7CF32"))
+    p.setLineWidth(10)
+    p.line(0, 0, width, 0)
+    set_style(p, size=10)
+    pg_text = f"Página {page_number}"
+    p.drawString(width - stringWidth(pg_text, "Helvetica", 10) - 30, 15, pg_text)
+
+
+def ensure_space(p, required_height, footer_height, page_number, font="Helvetica", font_size=12, color="#505050"):
+    global available_height
+    if available_height < footer_height + required_height:
+        include_footer(p, width_total, page_number)
+        p.showPage()
+        page_number += 1
+        available_height = include_header(p, width_total)
+        set_style(p, font, font_size, color)
+    return page_number
+
+
+def load_query(where_condition=None):
+    query_path = os.path.join(settings.BASE_DIR, 'query', 'query.sql')
+    with open(query_path, 'r', encoding='utf-8') as file:
+        query_sql = file.read()
+    return query_sql.replace('/* WHERE_CONDITION */', f'WHERE {where_condition}' if where_condition else '')
+
+
+def draw_first_page_content(p, margin_left, operation_name, content_width, footer_height, page_number):
+    global available_height
+
+    set_style(p, "Helvetica-Bold", 14)
     p.drawString(margin_left, available_height, "Visualizar operação")
-    available_height -= 26 
+    available_height -= 26
 
-    p.setFont("Helvetica-Bold", 10)
-    p.setFillColor(HexColor("#9F9F9F"))
-    name_lines = break_text(operation_name, content_width, font_size=10, is_bold=True)
-    for line in name_lines:
+    set_style(p, "Helvetica-Bold", 10, "#9F9F9F")
+    for line in break_text(operation_name, content_width, font_size=10, is_bold=True):
         if available_height < footer_height + 10:
-            include_footer(p, widthTotal, pg_number)
+            include_footer(p, width_total, page_number)
             p.showPage()
-            pg_number += 1
-            available_height = include_header(p, widthTotal)
-            p.setFont("Helvetica-Bold", 10)
-        
+            page_number += 1
+            available_height = include_header(p, width_total)
+            set_style(p, "Helvetica-Bold", 10, "#9F9F9F")
         p.drawString(margin_left, available_height, line)
         available_height -= 10
-    
-    line_height = 12
+
     p.setStrokeColor(HexColor("#F7CF32"))
     p.setLineWidth(1)
     p.line(margin_left, available_height - 5, margin_left + content_width, available_height - 5)
     available_height -= 30
-    
-    space_betw_items = 12
-    
-    ignored_keys = ["id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo", "Nome da operação"]
-    special_keys = [
+
+    return page_number
+
+
+def draw_operation_details(attributes, page_number, footer_height, p, content_width, margin_left):
+    global available_height
+
+    ignored_keys = {"id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo", "Nome da operação"}
+    special_keys = {
         "Justificativa da excepcionalidade da operação",
-        "Objetivo estratégico da operação", 
+        "Objetivo estratégico da operação",
         "Análise de riscos e medidas de controle"
-    ]
-    
-    p.setFillColor(HexColor("#505050"))
-    
+    }
+
     for key, value in attributes.items():
         if key in ignored_keys:
             continue
-        
-        shown_value = ("não preenchido" if value is None or value == "" or value == " " else
-                      "sim" if isinstance(value, bool) and value else
-                      "não" if isinstance(value, bool) else
-                      "programada" if value == "Pr" else
-                      "emergencial" if value == "Em" else
-                      str(date_or_time_formatter(value)) if isinstance(value, (date, datetime)) else
-                      str(value))
-        
-        if available_height < footer_height + line_height:
-            include_footer(p, widthTotal, pg_number)
-            p.showPage()
-            pg_number += 1
-            available_height = include_header(p, widthTotal)
-            p.setFillColor(HexColor("#505050"))
-        
+
+        shown_value = format_value_for_display(value)
+
         if key in special_keys:
-            p.setFont("Helvetica-Bold", 12)
-            key_lines = break_text(key + ":", content_width, is_bold=True)
-            
-            for line in key_lines:
-                if available_height < footer_height + line_height:
-                    include_footer(p, widthTotal, pg_number)
-                    p.showPage()
-                    pg_number += 1
-                    available_height = include_header(p, widthTotal)
-                    p.setFont("Helvetica-Bold", 12)
-                    p.setFillColor(HexColor("#505050"))
-                
+            set_style(p, "Helvetica-Bold", 12)
+            for line in break_text(f"{key}:", content_width, is_bold=True):
+                page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number)
                 p.drawString(margin_left, available_height, line)
-                available_height -= line_height
-            
-            p.setFont("Helvetica", 12)
-            value_lines = break_text(shown_value, content_width)
-            
-            for line in value_lines:
-                if available_height < footer_height + line_height:
-                    include_footer(p, widthTotal, pg_number)
-                    p.showPage()
-                    pg_number += 1
-                    available_height = include_header(p, widthTotal)
-                    p.setFont("Helvetica", 12)
-                    p.setFillColor(HexColor("#505050"))
-                
+                available_height -= LINE_HEIGHT
+
+            set_style(p, "Helvetica", 12)
+            for line in break_text(shown_value, content_width):
+                page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number)
                 p.drawString(margin_left, available_height, line)
-                available_height -= line_height
+                available_height -= LINE_HEIGHT
         else:
-            p.setFont("Helvetica-Bold", 12)
-            key_part = f"{key}: "
-            key_width = stringWidth(key_part, "Helvetica-Bold", 12)
-            
-            p.drawString(margin_left, available_height, key_part)
-            
-            p.setFont("Helvetica", 12)
-            value_lines = break_text(shown_value, content_width - key_width, font_size=12)
-            
+            key_text = f"{key}: "
+            key_width = stringWidth(key_text, "Helvetica-Bold", 12)
+
+            page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number, font="Helvetica-Bold", font_size=12)
+            set_style(p, "Helvetica-Bold", 12)
+            p.drawString(margin_left, available_height, key_text)
+
+            value_lines = break_text(shown_value, content_width - key_width)
             if value_lines:
+                set_style(p, "Helvetica", 12)
+                page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number, "Helvetica", 12)
                 p.drawString(margin_left + key_width, available_height, value_lines[0])
-                
+
                 for line in value_lines[1:]:
-                    available_height -= line_height
-                    if available_height < footer_height + line_height:
-                        include_footer(p, widthTotal, pg_number)
-                        p.showPage()
-                        pg_number += 1
-                        available_height = include_header(p, widthTotal)
-                        p.setFont("Helvetica", 12)
-                        p.setFillColor(HexColor("#505050"))
+                    available_height -= LINE_HEIGHT
+                    page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number)
                     p.drawString(margin_left, available_height, line)
-            
-            available_height -= line_height
-        
-        available_height -= space_betw_items
-        
+
+            available_height -= LINE_HEIGHT
+
+        available_height -= SECTION_SPACING
+
         if key == "Cartuchos Apreendidos":
             break
-    
-    include_footer(p, widthTotal, pg_number)
+
+    return page_number
+
+
+def generate_pdf_file(operacao_uuid):
+    global width_total, height_total, available_height
+    width_total, height_total = 595, 841
+    margin_left, content_width = 30, 535
+
+    try:
+        operacao_uuid = UUID(str(operacao_uuid))
+        query_sql = load_query("op.identificador = %s")
+        operacoes = Operacao.objects.raw(query_sql, [str(operacao_uuid)])
+        attributes = operacoes[0].__dict__.copy()
+        operation_name = attributes.get("Nome da operação", "Nome não disponível")
+        attributes.pop("_state", None)
+    except (Operacao.DoesNotExist, ValueError) as e:
+        print(f"Erro ao buscar operação: {e}")
+        return None
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=(width_total, height_total))
+
+    page_number = 1
+    available_height = include_header(p, width_total)
+
+    page_number = draw_first_page_content(p, margin_left, operation_name, content_width, FOOTER_HEIGHT, page_number)
+
+    page_number = draw_operation_details(attributes, page_number, FOOTER_HEIGHT, p, content_width, margin_left)
+
+    include_footer(p, width_total, page_number)
     p.save()
     buffer.seek(0)
     return buffer
-
 
