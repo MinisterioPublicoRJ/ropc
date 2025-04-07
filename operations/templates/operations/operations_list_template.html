@@ -49,9 +49,16 @@
             <div style="padding: 0 1.25rem; display: flex; 
                 flex-direction: row; justify-content: space-between; align-items: center; background:#121212;">
                 <form style="display: flex;
-                justify-content: center; height: max-content; margin: auto 0; gap: .5rem;" method="get" action="">
+                justify-content: center; align-items: center; margin: auto 0; gap:1rem;" method="get" action="">
+                    
                     <input  style="text-align: left;  font-size: 1rem;background: #333333; color: #FEBC2E; width: 25rem; border-radius: 8px; border:none;" type="text" name="q" placeholder="Pesquisar na lista" value="{{ request.GET.q }}">
-                    <button  style="color: #FEBC2E; padding: .25rem 1rem; width: 5.125rem; border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;border: none;" type="submit">Buscar</button>
+                    <button  class="fas fa-search" style="color: #FEBC2E; background: transparent; display: flex; align-items: center; cursor:pointer;border: none; margin-left: -3rem; margin-bottom: .5rem;width: fit-content;" type="submit"></button>
+
+                    <a style="color: #FEBC2E; width: 5rem; height:  2.7rem;border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;"
+                    href="{% url 'operations:operations-list' %}" >
+                    Limpar
+                    </a>
+          
                 </form>
                 <a id="meuBotao" style="color: #FEBC2E; width: 224px; height: 1.5rem; border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;"
                     href="{% url 'operations:generate_excel' %}" onclick="carregar()">
@@ -106,13 +113,13 @@
                 </table>
      
     
-            </div>
+          
         
 
 {% if page_obj.has_other_pages %}
     {% with search_query=query_params.q %}
 
-        <ul class="pagination" style="display:flex; flex-direction:row; gap:8px; align-items: center; justify-content: center;">
+    <ul class="pagination" style="display:flex; flex-direction:row; gap:8px; align-items: center; justify-content: center; margin-top: 2rem;">
         {% if page_obj.has_previous %}
         <li ><a style="border-radius: 8px;" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">&laquo;</a></li>
         {% else %}
@@ -133,6 +140,7 @@
       </ul>
     {% endwith %}
 {% endif %}
+</div>
 </div>
 
 {% endblock content %}
