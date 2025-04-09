@@ -23,7 +23,7 @@ from operations.serializers import (
     InfoResultadosTwoSerializer,
     InfoResultadosThreeSerializer
 )
-from .scripts.exports import gera_planilha_excel, generate_pdf_file
+from .scripts.exports import ExcelReport, PDFReport, DetailReport
 from collections import defaultdict
 from datetime import datetime 
 
@@ -334,103 +334,71 @@ class OperationListView(LoginRequiredMixin, ListView):
         context["query_params"] = self.request.GET  
         return context
 
-class GenereteReportView(LoginRequiredMixin, View):
-    def get_data(self, columns, result):
-        return [tuple([str(getattr(row, col)) for col in columns]) for row in result]
-
-
-    def get(self, request):
-        result = Operacao.objects.get_operations_report()
-        
-        columns = result.query.get_columns()
-        print(columns)               
-        data = self.get_data(columns, result)
-        excel_buffer = gera_planilha_excel(data, columns, "Operações")
-
-        date_now =datetime.now().strftime("%d_%m_%Y %H:%M:%S")
-        return FileResponse(excel_buffer, filename=f"Operações ROPC até {date_now}.xlsx", as_attachment=True)
-
 
 class OperationDetailView(LoginRequiredMixin, View):
     template_name = "operations/operation_detail.html"
-    lookup_url_kwarg = "form_uuid"
 
-    def get_data(self, columns, result):
-        return [(col,str(getattr(result[0], col))) for col in columns]
-
-    def get(self, request, *args, **kwargs):
-        form_uuid = self.kwargs.get(self.lookup_url_kwarg)  # Obtém o UUID da URL
-        
-        # Obtém o conjunto de dados a partir do método customizado
-        result = Operacao.objects.get_operations_report(form_uuid)
-  
+    def get(self, request, uuid):
+        result = Operacao.objects.get_operations_report(uuid)
         columns = result.query.get_columns()
-        data = self.get_data(columns, result)
-        nome_operacao = data[4][1]
-        identificador = data[0][1]
-   
-        columns_with_big_text = [
-                                "Justificativa da excepcionalidade da operação", 
-                                "Objetivo estratégico da operação",
-                                "Análise de riscos e medidas de controle",
-                                "Endereço de referência", 
-                                "Observações gerais"
-                                ]
-        
-        columns_end_section =   [
-                                "Número do procedimento (TJRJ)", 
-                                "Localidade", 
-                                "Justificativa da excepcionalidade da operação", 
-                                "Unidades Apoiadoras",
-                                "Análise de riscos e medidas de controle", 
-                                "Número de veículos recuperados?"
-                                ]
-        
-        ignored_keys = [
-                        "identificador"
-                        "id",
-                        "Criado em",
-                        "Seção Atual",
-                        "Dado registrado fora do sistema",
-                        "Cadastro Completo",
-                        "Nome da operação"
-                        ]
-                        
+
+        detail = DetailReport()
+
+        data = detail.get_data(columns, result)
+        nome_operacao = detail.get_nome_operacao(data)
+        identificador = detail.get_identificador(data)
+
         context = {
             "detail": data, 
             "datetime_now": datetime.now(),
-            "columns_with_big_text": columns_with_big_text,
-            "columns_end_section": columns_end_section,
-            "ignored_keys": ignored_keys,
+            "columns_with_big_text": detail.get_columns_big_text(),
+            "columns_end_section": detail.get_columns_end_of_section(),
+            "ignored_keys": detail.list_ignored_keys(),
             "nome_operacao": nome_operacao,
             "identificador": identificador
         }
 
-       
         return render(request, self.template_name, context)
+
+
+class GenereteReportExcelView(LoginRequiredMixin, View):
+    def get(self, request):
+        result = Operacao.objects.get_operations_report()
+        columns = result.query.get_columns()[2:] #Ignora id e identificador TODO  melhorar aqui
+        
+        excel_obj = ExcelReport()
+        excel_data = excel_obj.get_data(columns, result)
+        excel_buffer = excel_obj.generate_excel_file(excel_data, columns, "Operações") 
+        
+        return FileResponse(excel_buffer, 
+                            filename=f"Operações ROPC até {datetime.now().strftime('%d_%m_%Y %H:%M:%S')}.xlsx", 
+                            as_attachment=True)
+
+
+class GenereteReportPDFView(LoginRequiredMixin, View):
+    def get(self, request, uuid):
+        result = Operacao.objects.get_operations_report(uuid)
+
+        try:
+            pdf = PDFReport()
+            data = pdf.get_data(result)
+            buffer = pdf.generate_pdf_file(data)
+            if not buffer:
+                return HttpResponse("Erro ao gerar o PDF. Operação não encontrada.", status=404)
+            return FileResponse(buffer, as_attachment=True, filename='operacao.pdf')
+
+        except ValueError as e:
+            return HttpResponse("UUID inválido.", status=400)
+
+        except Exception as e:
+            return HttpResponse(f"Erro interno do servidor: {e}", status=500)
+
 
 class InitialPageListView(LoginRequiredMixin, TemplateView):
     template_name = "operations/initial_page_template.html"
 
 
 
-def generate_pdf(request, identificador):
-    #result = Operacao.objects.get_operations_report(form_uuid) TODO fazer query aqui
-
-    try:
-        identificador = UUID(str(identificador))
-
-        buffer = generate_pdf_file(identificador)
-        if not buffer:
-            return HttpResponse("Erro ao gerar o PDF. Operação não encontrada.", status=404)
-
-        return FileResponse(buffer, as_attachment=True, filename='operacao.pdf')
-
-    except ValueError as e:
-        return HttpResponse("UUID inválido.", status=400)
-
-    except Exception as e:
-        return HttpResponse(f"Erro interno do servidor: {e}", status=500)
 
 
 
