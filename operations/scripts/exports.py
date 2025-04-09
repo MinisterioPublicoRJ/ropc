@@ -9,240 +9,267 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from operations.models import Operacao
 
-# Constantes de layout
-FOOTER_HEIGHT = 35
-LINE_HEIGHT = 12
-SECTION_SPACING = 12
-HEADER_HEIGHT = 84
 
-def gera_planilha_excel(rows, header, sheet_title):
-    workbook = Workbook()
-    sheet = workbook[workbook.sheetnames[0]]
-    sheet.title = sheet_title
-    # Escreve cabeçalho
-    sheet.append(header)
-    for row in rows:
-        sheet.append(row)
+class BaseReportFormatter:
+    IGNORED_KEYS = [
+        "id",
+        "identificador",
+        "Criado em",
+        "Seção Atual",
+        "Dado registrado fora do sistema",
+        "Cadastro Completo",
+        "Nome da operação"
+    ]
 
-    buffer_ = BytesIO()
-    workbook.save(buffer_)
-    buffer_.seek(0)
-    return buffer_
+    def list_ignored_keys(self):
+        return self.IGNORED_KEYS
 
+    def format_value_for_display(self, value):
+        if value is None or str(value).strip() == "":
+            return "Não preenchido"
+        if isinstance(value, bool):
+            return "Sim" if value else "Não"
+        if value == "Pr":
+            return "Programada"
+        if value == "Em":
+            return "Emergencial"
+        return str(value)
 
-def date_or_time_formatter(data):
-    if isinstance(data, datetime):
-        return data.strftime("%d/%m/%Y %H:%M")
-    elif isinstance(data, date):
-        return data.strftime("%d/%m/%Y")
-    elif isinstance(data, time):
-        return data.strftime("%H:%M")
-    return data
-
-
-def format_value_for_display(value):
-    if value is None or str(value).strip() == "":
-        return "não preenchido"
-    if isinstance(value, bool):
-        return "sim" if value else "não"
-    if value == "Pr":
-        return "programada"
-    if value == "Em":
-        return "emergencial"
-    if isinstance(value, (date, datetime)):
-        return date_or_time_formatter(value)
-    return str(value)
+    def get_data(self, columns, result):
+        """Retorna dados formatados como lista de listas (tabela)."""
+        return [
+            [self.format_value_for_display(getattr(row, col)) for col in columns if col]
+            for row in result
+        ]
 
 
-def break_text(text, max_width, font_size=12, is_bold=False):
-    text = str(text)
-    font = "Helvetica-Bold" if is_bold else "Helvetica"
-    words = text.split()
-    lines, current_line, current_width = [], [], 0
+class ExcelReport(BaseReportFormatter):
+    def generate_excel_file(self, rows, header, sheet_title):
+        """Cria e retorna um arquivo Excel em memória."""
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.title = sheet_title
 
-    for word in words:
-        word_width = stringWidth(word + ' ', font, font_size)
+        sheet.append(header)
+        for row in rows:
+            sheet.append(row)
 
-        if stringWidth(word, font, font_size) > max_width:
-            for char in word:
-                char_width = stringWidth(char, font, font_size)
-                if current_width + char_width <= max_width:
-                    current_line.append(char)
-                    current_width += char_width
-                else:
-                    lines.append(''.join(current_line))
-                    current_line, current_width = [char], char_width
-            if current_line:
-                lines.append(''.join(current_line))
-                current_line, current_width = [], 0
-        elif current_width + word_width <= max_width:
-            current_line.append(word)
-            current_width += word_width
-        else:
-            lines.append(' '.join(current_line))
-            current_line, current_width = [word], word_width
-
-    if current_line:
-        lines.append(' '.join(current_line))
-
-    return lines
+        buffer = BytesIO()
+        workbook.save(buffer)
+        buffer.seek(0)
+        return buffer
 
 
-def set_style(p, font="Helvetica", size=12, color="#505050"):
-    p.setFont(font, size)
-    p.setFillColor(HexColor(color))
-
-
-def include_header(p, width):
-    img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
-    p.drawImage(img_header, 0, height_total - HEADER_HEIGHT, width=width, height=HEADER_HEIGHT)
-
-    set_style(p, size=12, color="#353535")
-    emitido_em = f"Emitido em: {date_or_time_formatter(datetime.now())}"
-    y = height_total - HEADER_HEIGHT - 11 - 12
-    p.drawString(width - stringWidth(emitido_em, "Helvetica", 12) - 30, y, emitido_em)
-
-    return y - 32
-
-
-def include_footer(p, width, page_number):
-    p.setStrokeColor(HexColor("#F7CF32"))
-    p.setLineWidth(10)
-    p.line(0, 0, width, 0)
-    set_style(p, size=10)
-    pg_text = f"Página {page_number}"
-    p.drawString(width - stringWidth(pg_text, "Helvetica", 10) - 30, 15, pg_text)
-
-
-def ensure_space(p, required_height, footer_height, page_number, font="Helvetica", font_size=12, color="#505050"):
-    global available_height
-    if available_height < footer_height + required_height:
-        include_footer(p, width_total, page_number)
-        p.showPage()
-        page_number += 1
-        available_height = include_header(p, width_total)
-        set_style(p, font, font_size, color)
-    return page_number
-
-
-def load_query(where_condition=None):
-    query_path = os.path.join(settings.BASE_DIR, 'query', 'query.sql')
-    with open(query_path, 'r', encoding='utf-8') as file:
-        query_sql = file.read()
-    return query_sql.replace('/* WHERE_CONDITION */', f'WHERE {where_condition}' if where_condition else '')
-
-
-def draw_first_page_content(p, margin_left, operation_name, content_width, footer_height, page_number):
-    global available_height
-
-    set_style(p, "Helvetica-Bold", 14)
-    p.drawString(margin_left, available_height, "Visualizar operação")
-    available_height -= 26
-
-    set_style(p, "Helvetica-Bold", 10, "#9F9F9F")
-    for line in break_text(operation_name, content_width, font_size=10, is_bold=True):
-        if available_height < footer_height + 10:
-            include_footer(p, width_total, page_number)
-            p.showPage()
-            page_number += 1
-            available_height = include_header(p, width_total)
-            set_style(p, "Helvetica-Bold", 10, "#9F9F9F")
-        p.drawString(margin_left, available_height, line)
-        available_height -= 10
-
-    p.setStrokeColor(HexColor("#F7CF32"))
-    p.setLineWidth(1)
-    p.line(margin_left, available_height - 5, margin_left + content_width, available_height - 5)
-    available_height -= 30
-
-    return page_number
-
-
-def draw_operation_details(attributes, page_number, footer_height, p, content_width, margin_left):
-    global available_height
-
-    ignored_keys = {"id", "Criado em", "Seção Atual", "Dado registrado fora do sistema", "Cadastro Completo", "Nome da operação"}
-    special_keys = {
+class DetailReport(BaseReportFormatter):
+    BIG_TEXT_COLUMNS = [
         "Justificativa da excepcionalidade da operação",
         "Objetivo estratégico da operação",
-        "Análise de riscos e medidas de controle"
-    }
+        "Análise de riscos e medidas de controle",
+        "Endereço de referência",
+        "Observações gerais"
+    ]
 
-    for key, value in attributes.items():
-        if key in ignored_keys:
-            continue
+    END_OF_SECTION_COLUMNS = [
+        "Número do procedimento (TJRJ)",
+        "Localidade",
+        "Justificativa da excepcionalidade da operação",
+        "Unidades Apoiadoras",
+        "Análise de riscos e medidas de controle",
+        "Número de veículos recuperados?"
+    ]
 
-        shown_value = format_value_for_display(value)
+    def get_data(self, columns, result):
+        """Retorna dados formatados como tuplas (label, valor)."""
+        instance = result[0]
+        return [(col, self.format_value_for_display(getattr(instance, col))) for col in columns]
 
-        if key in special_keys:
-            set_style(p, "Helvetica-Bold", 12)
-            for line in break_text(f"{key}:", content_width, is_bold=True):
-                page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number)
-                p.drawString(margin_left, available_height, line)
-                available_height -= LINE_HEIGHT
+    def get_nome_operacao(self, data):
+        """Retorna o valor da coluna 'Nome da operação' baseado na posição 3."""
+        return data[3][1] if len(data) > 3 else "Não informado"
 
-            set_style(p, "Helvetica", 12)
-            for line in break_text(shown_value, content_width):
-                page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number)
-                p.drawString(margin_left, available_height, line)
-                available_height -= LINE_HEIGHT
+    def get_identificador(self, data):
+        """Retorna o valor da coluna 'identificador' baseado na posição 0."""
+        return data[0][1] if data else "Não informado"
+
+    def get_columns_big_text(self):
+        return self.BIG_TEXT_COLUMNS
+
+    def get_columns_end_of_section(self):
+        return self.END_OF_SECTION_COLUMNS
+
+
+class PDFReport(BaseReportFormatter):
+    # Constantes de layout
+    PAGE_WIDTH = 595
+    PAGE_HEIGHT = 841
+    MARGIN_LEFT = 30
+    CONTENT_WIDTH = 535
+    HEADER_HEIGHT = 82
+    FOOTER_HEIGHT = 35
+    LINE_HEIGHT = 12
+    SECTION_SPACING = 12
+
+
+    def __init__(self):
+        self.canvas = None
+        self.page_number = 1
+        self.available_height = self.PAGE_HEIGHT
+        self.buffer = BytesIO()
+
+    def get_data(self, result):
+        data = result[0].__dict__.copy()
+        data.pop("_state", None)
+        return data
+
+    def set_canvas(self):
+        self.canvas = canvas.Canvas(self.buffer, pagesize=(self.PAGE_WIDTH, self.PAGE_HEIGHT))
+
+    def set_style(self, font="Helvetica", size=12, color="#505050"):
+        self.canvas.setFont(font, size)
+        self.canvas.setFillColor(HexColor(color))
+
+    def break_text(self, text, max_width, font_size=12, is_bold=False):
+        text = str(text)
+        font = "Helvetica-Bold" if is_bold else "Helvetica"
+        words = text.split()
+        lines, current_line, current_width = [], [], 0
+
+        for word in words:
+            word_width = stringWidth(word + ' ', font, font_size)
+            if stringWidth(word, font, font_size) > max_width:
+                for char in word:
+                    char_width = stringWidth(char, font, font_size)
+                    if current_width + char_width <= max_width:
+                        current_line.append(char)
+                        current_width += char_width
+                    else:
+                        lines.append(''.join(current_line))
+                        current_line, current_width = [char], char_width
+                if current_line:
+                    lines.append(''.join(current_line))
+                    current_line, current_width = [], 0
+            elif current_width + word_width <= max_width:
+                current_line.append(word)
+                current_width += word_width
+            else:
+                lines.append(' '.join(current_line))
+                current_line, current_width = [word], word_width
+
+        if current_line:
+            lines.append(' '.join(current_line))
+        return lines
+
+    def include_header(self):
+        img_header = os.path.join(settings.BASE_DIR, "static", "img", "bg-inicial-page.png")
+        self.canvas.drawImage(img_header, 0, self.PAGE_HEIGHT - self.HEADER_HEIGHT, width=self.PAGE_WIDTH, height=self.HEADER_HEIGHT)
+
+        self.set_style(size=12, color="#353535")
+        emitido_em = f"Emitido em: {datetime.now().strftime('%d/%m/%Y %H:%M')}"
+        y = self.PAGE_HEIGHT - self.HEADER_HEIGHT - 23
+        self.canvas.drawString(self.PAGE_WIDTH - stringWidth(emitido_em, "Helvetica", 12) - 30, y, emitido_em)
+
+        self.available_height = y - 32
+
+    def include_footer(self):
+        self.canvas.setStrokeColor(HexColor("#F7CF32"))
+        self.canvas.setLineWidth(10)
+        self.canvas.line(0, 0, self.PAGE_WIDTH, 0)
+
+        self.set_style(size=10)
+        pg_text = f"Página {self.page_number}"
+        self.canvas.drawString(self.PAGE_WIDTH - stringWidth(pg_text, "Helvetica", 10) - 30, 15, pg_text)
+
+    def new_page(self):
+        self.include_footer()
+        self.canvas.showPage()
+        self.page_number += 1
+        self.include_header()
+
+    def ensure_space(self, required_height):
+        if self.available_height < self.FOOTER_HEIGHT + required_height:
+            self.new_page()
+
+    def draw_title(self, title):
+        self.set_style("Helvetica-Bold", 14)
+        self.canvas.drawString(self.MARGIN_LEFT, self.available_height, title)
+        self.available_height -= 26
+
+    def draw_operation_name(self, operation_name):
+        self.set_style("Helvetica-Bold", 10, "#9F9F9F")
+        for line in self.break_text(operation_name, self.CONTENT_WIDTH, font_size=10, is_bold=True):
+            self.ensure_space(10)
+            self.canvas.drawString(self.MARGIN_LEFT, self.available_height, line)
+            self.available_height -= 10
+
+        self.canvas.setStrokeColor(HexColor("#F7CF32"))
+        self.canvas.setLineWidth(1)
+        self.canvas.line(self.MARGIN_LEFT, self.available_height - 5, self.MARGIN_LEFT + self.CONTENT_WIDTH, self.available_height - 5)
+        self.available_height -= 30
+
+    def draw_key_value_block(self, key, value, is_special=False):
+        shown_value = self.format_value_for_display(value)
+
+        if is_special:
+            self.set_style("Helvetica-Bold", 12)
+            for line in self.break_text(f"{key}:", self.CONTENT_WIDTH, is_bold=True):
+                self.ensure_space(self.LINE_HEIGHT)
+                self.canvas.drawString(self.MARGIN_LEFT, self.available_height, line)
+                self.available_height -= self.LINE_HEIGHT * 2
+
+            self.set_style("Helvetica", 12)
+            for line in self.break_text(shown_value, self.CONTENT_WIDTH):
+                self.ensure_space(self.LINE_HEIGHT)
+                self.canvas.drawString(self.MARGIN_LEFT, self.available_height, line)
+                self.available_height -= self.LINE_HEIGHT * 2
         else:
             key_text = f"{key}: "
             key_width = stringWidth(key_text, "Helvetica-Bold", 12)
 
-            page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number, font="Helvetica-Bold", font_size=12)
-            set_style(p, "Helvetica-Bold", 12)
-            p.drawString(margin_left, available_height, key_text)
+            self.ensure_space(self.LINE_HEIGHT)
+            self.set_style("Helvetica-Bold", 12)
+            self.canvas.drawString(self.MARGIN_LEFT, self.available_height, key_text)
 
-            value_lines = break_text(shown_value, content_width - key_width)
+            value_lines = self.break_text(shown_value, self.CONTENT_WIDTH - key_width)
             if value_lines:
-                set_style(p, "Helvetica", 12)
-                page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number, "Helvetica", 12)
-                p.drawString(margin_left + key_width, available_height, value_lines[0])
-
+                self.set_style("Helvetica", 12)
+                self.canvas.drawString(self.MARGIN_LEFT + key_width, self.available_height, value_lines[0])
                 for line in value_lines[1:]:
-                    available_height -= LINE_HEIGHT
-                    page_number = ensure_space(p, LINE_HEIGHT, footer_height, page_number)
-                    p.drawString(margin_left, available_height, line)
+                    self.available_height -= self.LINE_HEIGHT
+                    self.ensure_space(self.LINE_HEIGHT)
+                    self.canvas.drawString(self.MARGIN_LEFT, self.available_height, line)
 
-            available_height -= LINE_HEIGHT
+            self.available_height -= self.LINE_HEIGHT
 
-        available_height -= SECTION_SPACING
+        self.available_height -= self.SECTION_SPACING
 
-        if key == "Cartuchos Apreendidos":
-            break
+    def draw_operation_details(self, attributes):
+        ignored_keys = self.list_ignored_keys()
+        special_keys = {
+            "Justificativa da excepcionalidade da operação",
+            "Objetivo estratégico da operação",
+            "Análise de riscos e medidas de controle"
+        }
 
-    return page_number
+        for key, value in attributes.items():
+            if key in ignored_keys:
+                continue
+            self.draw_key_value_block(key, value, key in special_keys)
 
+            if key == "Cartuchos Apreendidos":
+                break
 
-def generate_pdf_file(operacao_uuid):
-    global width_total, height_total, available_height
-    width_total, height_total = 595, 841
-    margin_left, content_width = 30, 535
+    def generate_pdf_file(self, operacoes):
+        operation_name = operacoes.get("Nome da operação", "Nome não disponível")
 
-    try:
-        operacao_uuid = UUID(str(operacao_uuid))
-        query_sql = load_query("op.identificador = %s")
-        operacoes = Operacao.objects.raw(query_sql, [str(operacao_uuid)])
-        attributes = operacoes[0].__dict__.copy()
-        operation_name = attributes.get("Nome da operação", "Nome não disponível")
-        attributes.pop("_state", None)
-    except (Operacao.DoesNotExist, ValueError) as e:
-        print(f"Erro ao buscar operação: {e}")
-        return None
+        self.set_canvas()
+        self.include_header()
 
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=(width_total, height_total))
+        self.draw_title("Visualizar operação")
+        self.draw_operation_name(operation_name)
+        self.draw_operation_details(operacoes)
 
-    page_number = 1
-    available_height = include_header(p, width_total)
-
-    page_number = draw_first_page_content(p, margin_left, operation_name, content_width, FOOTER_HEIGHT, page_number)
-
-    page_number = draw_operation_details(attributes, page_number, FOOTER_HEIGHT, p, content_width, margin_left)
-
-    include_footer(p, width_total, page_number)
-    p.save()
-    buffer.seek(0)
-    return buffer
+        self.include_footer()
+        self.canvas.save()
+        self.buffer.seek(0)
+        return self.buffer
 
