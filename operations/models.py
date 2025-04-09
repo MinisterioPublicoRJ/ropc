@@ -261,10 +261,9 @@ ORGAOS_EXTERNOS = [
 
 class InformacaoManager(models.Manager):    
     def get_operations_report(self, identificador=None):
-        query = ("""SELECT
+        query = ("""SELECT DISTINCT ON (op.id)
                     op.identificador,
                     op.id,
-                    op.criado_em AS "Criado em",
                     op.situacao AS "Situação Cadastro",
 
                     -- Informações do Registro
@@ -311,11 +310,10 @@ class InformacaoManager(models.Manager):
                     op.numero_equipes_medicas AS "Número de equipes médicas de apoio",
                     op.numero_ambulancia AS "Número de ambulâncias",
                     op.justificativa_uso_aeronave AS "Justificativa do uso de aeronave",
-                    
-
-                    -- Comunicação e Risco
+                
+                   -- Comunicação e Risco
                     op.escolas_perto AS "Escolas nas proximidades?",
-                    op.comunicacao_escola AS "Houve comunicação prévia às autoridades de educação?",
+                    op.comunicacao_escola AS "Houve comunicação prévia às autoridades de educação?",                 
                     op.justificativa_omissao_comunicacao_escola AS "Justificativa para omissão da comunicação às autoridades de educação",
                     op.orgao_autoridade_comunicacao_escola AS "Órgãos ou autoridades alertados",
                     op.canal_comunicacao_escola AS "Canal de comunicação utilizado",
@@ -548,33 +546,33 @@ class Operacao(models.Model):
     ### Info Operacionais Two
     numero_viaturas_mobilizadas = models.PositiveIntegerField(
         "Número de viaturas mobilizadas",
-        default=0,
+        null=True,
         blank=True
     )
     numero_agentes_mobilizados = models.PositiveIntegerField(
         "Número de agentes mobilizados",
-        default=1,
+        null=True,
         blank=True
     )
     numero_veiculos_blindados = models.PositiveIntegerField(
         "Número de veículos blindados",
-        default=0,
+        null=True,
         blank=True
     )
     numero_aeronaves = models.PositiveIntegerField(
         "Número de aeronaves",
-        default=0,
+        null=True,
         blank=True
     )
     numero_ambulancia = models.PositiveIntegerField(
         "Número de ambulancia",
-        default=0,
+        null=True,
         blank=True
     )
     justificativa_uso_aeronave = models.TextField("Justificativa do uso de aeronave", null=True, blank=True)
     numero_equipes_medicas = models.PositiveIntegerField(
         "Número de equipes médicas de apoio",
-        default=0,
+        null=True,
         blank=True
     )
     escolas_perto = models.BooleanField(
@@ -654,32 +652,32 @@ class Operacao(models.Model):
     )
     numero_presos_elencados = models.PositiveIntegerField(
         "Número de presos elencados nos mandados de prisão",
-        default=0,
+        null=True,
         blank=True
     )
     numero_presos_outros_mandados = models.PositiveIntegerField(
         "Número de presos indicados em outros mandados de prisão pendentes",
-        default=0,
+        null=True,
         blank=True
     )
     numero_presos_flagrante = models.PositiveIntegerField(
         "Número de presos em flagrante",
-        default=0,
+        null=True,
         blank=True
     )
     numero_adolescentes_apreendidos = models.PositiveIntegerField(
         "Número de adolescentes apreendidos",
-        default=0,
+        null=True,
         blank=True,
     )
     numero_policiais_feridos = models.PositiveIntegerField(
         "Número de policiais feridos",
-        default=0,
+        null=True,
         blank=True,
     )
     numero_mortes_policiais = models.PositiveIntegerField(
         "Número de mortes policiais",
-        default=0,
+        null=True,
         blank=True
     )
     # numero_mortes_interv_estado = models.PositiveIntegerField(
@@ -689,12 +687,12 @@ class Operacao(models.Model):
     # )
     numero_civis_mortos = models.PositiveIntegerField(
         "Número de civis mortos",
-        default=0,
+        null=True,
         blank=True
     )
     numero_civis_feridos = models.PositiveIntegerField(
         "Número de civis feridos",
-        default=0,
+        null=True,
         blank=True
     )
     # numero_civis_mortos_npap = models.PositiveIntegerField(
@@ -704,7 +702,7 @@ class Operacao(models.Model):
     # )
     numero_veiculos_recuperados = models.PositiveIntegerField(
         "Número de veículos recuperados",
-        default=0,
+        null=True,
         blank=True
     )
 
@@ -721,27 +719,27 @@ class Operacao(models.Model):
     droga_outros = models.BooleanField("Apreensão de Outros?", default=False)
     numero_explosivos_apreendidos = models.PositiveIntegerField(
         "Número de artefatos explosivos apreendidos",
-        default=0,
+        null=True,
         blank=True
     )
     numero_armas_apreendidas = models.PositiveIntegerField(
         "Número de armas apreendidas",
-        default=0,
+        null=True,
         blank=True
     )
     numero_fuzis_apreendidos = models.PositiveIntegerField(
         "Número de fuzis apreendidos",
-        default=0,
+        null=True,
         blank=True
     )
     numero_carregadores_apreendidos = models.PositiveIntegerField(
         "Número de carregadores apreendidos",
-        default=0,
+        null=True,
         blank=True
     )
     numero_municoes_apreendidas = models.PositiveIntegerField(
         "Número de munições apreendidas",
-        default=0,
+        null=True,
         blank=True
     )
     cartuchos_calibres = models.ManyToManyField(CartuchoCalibresApreendidos)
