@@ -68,16 +68,16 @@ urlpatterns = [
         views.OperationListView.as_view(), 
         name="operations-list"),
     path(
-        "gerar-excel/",
-        views.GenereteReportView.as_view(),
-        name="generate_excel"),
-    path(
-        "detalhe/<uuid:form_uuid>", 
+        "detalhe/<uuid:uuid>", 
         views.OperationDetailView.as_view(), 
         name="operation-detail"),
     path(
-        "gerar-pdf/<uuid:identificador>/",
-        views.generate_pdf,
+        "gerar-excel/",
+        views.GenereteReportExcelView.as_view(),
+        name="generate_excel"),
+    path(
+        "gerar-pdf/<uuid:uuid>",
+        views.GenereteReportPDFView.as_view(),
         name="generate_pdf"
     ),
 ]
