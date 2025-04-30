@@ -39,6 +39,13 @@
         left: 50%;
         transform: translateX(-50%);
     }
+    ul li a {
+        transition: color 0.3s ease;
+    }
+    
+    ul li a:hover {
+       color: #FEBC2E;
+    }
 </style>
 <div class="main-initial-page">
         <div class="table-list"  style="margin:2rem; width: fit-content">
@@ -121,23 +128,25 @@
 
     <ul class="pagination" style="display:flex; flex-direction:row; gap:8px; align-items: center; justify-content: center; margin-top: 2rem;">
         {% if page_obj.has_previous %}
-        <li ><a style="border-radius: 8px;" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">&laquo;</a></li>
+            <li ><a style="border-radius: 8px;" href="?page=1&q={{ search_query }}">Primeira página</a></li>
+            <li ><a style="border-radius: 8px;" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">&laquo;</a></li>
         {% else %}
-        <li class="disabled"><strong>&laquo;</strong></li>
+            <li ><a style="border-radius: 8px;opacity:.2;color:white;">Primeira página</a></li>
+            <li ><a style="border-radius: 8px;opacity: .2;color:white;">&laquo;</a></li>
         {% endif %}
-        {% for i in page_obj.paginator.page_range %}
-        {% if page_obj.number == i %}
-        <li class="active"><strong>{{ i }} <strong class="sr-only"></strong></strong></li>
-        {% else %}
-        <li><a style="border-radius: 8px;" href="?page={{ i }}&q={{ search_query }}">{{ i }}</a></li>
-        {% endif %}
-        {% endfor %}
+
+        <li><a style="border-radius: 8px;color:#FEBC2E;">{{ page_obj.number }} / {{page_obj.paginator.num_pages}}</a></li>
+
         {% if page_obj.has_next %}
-        <li><a style="border-radius: 8px;" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}">&raquo;</a></li>
+            <li><a style="border-radius: 8px;" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}">&raquo;</a></li>
+            <li ><a style="border-radius: 8px;" href="?page={{page_obj.paginator.num_pages}}&q={{ search_query }}">Última página</a></li>
         {% else %}
-       <li class="disabled"><strong>&raquo;</strong></li>
-       {% endif %}
-      </ul>
+
+            <li ><a style="border-radius: 8px;opacity:.2;color:white;">&raquo;</a></li>
+            <li ><a style="border-radius: 8px;opacity:.2;color:white;">Última página</a></li>
+        {% endif %}
+    </ul>
+
     {% endwith %}
 {% endif %}
 </div>
