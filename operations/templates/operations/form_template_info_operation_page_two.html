@@ -249,8 +249,14 @@
                             <button type="submit" class="btn-previus">Anterior</button>
                         </a>
                     </div>
-                    <button type="submit" class="btn-next" onclick="submitFormInfo(event);">Proxímo</button>
+                    <button type="submit" class="btn-next" onclick="submitFormInfoForPageTwo(event);">Proxímo</button>
                 </div>
+
+                <div id="aviso-box" class="aviso-box">
+                    Verifique os campos no topo da página.
+                    <button onclick="fecharAviso()" id="fechar-btn">&times;</button>
+                </div>
+
             </div>
         </div>
         <div class="logo">
@@ -352,7 +358,7 @@
             const segundo_radio_saude = document.getElementsByName("option-saude")[1].checked;
             comunicacao_saude_classe = comunicacao_saude.firstElementChild;
             
-
+            
             const orgao_autoridade_comunicacao_saude_to_js = document.getElementById("orgao_autoridade_comunicacao_saude_to_js");
             const canal_comunicacao_saude_to_js = document.getElementById("canal_comunicacao_saude_to_js");
             const justificativa_omissao_comunicacao_saude_to_js = document.getElementById("justificativa_omissao_comunicacao_saude_to_js");
@@ -388,14 +394,90 @@
                 justificativa_omissao_comunicacao_saude_classe.classList.add('hide')
             }
           };
-        
-
-        
+          
+        function submitFormInfoForPageTwo(event) {
+            event.preventDefault();
+            let is_valid = validateFields(document.querySelector("#main-form"));
+            
+            if (is_valid) {
+                const formUUID = document.querySelector("#form_uuid").value;
+                const apiFullURL = API_URL + formUUID;
+                const forwardFullURL = FORWARD_URL + formUUID;
+                const formData = buildFormData(FORM_VAR_LIST);
+                fetch(apiFullURL, {
+                method: "PUT",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                body: formData,
+                })
+                .then(response => {
+                    let error = false;
+                    if(response.status >= 400){
+                        response.json().then(data => {
+                            showValidationErros(data);
+                            if ("numero_equipes_medicas"  in data ||
+                                "numero_agentes_mobilizados" in data ||
+                                "numero_viaturas_mobilizadas" in data ||
+                                "numero_veiculos_blindados" in data ||
+                                "numero_aeronaves" in data ||
+                                "numero_equipes_medicas" in data ||
+                                "numero_ambulancia" in data ||
+                                "justificativa_uso_aeronave" in data
+                                ) {
+    
+                                const avisoBox = document.getElementById("aviso-box");
+                                avisoBox.style.display = "flex"; 
+                            }
+                        })
+                    }else{
+                        window.location = forwardFullURL;
+                    }
+                })
+            }
+        }
+          
+        function fecharAviso() {
+            document.getElementById("aviso-box").style.display = "none";
+        }
 
     </script>
     <style>
         .hide{
             display: none;
         }
+
+        #aviso-box {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        margin: 10px;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        display: none;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Roboto', sans-serif;
+        
+        position: fixed;
+        top: 20px; 
+        right: 20px;
+        z-index: 1000; 
+        }
+
+        #fechar-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #721c24;
+            cursor: pointer;
+        }
+
+        #fechar-btn:hover {
+            color: #f44336;
+        }
+
     </style>
 {% endblock extra_js %}
