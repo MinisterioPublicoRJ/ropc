@@ -1,11 +1,15 @@
 import uuid
-import os
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect
+from django.db import connection
+from django.http import FileResponse, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, TemplateView
+from django.views import View
 from django.urls import reverse
+from io import BytesIO
+from uuid import UUID
 
 from coredata.models import Bairro, Municipio
 from operations.models import Operacao, UNIDADES_POLICIA, ORGAOS_EXTERNOS
@@ -19,7 +23,9 @@ from operations.serializers import (
     InfoResultadosTwoSerializer,
     InfoResultadosThreeSerializer
 )
-
+from .scripts.exports import ExcelReport, PDFReport, DetailReport
+from collections import defaultdict
+from datetime import datetime 
 
 
 URL_SECTION_MAPPER = {
@@ -313,8 +319,79 @@ class OperationListView(LoginRequiredMixin, ListView):
     template_name = "operations/operations_list_template.html"
     paginate_by = settings.OPERATIONS_PER_PAGE
 
+    model = Operacao
+
     def get_queryset(self):
-        return Operacao.objects.order_by("-criado_em")
+        query = self.request.GET.get("q", "")
+        queryset = Operacao.objects.order_by("-criado_em")
+        if query:
+            queryset = queryset.filter(nome_operacao__icontains=query)  
+     
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query_params"] = self.request.GET  
+        return context
+
+
+class OperationDetailView(LoginRequiredMixin, View):
+    template_name = "operations/operation_detail.html"
+
+    def get(self, request, uuid):
+        result = Operacao.objects.get_operations_report(uuid)
+        columns = result.query.get_columns()
+
+        detail = DetailReport()
+
+        data = detail.get_data(columns, result)
+        nome_operacao = detail.get_nome_operacao(data)
+        identificador = detail.get_identificador(data)
+
+        context = {
+            "detail": data, 
+            "datetime_now": datetime.now(),
+            "columns_with_big_text": detail.get_columns_big_text(),
+            "columns_end_section": detail.get_columns_end_of_section(),
+            "ignored_keys": detail.list_ignored_keys(),
+            "nome_operacao": nome_operacao,
+            "identificador": identificador
+        }
+
+        return render(request, self.template_name, context)
+
+
+class GenereteReportExcelView(LoginRequiredMixin, View):
+    def get(self, request):
+        result = Operacao.objects.get_operations_report()
+        columns = result.query.get_columns()[2:] #Ignora id e identificador TODO  melhorar aqui
+        
+        excel_obj = ExcelReport()
+        excel_data = excel_obj.get_data(columns, result)
+        excel_buffer = excel_obj.generate_excel_file(excel_data, columns, "Operações") 
+        
+        return FileResponse(excel_buffer, 
+                            filename=f"Operações ROPC até {datetime.now().strftime('%d_%m_%Y %H:%M:%S')}.xlsx", 
+                            as_attachment=True)
+
+
+class GenereteReportPDFView(LoginRequiredMixin, View):
+    def get(self, request, uuid):
+        result = Operacao.objects.get_operations_report(uuid)
+
+        try:
+            pdf = PDFReport()
+            data = pdf.get_data(result)
+            buffer = pdf.generate_pdf_file(data)
+            if not buffer:
+                return HttpResponse("Erro ao gerar o PDF. Operação não encontrada.", status=404)
+            return FileResponse(buffer, as_attachment=True, filename='operacao.pdf')
+
+        except ValueError as e:
+            return HttpResponse("UUID inválido.", status=400)
+
+        except Exception as e:
+            return HttpResponse(f"Erro interno do servidor: {e}", status=500)
 
 
 class InitialPageListView(LoginRequiredMixin, TemplateView):
@@ -323,5 +400,5 @@ class InitialPageListView(LoginRequiredMixin, TemplateView):
 
 
 
-            
-    
+
+

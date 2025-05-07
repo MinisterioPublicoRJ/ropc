@@ -15,6 +15,9 @@ from operations.models import (
 
 
 class OperacaoSerializer(serializers.Serializer):
+    invalid_msg = {"invalid":"Necessário preencher os campos com uma numeração válida"}
+
+
     def update(self, instance, validated_data):
         for key, val in validated_data.items():
             instance.__setattr__(key, val)
@@ -186,13 +189,13 @@ class InfoOperacionaisOperacaoOneSerializer(OperacaoSerializer):
 
 
 class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
-    numero_viaturas_mobilizadas = serializers.IntegerField(required=True, min_value=0)
-    numero_agentes_mobilizados = serializers.IntegerField(required=True, min_value=1)
-    numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0)
-    numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
-    numero_ambulancia = serializers.IntegerField(required=True, min_value=0)
+    numero_viaturas_mobilizadas = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_agentes_mobilizados = serializers.IntegerField(required=True, min_value=1, error_messages={"invalid": "Necessário preencher os campos com uma numeração válida, igual ou maior que 1"})
+    numero_veiculos_blindados = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_aeronaves = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_ambulancia = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
     justificativa_uso_aeronave = serializers.CharField(required=False)
-    numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0)
+    numero_equipes_medicas = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
   
     escolas_perto = serializers.BooleanField(required=True)
     comunicacao_escola = serializers.BooleanField(required=True)
@@ -210,7 +213,6 @@ class InfoOperacionaisOperacaoTwoSerializer(OperacaoSerializer):
 
     def validate(self, attrs):
         errs = {}
-
         # if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == None:
         if attrs["numero_aeronaves"] > 0 and attrs["justificativa_uso_aeronave"] == "Não houve uso de aeronave":
             errs["justificativa_uso_aeronave"] = "Havendo uso de aeronove, deve-se justifica-la."
@@ -286,21 +288,24 @@ class InfoResultadosOneSerializer(OperacaoSerializer):
     houve_entrada_forcada = serializers.BooleanField(required=True)
     justificativa_entrada_forcada = serializers.CharField(required=False)
     # houve_ocorrencia_operacao = serializers.BooleanField(required=True)
-    numero_presos_elencados = serializers.IntegerField(required=True, min_value=0)
-    numero_presos_flagrante = serializers.IntegerField(required=True, min_value=0)
-    numero_adolescentes_apreendidos = serializers.IntegerField(required=True, min_value=0)
-    numero_policiais_feridos = serializers.IntegerField(required=True, min_value=0)
-    numero_mortes_policiais = serializers.IntegerField(required=True, min_value=0)
-    numero_civis_mortos = serializers.IntegerField(required=True, min_value=0)
+    numero_presos_elencados = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_presos_outros_mandados = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_presos_flagrante = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_adolescentes_apreendidos = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_policiais_feridos = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_mortes_policiais = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_civis_feridos = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_civis_mortos = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+
     # Repitindo solicitações da P.C
     numero_aeronaves = serializers.IntegerField(required=True, min_value=0)
     numero_ambulancia = serializers.IntegerField(required=True, min_value=0)
     justificativa_uso_aeronave = serializers.CharField(required=False)
     
     # numero_mortes_interv_estado = serializers.IntegerField(required=True, min_value=0)
-    numero_civis_feridos = serializers.IntegerField(required=True, min_value=0)
+    
     # numero_civis_mortos_npap = serializers.IntegerField(required=True, min_value=0)
-    numero_veiculos_recuperados = serializers.IntegerField(required=True, min_value=0)
+    numero_veiculos_recuperados = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
 
     def is_valid(self, raise_exception=False):
         try:
@@ -388,12 +393,12 @@ class InfoResultadosTwoSerializer(OperacaoSerializer):
     droga_haxixe = serializers.BooleanField(required=True)
     droga_sinteticos = serializers.BooleanField(required=True)
     droga_outros = serializers.BooleanField(required=True)
-    numero_explosivos_apreendidos = serializers.IntegerField(required=True, min_value=0)
-    numero_armas_apreendidas = serializers.IntegerField(required=True, min_value=0)
-    numero_fuzis_apreendidos = serializers.IntegerField(required=True, min_value=0)
+    numero_explosivos_apreendidos = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_armas_apreendidas = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_fuzis_apreendidos = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
     # numero_presos = serializers.IntegerField(required=True, min_value=0)
-    numero_carregadores_apreendidos = serializers.IntegerField(required=True, min_value=0)
-    numero_municoes_apreendidas = serializers.IntegerField(required=True, min_value=0)
+    numero_carregadores_apreendidos = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
+    numero_municoes_apreendidas = serializers.IntegerField(required=True, min_value=0, error_messages=OperacaoSerializer.invalid_msg)
     cartuchos_calibres = CartuchoCalibreSerializer(many=True)
 
     # def validate_registro_ocorrencia(self, value):

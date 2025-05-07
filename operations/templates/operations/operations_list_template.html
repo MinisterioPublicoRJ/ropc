@@ -4,62 +4,152 @@
 {% block title %}<title>ROPC</title>{% endblock title %}
 
 {% block content %}
+<style>
+    button {
+        transition: opacity 0.2s;
+    }
+   button:hover {
+        opacity: 80%;
+    }
+    input::placeholder {
+        text-align: left;
+        color: #FEBC2E; 
+        font-size: 1rem; 
+        line-height: 100%;
+    }
+    #meuBotao {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+    }
+
+    .loading {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    .loading::after {
+        content: "⏳ Carregando...";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    ul li a {
+        transition: color 0.3s ease;
+    }
+    
+    ul li a:hover {
+       color: #FEBC2E;
+    }
+</style>
 <div class="main-initial-page">
-        <div class="table-list">
-            <h2>Últimas operações cadastradas</h2>
+        <div class="table-list"  style="margin:2rem; width: fit-content">
+        
+            <h2 sty>Lista de operações</h2>
             <p style="margin-left: 30px">Aqui é onde se encontram as informações referentes às operações cadastradas e onde você pode editá-las.</p>
-            <table>
-                <tr>
-                    <th>Status</th>
-                    <th>Operação</th>
-                    <th>Data</th>
-                    <th>Responsável/Delegacia</th>
-                    <th>Local</th>
-                </tr>
-                {% for info_operacao in object_list %}
-                <tr class="tr-lista-operacao" onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}');">
-                        <td> {% if info_operacao.completo %}
-                            👍
-                            {% else %}
-                            🔴
-                            {% endif %}
-                        </td>
-                        <td>{{ info_operacao.nome_operacao|default:'' }}</td>
-                        <td>{{ info_operacao.data }}</td>
+        
+            <div style="padding: 0 1.25rem; display: flex; 
+                flex-direction: row; justify-content: space-between; align-items: center; background:#121212;">
+                <form style="display: flex;
+                justify-content: center; align-items: center; margin: auto 0; gap:1rem;" method="get" action="">
+                    
+                    <input  style="text-align: left;  font-size: 1rem;background: #333333; color: #FEBC2E; width: 25rem; border-radius: 8px; border:none;" type="text" name="q" placeholder="Pesquisar na lista" value="{{ request.GET.q }}">
+                    <button  class="fas fa-search" style="color: #FEBC2E; background: transparent; display: flex; align-items: center; cursor:pointer;border: none; margin-left: -3rem; margin-bottom: .5rem;width: fit-content;" type="submit"></button>
+
+                    <a style="color: #FEBC2E; width: 5rem; height:  2.7rem;border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;"
+                    href="{% url 'operations:operations-list' %}" >
+                    Limpar
+                    </a>
+          
+                </form>
+                <a id="meuBotao" style="color: #FEBC2E; width: 224px; height: 1.5rem; border-radius: 8px; background: #333333; display: flex; align-items: center; justify-content: center; cursor:pointer;"
+                    href="{% url 'operations:generate_excel' %}" onclick="carregar()">
+                    Download de operações
+                </a>
+            </div>
+       
+      
+                <table style="width: 100%; margin: 0 auto">
+                    
+                    <tr>
+                        <th style="padding: 1rem 1.25rem; font-size: 1rem; text-align: left;" >Operação</th>
+                        <th></th>
+                        <th></th>
+                        <th style="padding: 1rem 1.25rem; font-size: 1rem; text-align: left;">Data</th>
+                        <th style="padding: 1rem 1.25rem; font-size: 1rem; text-align: left;">Responsável/Delegacia</th>
+                        <th style="padding: 1rem 1.25rem; font-size: 1rem; text-align: left;">Local</th>
+                        <th style="padding: 1rem 1.25rem; font-size: 1rem; text-align: left;">Status</th>
+                        <!-- <th>PDF</th> -->
+                    </tr>
+                
+                    {% for info_operacao in object_list %}
+                    <tr class="tr-lista-operacao" style="cursor: default;">
+                        <td style="font-size: 1rem; text-align: left; padding: 1rem 1.25rem;">{{ info_operacao.nome_operacao|default:'' }}</td>
+                        
                         <td>
+                            <span style="padding: 4px 8px;margin-right: 8px; font-size:0.75rem; white-space: nowrap; min-width: fit-content; min-height:  fit-content; background: #292929; cursor: pointer; border-radius: 8px;" 
+                            onclick="openOperacao('{% url 'operations:operation-detail' info_operacao.identificador %}');">
+                            Ver detalhes
+                            </span>
+                        </td>
+                        <td><span style="padding: 4px 8px; font-size:0.75rem; white-space: nowrap; min-width: fit-content; min-height:  fit-content; background: #292929; cursor: pointer; border-radius: 8px;" 
+                            onclick="openOperacao('{% url 'operations:form-update' info_operacao.identificador %}');">Editar</span></td>
+                        <td style="font-size: 1rem; text-align: left; padding: 1rem 1.25rem;">{{ info_operacao.data|date:"d/m/Y" }}</td>
+                        <td style="font-size: 1rem; text-align: left; padding: 1rem 1.25rem;">
                             {{ info_operacao.nome_delegado_operacao|default:'' }}
                             {% if info_operacao.unidade_responsavel %}
                             - {{ info_operacao.unidade_responsavel|default:'' }}
                             {% endif %}
                         </td>
-                        <td>{{ info_operacao.localidade_operacao.all.0.municipio }} - {{ info_operacao.localidade_operacao.all.0.bairro }}</td>
+                        <td style="font-size: 1rem; text-align: left; padding: 1rem 1.25rem;">{{ info_operacao.localidade_operacao.all.0.municipio }} - {{ info_operacao.localidade_operacao.all.0.bairro }}</td>
+                        <td style="font-size: 1rem; text-align: left; padding: 1rem 1.25rem;"> {% if info_operacao.completo %}
+                            <span style="color: #88DF41; font-size: 1rem;">Completo</span>
+                            {% else %}
+                            <span style="color: #DF6141; font-size: 1rem;">Incompleto</span>
+                            {% endif %}
+                        </td>
+            
                     </tr>
-                {% endfor %}
-            </table>
-        </div>
-       
+                    {% endfor %}
+                    
+                </table>
+     
+    
+          
+        
 
 {% if page_obj.has_other_pages %}
-        <ul class="pagination">
+    {% with search_query=query_params.q %}
+
+    <ul class="pagination" style="display:flex; flex-direction:row; gap:8px; align-items: center; justify-content: center; margin-top: 2rem;">
         {% if page_obj.has_previous %}
-        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            <li ><a style="border-radius: 8px;" href="?page=1&q={{ search_query }}">Primeira página</a></li>
+            <li ><a style="border-radius: 8px;" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">&laquo;</a></li>
         {% else %}
-        <li class="disabled"><strong>&laquo;</strong></li>
+            <li ><a style="border-radius: 8px;opacity:.2;color:white;">Primeira página</a></li>
+            <li ><a style="border-radius: 8px;opacity: .2;color:white;">&laquo;</a></li>
         {% endif %}
-        {% for i in page_obj.paginator.page_range %}
-        {% if page_obj.number == i %}
-        <li class="active"><strong>{{ i }} <strong class="sr-only"></strong></strong></li>
-        {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-        {% endif %}
-        {% endfor %}
+
+        <li><a style="border-radius: 8px;color:#FEBC2E;">{{ page_obj.number }} / {{page_obj.paginator.num_pages}}</a></li>
+
         {% if page_obj.has_next %}
-        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            <li><a style="border-radius: 8px;" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}">&raquo;</a></li>
+            <li ><a style="border-radius: 8px;" href="?page={{page_obj.paginator.num_pages}}&q={{ search_query }}">Última página</a></li>
         {% else %}
-       <li class="disabled"><strong>&raquo;</strong></li>
-       {% endif %}
-      </ul>
+
+            <li ><a style="border-radius: 8px;opacity:.2;color:white;">&raquo;</a></li>
+            <li ><a style="border-radius: 8px;opacity:.2;color:white;">Última página</a></li>
+        {% endif %}
+    </ul>
+
+    {% endwith %}
 {% endif %}
+</div>
 </div>
 
 {% endblock content %}
@@ -70,5 +160,18 @@ function openOperacao(url){
     let win = window.open(url, '_blank');
     win.focus();
 }
+
+function carregar() {
+    let botao = document.getElementById("meuBotao");
+    botao.classList.add("loading");
+    botao.textContent = ""; 
+
+    // Delay para impedir multiplos cliques
+    setTimeout(() => {
+        botao.classList.remove("loading");
+        botao.textContent = "Download de operações"; 
+    }, 2000); 
+}
 </script>
+
 {% endblock extra_js %}
