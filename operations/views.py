@@ -364,12 +364,12 @@ class OperationDetailView(LoginRequiredMixin, View):
 class GenereteReportExcelView(LoginRequiredMixin, View):
     def get(self, request):
         result = Operacao.objects.get_operations_report()
-        columns = result.query.get_columns()[2:] #Ignora id e identificador TODO  melhorar aqui
+        columns = result.query.get_columns()[1:] #ignora identificador TODO  melhorar aqui
         
         excel_obj = ExcelReport()
         excel_data = excel_obj.get_data(columns, result)
         excel_buffer = excel_obj.generate_excel_file(excel_data, columns, "Operações") 
-        
+
         return FileResponse(excel_buffer, 
                             filename=f"Operações ROPC até {datetime.now().strftime('%d_%m_%Y %H:%M:%S')}.xlsx", 
                             as_attachment=True)
